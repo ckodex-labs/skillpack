@@ -1,0 +1,5 @@
+# Git: the user-level gitignore carries a global `bin/` rule intended for
+# binary artifact directories. It shadows Rust source bins. Re-include the
+# exact source-bin paths so CLI/server binaries stay under version control.
+!crates/skillpack-api/src/bin/
+!crates/skillpack-tests/src/bin/

@@ -1,12 +1,13 @@
 //! Secret Scanner
 //!
 //! Shared regex + entropy-based secret detection helper.
+//!
+//! Regexes are compiled once per scanner instance; construction is fallible
+//! so no `expect`/`unwrap` is needed anywhere in production paths.
 
 use regex::Regex;
-use std::sync::OnceLock;
 
-pub struct SecretScanner;
-
+/// One detected secret-shaped token.
 #[derive(Debug, PartialEq)]
 pub struct SecretHit {
     pub kind: &'static str,
@@ -14,37 +15,42 @@ pub struct SecretHit {
     pub matched: String,
 }
 
-impl Default for SecretScanner {
-    fn default() -> Self {
-        Self::new()
-    }
+/// Regex + entropy secret scanner.
+///
+/// Cheap to build (two small regexes); build one per checker run.
+pub struct SecretScanner {
+    aws: Regex,
+    github: Regex,
 }
 
 impl SecretScanner {
-    pub fn new() -> Self {
-        Self
+    /// Build a scanner, compiling the detection regexes.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error when a built-in pattern fails to compile, which can
+    /// only happen if the hardcoded patterns above are edited incorrectly.
+    pub fn new() -> Result<Self, regex::Error> {
+        Ok(Self {
+            aws: Regex::new(r"AKIA[0-9A-Z]{16}")?,
+            github: Regex::new(r"gh[pousr]_[A-Za-z0-9]{36}")?,
+        })
     }
 
+    /// Scan `content` line-by-line for known secret shapes and
+    /// high-entropy tokens.
     pub fn scan(&self, content: &str) -> Vec<SecretHit> {
-        static AWS: OnceLock<Regex> = OnceLock::new();
-        static GH: OnceLock<Regex> = OnceLock::new();
-        let aws = AWS.get_or_init(|| {
-            Regex::new(r"AKIA[0-9A-Z]{16}").expect("hardcoded AWS key regex is valid")
-        });
-        let gh = GH.get_or_init(|| {
-            Regex::new(r"gh[pousr]_[A-Za-z0-9]{36}").expect("hardcoded GitHub token regex is valid")
-        });
 
         let mut hits = Vec::new();
         for (i, line) in content.lines().enumerate() {
-            for m in aws.find_iter(line) {
+            for m in self.aws.find_iter(line) {
                 hits.push(SecretHit {
                     kind: "aws-access-key",
                     line: i + 1,
                     matched: m.as_str().into(),
                 });
             }
-            for m in gh.find_iter(line) {
+            for m in self.github.find_iter(line) {
                 hits.push(SecretHit {
                     kind: "github-token",
                     line: i + 1,

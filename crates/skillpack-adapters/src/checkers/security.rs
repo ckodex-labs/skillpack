@@ -151,11 +151,25 @@ impl DimensionChecker for SecurityChecker {
         }
 
         // 3. Secrets scan (25 pts)
-        let scanner = SecretScanner::new();
+        let scanner = match SecretScanner::new() {
+            Ok(scanner) => Some(scanner),
+            Err(err) => {
+                issues.push(Issue {
+                    dimension: DimensionId::Security,
+                    severity: Severity::Warning,
+                    message: format!("secret scanner unavailable: {err}"),
+                    file: None,
+                    line: None,
+                });
+                None
+            }
+        };
         let mut secrets_found = false;
         for f in reader.list_files(path, r"\.(rs|py|js|ts|yaml|yml|json|md|tf|sh)$") {
             if let Ok(content) = reader.read_file(path, &f) {
-                let hits = scanner.scan(&content);
+                let Some(hits) = scanner.as_ref().map(|s| s.scan(&content)) else {
+                    continue;
+                };
                 if !hits.is_empty() {
                     secrets_found = true;
                     for hit in hits {

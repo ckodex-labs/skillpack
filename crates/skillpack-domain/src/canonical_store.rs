@@ -174,7 +174,7 @@ pub struct CanonicalSkill {
     pub source_agent: Option<String>,
 }
 
-pub use super::agent_registry::{AgentRegistry};
+pub use super::agent_registry::AgentRegistry;
 
 #[cfg(test)]
 mod tests {
@@ -225,18 +225,6 @@ mod tests {
         let a = AgentConfig::custom_symlink("Cool Harness", "~/x");
         assert_eq!(a.env_override, "COOL_HARNESS_SKILLS_DIR");
         assert_eq!(a.integration_type, AgentIntegrationType::Symlink);
-    }
-
-    #[test]
-    fn parse_custom_agents_handles_pairs_and_junk() {
-        let parsed = parse_custom_agents("foo=/a/b, bar = /c/d ,,baz,=/x,qux=");
-        assert_eq!(
-            parsed,
-            vec![
-                ("foo".to_string(), PathBuf::from("/a/b")),
-                ("bar".to_string(), PathBuf::from("/c/d")),
-            ]
-        );
     }
 
     #[test]

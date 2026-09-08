@@ -99,5 +99,4 @@ fn main() {
         Commands::Lock { path } => cmd_lock(&path),
         Commands::Migrate { path, to } => cmd_migrate(&path, &to),
     }
-
 }

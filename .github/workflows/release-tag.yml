@@ -1,0 +1,59 @@
+---
+name: Release Tag
+
+# Tag automation for beta release engineering.
+# On a main push, checks the version triple (Cargo.toml, release manifest,
+# CHANGELOG), runs the full CI-parity gate, then cuts an annotated tag
+# `v<version>` from Cargo.toml if that tag does not already exist.
+# Non-releases (version unchanged) skip tag creation.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    name: Gate, then tag v<version> if new
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Rust (pinned to MSRV)
+        uses: dtolnay/rust-toolchain@1.95.0
+
+      - name: Cache dependencies
+        uses: Swatinem/rust-cache@v2
+
+      - name: Version-triple check (Cargo.toml + manifest + CHANGELOG)
+        run: cargo run -p xtask -- stamp
+
+      - name: Run CI-parity gate (fmt, clippy, test, smoke)
+        run: cargo run -p xtask -- ci
+
+      - name: Read version
+        id: version
+        run: |
+          version="$(grep -m1 '^version' Cargo.toml | sed 's/.*"\(.*\)"/\1/')"
+          test -n "$version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Create annotated tag if new
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          tag="v${VERSION}"
+          if git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then
+            echo "Tag ${tag} already exists; skipping."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "${tag}" -m "SkillPack ${VERSION}"
+          echo "Created ${tag}"

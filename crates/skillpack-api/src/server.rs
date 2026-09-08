@@ -10,7 +10,6 @@ use skillpack_adapters::checkers::all_checkers;
 use skillpack_adapters::filesystem::FilesystemReader;
 use skillpack_application::{AssessSkillRequest, AssessSkillUseCase};
 use skillpack_domain::SkillReader;
-use std::path::{Path, PathBuf};
 use tokio_stream::wrappers::ReceiverStream;
 use tonic::{Request, Response, Status};
 
@@ -31,37 +30,17 @@ impl SkillPackServer {
         SkillPackServiceServer::new(self)
     }
 
-    /// Sanitize and canonicalize a user-provided path to prevent path traversal attacks.
-    /// Returns an error if the path attempts to escape the current working directory.
+    /// Sanitize and canonicalize a user-provided path, rejecting traversal.
+    /// Transport wrapper: keeps only error mapping; policy lives in the
+    /// shared skill_path_guard (validation space).
     fn sanitize_path(&self, path: &str) -> Result<String, Status> {
-        // Convert to absolute path
-        let absolute = if Path::new(path).is_absolute() {
-            PathBuf::from(path)
-        } else {
-            std::env::current_dir()
-                .map_err(|e| Status::internal(format!("Failed to get current directory: {}", e)))?
-                .join(path)
-        };
-
-        // Canonicalize to resolve any .. or . components
-        let canonical = absolute.canonicalize().map_err(|e| {
-            Status::invalid_argument(format!("Failed to canonicalize path '{}': {}", path, e))
-        })?;
-
-        // Ensure the canonical path doesn't escape the current working directory
-        let current_dir = std::env::current_dir()
-            .map_err(|e| Status::internal(format!("Failed to get current directory: {}", e)))?
-            .canonicalize()
-            .map_err(|e| {
-                Status::internal(format!("Failed to canonicalize current directory: {}", e))
+        let canonical =
+            skillpack_application::validate_skill_path_cwd(path).map_err(|e| match e {
+                skillpack_application::SkillPathError::Canonicalize { .. } => {
+                    Status::invalid_argument(e.to_string())
+                }
+                _ => Status::permission_denied(e.to_string()),
             })?;
-
-        if !canonical.starts_with(&current_dir) {
-            return Err(Status::permission_denied(format!(
-                "Path '{}' attempts to escape the current working directory",
-                path
-            )));
-        }
 
         canonical
             .to_str()
@@ -132,13 +111,14 @@ impl SkillPackService for SkillPackServer {
         request: Request<ReportRequest>,
     ) -> Result<Response<ReportResponse>, Status> {
         let req = request.into_inner();
+        let skill_path = self.sanitize_path(&req.skill_path)?;
 
         let reader = FilesystemReader::new();
         let checkers = all_checkers();
         let use_case = AssessSkillUseCase::new(reader, checkers);
 
         let assess_req = AssessSkillRequest {
-            skill_path: req.skill_path,
+            skill_path: skill_path.clone(),
             min_score: None,
         };
 
@@ -167,7 +147,21 @@ impl SkillPackService for SkillPackServer {
         tokio::spawn(async move {
             let reader = FilesystemReader::new();
             let checkers = all_checkers();
-            let path = std::path::Path::new(&req.skill_path);
+            // Sanitize before any filesystem access (was previously unsanitized).
+            let path_buf = match skillpack_application::validate_skill_path_cwd(&req.skill_path) {
+                Ok(p) => p,
+                Err(e) => {
+                    let status = match e {
+                        skillpack_application::SkillPathError::Canonicalize { .. } => {
+                            Status::invalid_argument(e.to_string())
+                        }
+                        _ => Status::permission_denied(e.to_string()),
+                    };
+                    let _ = tx.send(Err(status)).await;
+                    return;
+                }
+            };
+            let path = path_buf.as_path();
 
             // Read identity (single step, not streamed)
             let identity = match reader.read_identity(path) {
@@ -375,31 +369,13 @@ impl SkillPackService for SkillPackServer {
 }
 
 fn sanitize_path_grpc(path: &str) -> Result<String, Status> {
-    let absolute = if Path::new(path).is_absolute() {
-        PathBuf::from(path)
-    } else {
-        std::env::current_dir()
-            .map_err(|e| Status::internal(format!("Failed to get current directory: {}", e)))?
-            .join(path)
-    };
-
-    let canonical = absolute.canonicalize().map_err(|e| {
-        Status::invalid_argument(format!("Failed to canonicalize path '{}': {}", path, e))
+    // Transport wrapper: policy lives in the shared skill_path_guard.
+    let canonical = skillpack_application::validate_skill_path_cwd(path).map_err(|e| match e {
+        skillpack_application::SkillPathError::Canonicalize { .. } => {
+            Status::invalid_argument(e.to_string())
+        }
+        _ => Status::permission_denied(e.to_string()),
     })?;
-
-    let current_dir = std::env::current_dir()
-        .map_err(|e| Status::internal(format!("Failed to get current directory: {}", e)))?
-        .canonicalize()
-        .map_err(|e| {
-            Status::internal(format!("Failed to canonicalize current directory: {}", e))
-        })?;
-
-    if !canonical.starts_with(&current_dir) {
-        return Err(Status::permission_denied(format!(
-            "Path '{}' attempts to escape the current working directory",
-            path
-        )));
-    }
 
     canonical
         .to_str()

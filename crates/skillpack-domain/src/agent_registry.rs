@@ -252,7 +252,6 @@ impl AgentRegistry {
 
 /// Parse a `SKILLPACK_CUSTOM_AGENTS` spec: comma-separated `name=dir` pairs.
 /// Blank entries and entries without `=` or with an empty side are skipped.
-
 fn parse_custom_agents(spec: &str) -> Vec<(String, PathBuf)> {
     spec.split(',')
         .filter_map(|entry| {
@@ -268,3 +267,19 @@ fn parse_custom_agents(spec: &str) -> Vec<(String, PathBuf)> {
         .collect()
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parse_custom_agents_handles_pairs_and_junk() {
+        let parsed = parse_custom_agents("foo=/a/b, bar = /c/d ,,baz,=/x,qux=");
+        assert_eq!(
+            parsed,
+            vec![
+                ("foo".to_string(), PathBuf::from("/a/b")),
+                ("bar".to_string(), PathBuf::from("/c/d")),
+            ]
+        );
+    }
+}

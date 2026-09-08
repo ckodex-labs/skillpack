@@ -1,7 +1,7 @@
 //! Assessment commands.
 
-use super::*;
 use super::cmds_author::format_grade;
+use super::*;
 
 pub(super) fn cmd_check(path: &Path) {
     println!("{} {}", "Checking".cyan(), path.display());

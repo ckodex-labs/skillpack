@@ -101,44 +101,20 @@ pub fn hydrate_catalog(catalog: Arc<std::sync::RwLock<CatalogState>>, root: Path
     }
 }
 
-/// Sanitize and canonicalize a user-provided path to prevent path traversal attacks.
-/// Returns an error if the path attempts to escape the current working directory.
+/// Sanitize a user-provided path via the shared application-layer guard.
+///HTTP mapping: canonicalize failure → 400, escape/symlink escape → 403.
 fn sanitize_path(path: &str) -> Result<String, axum::http::StatusCode> {
-    // Convert to absolute path
-    let absolute = if std::path::Path::new(path).is_absolute() {
-        PathBuf::from(path)
-    } else {
-        match std::env::current_dir() {
-            Ok(dir) => dir.join(path),
-            Err(_) => return Err(axum::http::StatusCode::INTERNAL_SERVER_ERROR),
-        }
-    };
-
-    // Canonicalize to resolve any .. or . components
-    let canonical = match absolute.canonicalize() {
-        Ok(path) => path,
-        Err(_) => return Err(axum::http::StatusCode::BAD_REQUEST),
-    };
-
-    // Ensure the canonical path doesn't escape the current working directory
-    let current_dir = match std::env::current_dir() {
-        Ok(dir) => dir,
-        Err(_) => return Err(axum::http::StatusCode::INTERNAL_SERVER_ERROR),
-    };
-
-    let current_dir = match current_dir.canonicalize() {
-        Ok(dir) => dir,
-        Err(_) => return Err(axum::http::StatusCode::INTERNAL_SERVER_ERROR),
-    };
-
-    if !canonical.starts_with(&current_dir) {
-        return Err(axum::http::StatusCode::FORBIDDEN);
-    }
-
-    canonical
-        .to_str()
-        .map(|s| s.to_string())
-        .ok_or(axum::http::StatusCode::BAD_REQUEST)
+    use skillpack_application::validate_skill_path_cwd;
+    validate_skill_path_cwd(path)
+        .map(|p| p.display().to_string())
+        .map_err(|e| match e {
+            skillpack_application::SkillPathError::Canonicalize { .. } => {
+                axum::http::StatusCode::BAD_REQUEST
+            }
+            skillpack_application::SkillPathError::Escape { .. } => {
+                axum::http::StatusCode::FORBIDDEN
+            }
+        })
 }
 
 /// Health response shape (matches CLIENT-SPEC §3.1 capability negotiation).
@@ -1282,18 +1258,17 @@ mod tests {
     }
 
     #[test]
-    fn sanitize_path_allows_subpath() {
-        let result = sanitize_path("src/lib.rs");
+    fn skill_path_guard_allows_package_file() {
+        // Test harness CWD is the crate root; Cargo.toml exists there.
+        let result = skillpack_application::validate_skill_path_cwd("Cargo.toml");
         assert!(result.is_ok());
-        assert!(result.unwrap().ends_with("src/lib.rs"));
     }
 
     #[test]
-    fn sanitize_path_rejects_traversal() {
-        // Path that does not exist => canonicalize fails => BAD_REQUEST
-        let result = sanitize_path("../../../etc/passwd");
+    fn skill_path_guard_rejects_traversal() {
+        // `..` is rejected before the filesystem is touched.
+        let result = skillpack_application::validate_skill_path_cwd("../../../etc/passwd");
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err(), StatusCode::BAD_REQUEST);
     }
 
     #[tokio::test]

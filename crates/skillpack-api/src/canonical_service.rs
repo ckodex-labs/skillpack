@@ -316,13 +316,19 @@ impl CanonicalStoreService for CanonicalStoreServiceImpl {
         }
 
         let canonical_root = self.canonical_root();
-        let target_name = req.target_name.unwrap_or_else(|| {
+        // SEC: user input joins a trusted root — reject any absolute or
+        // separator-carrying component so the join cannot be steered outside
+        // the canonical store.
+        let raw_target = req.target_name.clone().unwrap_or_else(|| {
             source
                 .file_name()
                 .unwrap_or_default()
                 .to_string_lossy()
                 .to_string()
         });
+        let target_name = skillpack_application::validate_skill_component(&raw_target)
+            .map_err(|e| Status::invalid_argument(e.to_string()))?
+            .to_string();
         let target = canonical_root.join(&target_name);
 
         if target.exists() {
@@ -356,9 +362,13 @@ impl CanonicalStoreService for CanonicalStoreServiceImpl {
         info!("PromoteSkill request: candidate={}", req.candidate_name);
 
         let canonical_root = self.canonical_root();
+        // SEC: user input joins a trusted root — validate as a single path
+        // component before doing filesystem work.
+        let candidate = skillpack_application::validate_skill_component(&req.candidate_name)
+            .map_err(|e| Status::invalid_argument(e.to_string()))?;
         let candidates_dir = canonical_root.join("candidates");
-        let candidate_path = candidates_dir.join(&req.candidate_name);
-        let target_path = canonical_root.join(&req.candidate_name);
+        let candidate_path = candidates_dir.join(candidate);
+        let target_path = canonical_root.join(candidate);
 
         if !candidate_path.exists() {
             return Err(Status::not_found(format!(
@@ -640,8 +650,13 @@ impl CanonicalStoreService for CanonicalStoreServiceImpl {
 
         let canonical_root = self.canonical_root();
         let ns = req.namespace.as_deref().unwrap_or("default");
-        let skill_path = canonical_root.join(ns).join(&req.skill_ref);
-
+        // SEC: user input joins a trusted root — validate namespace and
+        // skill_ref as single path components before joining.
+        let ns = skillpack_application::validate_skill_component(ns)
+            .map_err(|e| Status::invalid_argument(e.to_string()))?;
+        let skill_ref = skillpack_application::validate_skill_component(&req.skill_ref)
+            .map_err(|e| Status::invalid_argument(e.to_string()))?;
+        let skill_path = canonical_root.join(ns).join(skill_ref);
         if !skill_path.exists() {
             return Err(Status::not_found(format!(
                 "Skill '{}' not found in namespace '{}'",
@@ -650,7 +665,7 @@ impl CanonicalStoreService for CanonicalStoreServiceImpl {
         }
 
         let registry = req.registry_url.as_deref().unwrap_or("localhost:5000");
-        let repository = format!("skillpack/{}", req.skill_ref);
+        let repository = format!("skillpack/{}", skill_ref);
         let tag = ns;
 
         let oci_auth: Option<(&str, &str)> = std::env::var("SKILLPACK_OCI_AUTH")

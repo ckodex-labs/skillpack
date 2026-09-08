@@ -1,7 +1,8 @@
 # Known Issues — SkillPack Beta
 
-> This document tracks acknowledged limitations and gaps for the `1.0.0-beta.1` release.
-> Items are not blockers for a trusted, local/private alpha audience unless explicitly marked **[CRITICAL]**.
+> This document tracks acknowledged limitations and gaps closed out in the
+> `1.0.0-beta.2` release. Items remaining open are marked **[POST-ALPHA]**. Closed items live in
+> the **Resolved** sections with the evidence that closed them (claimed -> validated discipline).
 
 ## 1. Security
 
@@ -9,9 +10,9 @@
   - **Mitigation:** Always set `SKILLPACK_API_TOKEN` before exposing the server. The server now defaults to binding on `127.0.0.1` only.
   - **Status:** Partially mitigated; requires user vigilance.
 
- User-provided `skill_path` arguments in gRPC, HTTP, and MCP handlers are passed directly to the filesystem reader. Path-traversal hardening is claimed in the threat model but not visibly enforced at entry points.
-  - **Mitigation:** Only run against trusted skill packs on local filesystem.
-  - **Status:** Planned for post-alpha.
+- **Path-traversal hardening:** Enforced at every entry point (gRPC, HTTP, MCP, canonical joins).
+  - **Evidence:** Shared `skill_path_guard` in `skillpack-application` (`validate_skill_path`, `validate_skill_path_cwd`, `validate_skill_component`); wired at `server.rs` (assess/grade/report/assess_stream/assess_batch_stream), `http_server.rs` (`assess_handler`), `mcp.rs` (3 tool call-sites), and `canonical_service.rs` (package_skill ns+skill_ref, import_skill target_name, promote_skill candidate_name). Rejects `..`, `..\\`, absolute escapes, symlink escapes (resolution-before-containment), NUL, and empty or separator-carrying components. 13 unit tests green plus workspace gate green.
+  - **Status:** Resolved in 1.0.0-beta.2+
 
 ## 2. CI / CD / Release
 
@@ -19,7 +20,8 @@
   - **Status:** Resolved in 1.0.0-beta.2.
 
 - **No changelog or release tagging workflow:** Prior to this release, no `CHANGELOG.md` or automated release tagging existed.
-  - **Status:** Added in this release; automated release workflow planned for post-alpha.
+  - **Evidence:** `.github/workflows/release-tag.yml` added — on push to `main` (or manual dispatch) it runs `cargo run -p xtask -- stamp` (version-triple consistency gate), the full `cargo run -p xtask -- ci` gate, then creates annotated tag `v<version>` iff absent; version extracted by the same grep pipeline validated locally against `1.0.0-beta.2`.
+  - **Status:** Resolved in 1.0.0-beta.2+
 
 ## 3. Observability
 
@@ -47,9 +49,9 @@
   - **Impact:** Larger attack surface than necessary.
   - **Status:** Acceptable for alpha; planned for post-alpha.
 
-## 7. Resolved in 1.0.0-beta.2
+## 7. Resolved in 1.0.0-beta.2+
 
-Closed items, retained for the audit trail.
+Closed items, retained for the audit trail (each entry cites the evidence that closed it).
 
 - **CORS and request limits:** HTTP layer applies deny-by-default CORS (`SKILLPACK_CORS_ORIGINS`), `TimeoutLayer` (`SKILLPACK_REQUEST_TIMEOUT_SECS`), and `RequestBodyLimitLayer` (`SKILLPACK_MAX_BODY_SIZE_MB`). Rate limiting remains a reverse-proxy concern for non-local deployments.
 - **OTLP export:** `init_telemetry` wires `opentelemetry-otlp` when `SKILLPACK_OTLP_ENDPOINT` or `--otlp-endpoint` is set; stdout-only fallback if the exporter cannot be built.

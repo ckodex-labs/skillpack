@@ -40,7 +40,6 @@ impl SecretScanner {
     /// Scan `content` line-by-line for known secret shapes and
     /// high-entropy tokens.
     pub fn scan(&self, content: &str) -> Vec<SecretHit> {
-
         let mut hits = Vec::new();
         for (i, line) in content.lines().enumerate() {
             for m in self.aws.find_iter(line) {

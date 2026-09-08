@@ -9,6 +9,7 @@ pub mod assessment;
 pub mod behavioral;
 pub mod bundle;
 pub mod caniuse;
+pub mod agent_registry;
 pub mod canonical_store;
 pub mod collision;
 pub mod cost;

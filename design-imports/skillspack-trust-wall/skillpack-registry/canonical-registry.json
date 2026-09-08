@@ -1,0 +1,1387 @@
+{
+  "canonicalRoot": "/Users/mchorfa/Skills/shared",
+  "consumption": {
+    "instruction": "For each skill, symlink <yourAgentSkillsDir>/<name> -> <canonicalRoot>/<name>. Never copy — the registry is the single source of truth.",
+    "method": "symlink",
+    "model": "reference",
+    "onboard": "Built-in harness: `skillpack store sync`. New harness: set SKILLPACK_CUSTOM_AGENTS=YourHarness=/path/to/skills then sync.",
+    "reconcile": "skillpack store sync --dry-run  # preview reference fanout"
+  },
+  "registry": "ckodex-skillpack",
+  "schemaVersion": 1,
+  "skillCount": 196,
+  "skills": [
+    {
+      "description": "Skill for accessibility.",
+      "hasSkillMd": true,
+      "name": "accessibility",
+      "path": "accessibility",
+      "status": "draft"
+    },
+    {
+      "description": "**STOP AND VERIFY**: Before running any command or tool that results in irreversible data loss, you MUST obtain explicit user consent.\nWhen in doubt, ask. It is better to wait for confirmation than to accidentally delete production data or critical project assets.\nUse this for:\n- SQL: DROP TABLE/VIEW/SCHEMA/DATABASE, TRUNCATE, or broad DELETE (missing WHERE or using 1=1).\n- Cloud Storage: gsutil rm or gcloud storage rm targeting production data or critical buckets.\n- Infrastructure: gcloud projects delete, deleting Spanner/BigQuery/Dataproc resources, deleting secrets, or KMS key destruction.\n",
+      "hasSkillMd": true,
+      "name": "accidental-data-loss-prevention",
+      "path": "accidental-data-loss-prevention",
+      "status": "draft"
+    },
+    {
+      "description": "Skill for agent ci dagger ssdlc.",
+      "hasSkillMd": true,
+      "name": "agent-ci-dagger-ssdlc",
+      "path": "agent-ci-dagger-ssdlc",
+      "status": "draft"
+    },
+    {
+      "description": "Create new AI chat interface components for the ai-elements library following established composable patterns, shadcn/ui integration, and Vercel AI SDK conventions. Use when creating new components in packages/elements/src or when the user asks to add a new component to ai-elements.",
+      "hasSkillMd": true,
+      "name": "ai-elements",
+      "path": "ai-elements",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for designing secure APIs on Azure - authentication, authorization, gateway controls, input validation, rate limiting, secret management, and runtime threat detection - aligned to OWASP API Security Top 10 and Azure API Management. WHEN: API security design, secure API, OWASP API Top 10, API authentication, API gateway security, rate limiting, validate JWT, protect backend API, API Management security policies, secure API architecture, BOLA, BFLA. DO NOT USE for general application security or web app design (use security-architecture / threat-modelling) or for API runtime detection only (use defender-for-apis).",
+      "hasSkillMd": true,
+      "name": "api-security-design",
+      "path": "api-security-design",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for instrumenting webapps with Azure Application Insights. Provides telemetry patterns, SDK setup, and configuration references. WHEN: how to instrument app, App Insights SDK, telemetry patterns, what is App Insights, Application Insights guidance, instrumentation examples, APM best practices.",
+      "hasSkillMd": true,
+      "name": "appinsights-instrumentation",
+      "path": "appinsights-instrumentation",
+      "status": "draft"
+    },
+    {
+      "description": "Migrated skill for artifactory.",
+      "hasSkillMd": true,
+      "name": "artifactory",
+      "path": "artifactory",
+      "status": "draft"
+    },
+    {
+      "description": "Use for Azure AI: Search, Speech, OpenAI, Document Intelligence. Helps with search, vector/hybrid search, speech-to-text, text-to-speech, transcription, OCR. WHEN: AI Search, query search, vector search, hybrid search, semantic search, speech-to-text, text-to-speech, transcribe, OCR, convert text to speech.",
+      "hasSkillMd": true,
+      "name": "azure-ai",
+      "path": "azure-ai",
+      "status": "draft"
+    },
+    {
+      "description": "Configure Azure API Management as an AI Gateway for AI models, MCP tools, and agents. WHEN: semantic caching, token limit, content safety, load balancing, AI model governance, MCP rate limiting, jailbreak detection, add Azure OpenAI backend, add AI Foundry model, test AI gateway, LLM policies, configure AI backend, token metrics, AI cost control, convert API to MCP, import OpenAPI to gateway.",
+      "hasSkillMd": true,
+      "name": "azure-aigateway",
+      "path": "azure-aigateway",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for securing Azure App Service web apps and APIs — managed identity, Easy Auth with Microsoft Entra ID, network isolation via private endpoints + VNet integration, HTTPS / TLS hardening, Key Vault references for secrets, and front-end WAF (Front Door / App Gateway). WHEN: App Service security, secure web app on Azure, Easy Auth, App Service managed identity, private endpoint web app, VNet integration, App Service TLS, Key Vault references, harden App Service, FTP disable, WAF in front of App Service, access restrictions. DO NOT USE for Azure Functions specifics only (similar but separate), AKS workloads (different platform), or VM-hosted web apps.",
+      "hasSkillMd": true,
+      "name": "azure-app-service-security",
+      "path": "azure-app-service-security",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Azure Arc — projecting on-premises, multicloud (AWS/GCP), and edge servers, Kubernetes, and data services into Azure Resource Manager for unified governance, security, and management. Covers Arc-enabled servers onboarding, extending Defender for Cloud and Azure Policy to non-Azure machines, and Arc-enabled Kubernetes. WHEN: Azure Arc, manage on-prem servers from Azure, hybrid management, Arc-enabled servers, Arc Kubernetes, extend Defender for Cloud to on-prem, govern multicloud machines, Connected Machine agent, Arc agent, hybrid security posture, machine configuration, guest configuration. DO NOT USE for Azure-native VMs only (use Azure Resource Manager directly), Intune-managed endpoints (use intune-device-mgmt), or Azure Stack HCI specifically (separate product).",
+      "hasSkillMd": true,
+      "name": "azure-arc",
+      "path": "azure-arc",
+      "status": "draft"
+    },
+    {
+      "description": "Assess and migrate cross-cloud workloads to Azure with migration reports and code conversion guidance. Supports AWS, GCP, and other providers. WHEN: migrate Lambda to Azure Functions, migrate AWS to Azure, Lambda migration assessment, convert AWS serverless to Azure, migration readiness report, migrate from AWS, migrate from GCP, cross-cloud migration.",
+      "hasSkillMd": true,
+      "name": "azure-cloud-migrate",
+      "path": "azure-cloud-migrate",
+      "status": "draft"
+    },
+    {
+      "description": "Run Azure compliance and security audits with azqr plus Key Vault expiration checks. Covers best-practice assessment, resource review, policy/compliance validation, and security posture checks. WHEN: compliance scan, security audit, BEFORE running azqr (compliance cli tool), Azure best practices, Key Vault expiration check, expired certificates, expiring secrets, orphaned resources, compliance assessment.",
+      "hasSkillMd": true,
+      "name": "azure-compliance",
+      "path": "azure-compliance",
+      "status": "draft"
+    },
+    {
+      "description": "Azure VM and VMSS router for recommendations, pricing, autoscale, orchestration, and connectivity troubleshooting. WHEN: Azure VM, VMSS, scale set, recommend, compare, server, website, burstable, lightweight, VM family, workload, GPU, learning, simulation, dev/test, backend, autoscale, load balancer, Flexible orchestration, Uniform orchestration, cost estimate, connect, refused, Linux, black screen, reset password, reach VM, port 3389, NSG, troubleshoot.",
+      "hasSkillMd": true,
+      "name": "azure-compute",
+      "path": "azure-compute",
+      "status": "draft"
+    },
+    {
+      "description": "Unified Azure cost management: query historical costs, forecast future spending, and optimize to reduce waste. WHEN: \"Azure costs\", \"Azure spending\", \"Azure bill\", \"cost breakdown\", \"cost by service\", \"cost by resource\", \"how much am I spending\", \"show my bill\", \"monthly cost summary\", \"cost trends\", \"top cost drivers\", \"actual cost\", \"amortized cost\", \"forecast spending\", \"projected costs\", \"estimate bill\", \"future costs\", \"budget forecast\", \"end of month costs\", \"how much will I spend\", \"optimize costs\", \"reduce spending\", \"find cost savings\", \"orphaned resources\", \"rightsize VMs\", \"cost analysis\", \"reduce waste\", \"unused resources\", \"optimize Redis costs\", \"cost by tag\", \"cost by resource group\", \"AKS cost analysis add-on\", \"namespace cost\", \"cost spike\", \"anomaly\", \"budget alert\", \"AKS cost visibility\". DO NOT USE FOR: deploying resources, provisioning infrastructure, diagnostics, security audits, or estimating costs for new resources not yet deployed.",
+      "hasSkillMd": true,
+      "name": "azure-cost",
+      "path": "azure-cost",
+      "status": "draft"
+    },
+    {
+      "description": "Execute Azure deployments for ALREADY-PREPARED applications that have existing .azure/deployment-plan.md and infrastructure files. DO NOT use this skill when the user asks to CREATE a new application — use azure-prepare instead. This skill runs azd up, azd deploy, terraform apply, and az deployment commands with built-in error recovery. Requires .azure/deployment-plan.md from azure-prepare and validated status from azure-validate. WHEN: \"run azd up\", \"run azd deploy\", \"execute deployment\", \"push to production\", \"push to cloud\", \"go live\", \"ship it\", \"bicep deploy\", \"terraform apply\", \"publish to Azure\", \"launch on Azure\". DO NOT USE WHEN: \"create and deploy\", \"build and deploy\", \"create a new app\", \"set up infrastructure\", \"create and deploy to Azure using Terraform\" — use azure-prepare for these.",
+      "hasSkillMd": true,
+      "name": "azure-deploy",
+      "path": "azure-deploy",
+      "status": "draft"
+    },
+    {
+      "description": "Debug Azure production issues on Azure using AppLens, Azure Monitor, resource health, and safe triage. WHEN: debug production issues, troubleshoot container apps, troubleshoot functions, troubleshoot AKS, kubectl cannot connect, kube-system/CoreDNS failures, pod pending, crashloop, node not ready, upgrade failures, analyze logs, KQL, insights, image pull failures, cold start issues, health probe failures, resource health, root cause of errors.",
+      "hasSkillMd": true,
+      "name": "azure-diagnostics",
+      "path": "azure-diagnostics",
+      "status": "draft"
+    },
+    {
+      "description": "Architect and provision enterprise Azure infrastructure from workload descriptions. For cloud architects and platform engineers planning networking, identity, security, compliance, and multi-resource topologies with WAF alignment. Generates Bicep or Terraform directly (no azd). WHEN: 'plan Azure infrastructure', 'architect Azure landing zone', 'design hub-spoke network', 'plan multi-region DR topology', 'set up VNets firewalls and private endpoints', 'subscription-scope Bicep deployment'. PREFER azure-prepare FOR app-centric workflows.",
+      "hasSkillMd": true,
+      "name": "azure-enterprise-infra-planner",
+      "path": "azure-enterprise-infra-planner",
+      "status": "draft"
+    },
+    {
+      "description": "Guides Microsoft Entra ID app registration, OAuth 2.0 authentication, and MSAL integration. USE FOR: create app registration, register Azure AD app, configure OAuth, set up authentication, add API permissions, generate service principal, MSAL example, console app auth, Entra ID setup, Azure AD authentication. DO NOT USE FOR: Azure RBAC or role assignments (use azure-rbac), Key Vault secrets (use azure-keyvault-expiration-audit), general Azure resource security guidance.",
+      "hasSkillMd": true,
+      "name": "azure-entra-app-registration",
+      "path": "azure-entra-app-registration",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Azure Firewall — managed cloud-native L3-L7 stateful network firewall for centralised egress, east-west, and ingress control. Covers SKU choice (Basic vs Standard vs Premium), Firewall Policy hierarchy, application/network/DNAT rules, threat intelligence and IDPS, TLS inspection, hub-spoke deployment with UDRs, and forced tunneling. WHEN: Azure Firewall, network firewall, egress filtering, FQDN filtering, Firewall Policy, IDPS, TLS inspection, forced tunneling, central network control, firewall SKU Premium Standard Basic, hub spoke firewall, UDR through firewall, DNAT inbound. DO NOT USE for L7 web application protection (use Front Door / Application Gateway WAF), subnet microsegmentation (use NSGs in azure-network-security-design), or third-party NVA design.",
+      "hasSkillMd": true,
+      "name": "azure-firewall",
+      "path": "azure-firewall",
+      "status": "draft"
+    },
+    {
+      "description": "Build, deploy, modify GitHub Copilot SDK apps on Azure. PREFER OVER azure-prepare when codebase contains copilot-sdk markers. WHEN: copilot SDK, @github/copilot-sdk, copilot-powered app, deploy copilot app, add feature, modify copilot app, BYOM, bring your own model, CopilotClient, createSession, sendAndWait, azd init copilot. DO NOT USE FOR: general web apps without copilot SDK (use azure-prepare), Copilot Extensions, Foundry agents (use microsoft-foundry).",
+      "hasSkillMd": true,
+      "name": "azure-hosted-copilot-sdk",
+      "path": "azure-hosted-copilot-sdk",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Azure Key Vault — securely storing and managing secrets, keys, and certificates with RBAC, network isolation, managed identity access, soft delete / purge protection, and rotation. Covers when to use standard Key Vault vs Managed HSM (FIPS 140-3 Level 3), one-vault-per-app blast radius principle, and Key Vault references in App Service / Functions. WHEN: Azure Key Vault, store secrets, manage certificates, encryption keys, secret rotation, Key Vault RBAC, purge protection, soft delete, private endpoint Key Vault, managed identity access secrets, Managed HSM, Key Vault references, BYOK CMK. DO NOT USE for certificate authority design (use pki-design), entra app credentials only (use entra-id), or PaaS networking topology (use azure-network-security-design).",
+      "hasSkillMd": true,
+      "name": "azure-key-vault",
+      "path": "azure-key-vault",
+      "status": "draft"
+    },
+    {
+      "description": "Plan, create, and configure production-ready Azure Kubernetes Service (AKS) clusters. Covers Day-0 checklist, SKU selection (Automatic vs Standard), networking options (private API server, Azure CNI Overlay, egress configuration), security, and operations (autoscaling, upgrade strategy, cost analysis). WHEN: create AKS environment, provision AKS environment, enable AKS observability, design AKS networking, choose AKS SKU, secure AKS.",
+      "hasSkillMd": true,
+      "name": "azure-kubernetes",
+      "path": "azure-kubernetes",
+      "status": "draft"
+    },
+    {
+      "description": "Query and analyze data in Azure Data Explorer (Kusto/ADX) using KQL for log analytics, telemetry, and time series analysis. WHEN: KQL queries, Kusto database queries, Azure Data Explorer, ADX clusters, log analytics, time series data, IoT telemetry, anomaly detection.",
+      "hasSkillMd": true,
+      "name": "azure-kusto",
+      "path": "azure-kusto",
+      "status": "draft"
+    },
+    {
+      "description": "Troubleshoot and resolve issues with Azure Messaging SDKs for Event Hubs and Service Bus. Covers connection failures, authentication errors, message processing issues, and SDK configuration problems. WHEN: event hub SDK error, service bus SDK issue, messaging connection failure, AMQP error, event processor host issue, message lock lost, message lock expired, lock renewal, lock renewal batch, send timeout, receiver disconnected, SDK troubleshooting, azure messaging SDK, event hub consumer, service bus queue issue, topic subscription error, enable logging event hub, service bus logging, eventhub python, servicebus java, eventhub javascript, servicebus dotnet, event hub checkpoint, event hub not receiving messages, service bus dead letter, batch processing lock, session lock expired, idle timeout, connection inactive, link detach, slow reconnect, session error, duplicate events, offset reset, receive batch.",
+      "hasSkillMd": true,
+      "name": "azure-messaging",
+      "path": "azure-messaging",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for designing secure Azure network architecture — hub-spoke topology (or Virtual WAN), segmentation with NSGs/ASGs, private endpoints / Private Link for PaaS, egress through Azure Firewall, DDoS protection, WAF on Front Door/App Gateway, and centralised private DNS. Aligned to the Zero Trust network pillar. WHEN: Azure network security, hub spoke, Virtual WAN, network segmentation, NSG ASG design, private endpoint, Private Link, DDoS protection, secure virtual network, egress control, Zero Trust network, private connectivity design, Bastion, JIT VM access. DO NOT USE for the firewall itself (use azure-firewall), VM-level hardening (use defender-for-cloud-hardening), or Key Vault networking only (use azure-key-vault).",
+      "hasSkillMd": true,
+      "name": "azure-network-security-design",
+      "path": "azure-network-security-design",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Entra Privileged Identity Management (PIM) — just-in-time, time-bound, approval-based, audited elevation for Entra roles, Azure resource roles, and privileged groups. Covers eligible vs active assignments, activation controls (MFA + approval + justification + ticket), access reviews, PIM for Groups, and removing standing access. WHEN: Privileged Identity Management, PIM, just-in-time access, time-bound role, eligible assignment, require approval to activate, privileged role activation, PIM for groups, access review privileged roles, reduce standing access, how do I remove permanent admin rights, temporary admin access, admins should not have standing Global Admin, JIT access for Azure roles, PIM activation alert, role activation audit. DO NOT USE for entitlement management of resource access packages (use entra-id-governance) or risk detection (use entra-id-protection).",
+      "hasSkillMd": true,
+      "name": "azure-pim",
+      "path": "azure-pim",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Azure Policy — enforcing and auditing governance and security guardrails at scale across Azure with definitions, initiatives, assignments, and remediation tasks. Covers effects (Audit, Deny, Append, Modify, DeployIfNotExists, AuditIfNotExists), management group inheritance, audit-first rollout, parameterised reusable policies, and exclusion discipline. Powers Defender for Cloud regulatory compliance. WHEN: Azure Policy, governance guardrails, enforce compliance, policy initiative, deny resource, audit configuration, remediation task, deployIfNotExists, management group policy, security baseline enforcement, MCSB initiative, regulatory compliance Azure. DO NOT USE for resource RBAC role choice (use azure-role-selector), Defender posture only (use defender-for-cloud-hardening), or Bicep / IaC templating.",
+      "hasSkillMd": true,
+      "name": "azure-policy",
+      "path": "azure-policy",
+      "status": "draft"
+    },
+    {
+      "description": "Prepare Azure apps for deployment (infra Bicep/Terraform, azure.yaml, Dockerfiles). Use for create/modernize or create+deploy; not cross-cloud migration (use azure-cloud-migrate). WHEN: \"create app\", \"build web app\", \"create API\", \"create serverless HTTP API\", \"create frontend\", \"create back end\", \"build a service\", \"modernize application\", \"update application\", \"add authentication\", \"add caching\", \"host on Azure\", \"create and deploy\", \"deploy to Azure\", \"deploy to Azure using Terraform\", \"deploy to Azure App Service\", \"deploy to Azure App Service using Terraform\", \"deploy to Azure Container Apps\", \"deploy to Azure Container Apps using Terraform\", \"generate Terraform\", \"generate Bicep\", \"function app\", \"timer trigger\", \"service bus trigger\", \"event-driven function\", \"containerized Node.js app\", \"social media app\", \"static portfolio website\", \"todo list with frontend and API\", \"prepare my Azure application to use Key Vault\", \"managed identity\".",
+      "hasSkillMd": true,
+      "name": "azure-prepare",
+      "path": "azure-prepare",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for estimating and reasoning about the cost of Azure security services — using the Azure Pricing Calculator, understanding key cost drivers (Sentinel ingestion, Defender plans, Key Vault operations), and cost-optimization levers. WHEN: Azure security pricing, estimate cost, Sentinel cost, Defender for Cloud pricing, pricing calculator, cost drivers, optimize security spend, ingestion cost, licensing vs consumption, budget for security.",
+      "hasSkillMd": true,
+      "name": "azure-pricing",
+      "path": "azure-pricing",
+      "status": "draft"
+    },
+    {
+      "description": "Check/manage Azure quotas and usage across providers. For deployment planning, capacity validation, region selection. WHEN: \"check quotas\", \"service limits\", \"current usage\", \"request quota increase\", \"quota exceeded\", \"validate capacity\", \"regional availability\", \"provisioning limits\", \"vCPU limit\", \"how many vCPUs available in my subscription\".",
+      "hasSkillMd": true,
+      "name": "azure-quotas",
+      "path": "azure-quotas",
+      "status": "draft"
+    },
+    {
+      "description": "Helps users find the right Azure RBAC role for an identity with least privilege access, then generate CLI commands and Bicep code to assign it. Also provides guidance on permissions required to grant roles. WHEN: bicep for role assignment, what role should I assign, least privilege role, RBAC role for, role to read blobs, role for managed identity, custom role definition, assign role to identity, what role do I need to grant access, permissions to assign roles.",
+      "hasSkillMd": true,
+      "name": "azure-rbac",
+      "path": "azure-rbac",
+      "status": "draft"
+    },
+    {
+      "description": "List, find, and show Azure resources across subscriptions or resource groups. Handles prompts like \"list websites\", \"list virtual machines\", \"list my VMs\", \"show storage accounts\", \"find container apps\", and \"what resources do I have\". USE FOR: resource inventory, find resources by tag, tag analysis, orphaned resource discovery (not for cost analysis), unattached disks, count resources by type, cross-subscription lookup, and Azure Resource Graph queries. DO NOT USE FOR: deploying/changing resources (use azure-deploy), cost optimization (use azure-cost), or non-Azure clouds.",
+      "hasSkillMd": true,
+      "name": "azure-resource-lookup",
+      "path": "azure-resource-lookup",
+      "status": "draft"
+    },
+    {
+      "description": "Analyze Azure resource groups and generate detailed Mermaid architecture diagrams showing the relationships between individual resources. WHEN: create architecture diagram, visualize Azure resources, show resource relationships, generate Mermaid diagram, analyze resource group, diagram my resources, architecture visualization, resource topology, map Azure infrastructure.",
+      "hasSkillMd": true,
+      "name": "azure-resource-visualizer",
+      "path": "azure-resource-visualizer",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for selecting the right Azure RBAC role with least privilege - mapping required actions to built-in roles, deciding when a custom role is needed, scoping assignments correctly, and choosing between control-plane and data-plane roles. Covers scope levels (management group → resource), groups vs direct assignment, and PIM for privileged roles. WHEN: which Azure role, least privilege role, Azure RBAC role selection, built-in vs custom role, scope role assignment, role for managed identity, data plane role, assign minimal permissions, RBAC design, control plane vs data plane, Storage Blob Data Reader vs Reader. DO NOT USE for Entra ID directory roles (use entra-id) or for Microsoft 365 admin roles (use m365-govern-manage).",
+      "hasSkillMd": true,
+      "name": "azure-role-selector",
+      "path": "azure-role-selector",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for the Microsoft Cloud Security Benchmark (MCSB) — Microsoft's canonical set of cloud security best-practice controls mapped to industry frameworks and monitored in Microsoft Defender for Cloud. Covers control domains, applying the benchmark, and compliance tracking. WHEN: Microsoft Cloud Security Benchmark, MCSB, Azure Security Benchmark, security baseline controls, CIS NIST mapping, Defender for Cloud regulatory compliance, cloud security best practices, security controls framework.",
+      "hasSkillMd": true,
+      "name": "azure-security-benchmark",
+      "path": "azure-security-benchmark",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Azure Site Recovery (ASR) — disaster-recovery-as-a-service that replicates Azure VMs and on-premises machines to a secondary region for orchestrated failover. Covers RPO / RTO design, replication setup, recovery plans with start-up ordering and scripts, test failover discipline, and the separation between DR (ASR) and backup (Azure Backup) for ransomware resilience. WHEN: Azure Site Recovery, ASR, disaster recovery, DR replication, failover, recovery plan, business continuity, RPO RTO, test failover, region failover, ransomware resilience DR, paired region, failover and failback. DO NOT USE for point-in-time backup / restore (use Azure Backup), database HA / geo-replication only (use SQL geo-replication), or general BCDR design without an Azure tilt.",
+      "hasSkillMd": true,
+      "name": "azure-site-recovery",
+      "path": "azure-site-recovery",
+      "status": "draft"
+    },
+    {
+      "description": "Azure Storage Services including Blob Storage, File Shares, Queue Storage, Table Storage, and Data Lake. Provides object storage, SMB file shares, async messaging, NoSQL key-value, and big data analytics capabilities. Includes access tiers (hot, cool, archive) and lifecycle management. USE FOR: blob storage, file shares, queue storage, table storage, data lake, upload files, download blobs, storage accounts, access tiers, lifecycle management. DO NOT USE FOR: SQL databases, Cosmos DB (use azure-prepare), messaging with Event Hubs or Service Bus (use azure-messaging).",
+      "hasSkillMd": true,
+      "name": "azure-storage",
+      "path": "azure-storage",
+      "status": "draft"
+    },
+    {
+      "description": "Assess and upgrade Azure workloads between plans, tiers, or SKUs within Azure. Generates assessment reports and automates upgrade steps. WHEN: upgrade Consumption to Flex Consumption, upgrade Azure Functions plan, migrate hosting plan, upgrade Functions SKU, move to Flex Consumption, upgrade Azure service tier, change hosting plan, upgrade function app plan, migrate App Service to Container Apps.",
+      "hasSkillMd": true,
+      "name": "azure-upgrade",
+      "path": "azure-upgrade",
+      "status": "draft"
+    },
+    {
+      "description": "Pre-deployment validation for Azure readiness. Run deep checks on configuration, infrastructure (Bicep or Terraform), RBAC role assignments, managed identity permissions, and prerequisites before deploying. WHEN: validate my app, check deployment readiness, run preflight checks, verify configuration, check if ready to deploy, validate azure.yaml, validate Bicep, test before deploying, troubleshoot deployment errors, validate Azure Functions, validate function app, validate serverless deployment, verify RBAC roles, check role assignments, review managed identity permissions, what-if analysis.",
+      "hasSkillMd": true,
+      "name": "azure-validate",
+      "path": "azure-validate",
+      "status": "draft"
+    },
+    {
+      "description": "Discovers and inspects BigQuery Data Transfer Service (DTS) configurations. Use this to identify existing ingestion pipelines and extract datasource or transfer config metadata for data pipelines. Use when a user asks for ingestion scenarios while building or managing data pipelines or when a user asks to \"ingest\" or \"add\" data that may already be managed by a DTS transfer.",
+      "hasSkillMd": true,
+      "name": "bigquery-data-transfer-service",
+      "path": "bigquery-data-transfer-service",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for designing BitLocker drive encryption for Windows endpoints managed via Microsoft Intune — encryption policy, silent enablement, recovery key escrow to Entra ID, TPM, pre-boot authentication trade-offs, and BitLocker To Go for removable media. Covers compliance integration with Conditional Access and recovery workflows. WHEN: BitLocker, disk encryption, Windows encryption policy, BitLocker recovery key, silent BitLocker enablement, Intune disk encryption, TPM 2.0, escrow recovery key, encrypt endpoints, XTS-AES, BitLocker To Go, pre-boot authentication, removable drive encryption. DO NOT USE for general Intune device management (use intune-device-mgmt), Linux/macOS encryption (use intune-device-mgmt FileVault), or Azure disk encryption (use azure-key-vault).",
+      "hasSkillMd": true,
+      "name": "bitlocker-design",
+      "path": "bitlocker-design",
+      "status": "draft"
+    },
+    {
+      "description": "Build modern data apps, dashboards, and interactive reports using either\nReact + Vite or Streamlit. Includes optional Gemini Data Analytics chat\nintegration for an AI powered \"chat with your data\" experience.\n\nRelevant when any of the following conditions are true:\n  1. User explicitly requests to build a data dashboard, data application, or visualization UI, and the UI pulls data from a GCP database (defaulting to BigQuery unless otherwise specified).\n  2. You need to generate a frontend web application to interact with, query, and visualize data from GCP data sources.\n  3. User wants to build a \"chat with your data\" experience or integrate the Gemini Data Analytics chat API into a web interface.\n\nDo NOT use when any of the following conditions are true:\n  1. The request is for building backend-only services.\n  2. The request is for simple CLI scripts or command-line applications.\n  3. The web application is not data-centric or does not involve visualizing/querying data from GCP sources.\n",
+      "hasSkillMd": true,
+      "name": "building-data-apps",
+      "path": "building-data-apps",
+      "status": "draft"
+    },
+    {
+      "description": "Enterprise-grade React/Next.js architecture patterns with high-assurance governance. Use when building production React apps with accessibility, security, i18n, and provider-agnostic auth.",
+      "hasSkillMd": true,
+      "name": "canonical-frontend",
+      "path": "canonical-frontend",
+      "status": "draft"
+    },
+    {
+      "description": "High-assurance Rust development skill with 179 rules across 14 categories and 18 specialist agents. Covers ownership, error handling, async patterns, API design, memory optimization, FFI, WASM, gRPC, testing, and security.\n",
+      "hasSkillMd": true,
+      "name": "canonical-rust",
+      "path": "canonical-rust",
+      "status": "draft"
+    },
+    {
+      "description": "Skill for capability lock.",
+      "hasSkillMd": true,
+      "name": "capability-lock",
+      "path": "capability-lock",
+      "status": "draft"
+    },
+    {
+      "description": "Ultra-compressed communication mode. Cuts token usage ~75% by speaking like caveman while keeping full technical accuracy. Supports intensity levels: lite, full (default), ultra, wenyan-lite, wenyan-full, wenyan-ultra. Use when user says \"caveman mode\", \"talk like caveman\", \"use caveman\", \"less tokens\", \"be brief\", or invokes /caveman. Also auto-triggers when token efficiency is requested.",
+      "hasSkillMd": true,
+      "name": "caveman",
+      "path": "caveman",
+      "status": "draft"
+    },
+    {
+      "description": "High-assurance command-line utility for building, packaging, signing, and verifying Siderolabs Talos Linux bootable assets (ISOs, UKIs, raw disks) hardened according to NIST SP 800-53 controls and operational profiles. Use this skill when instructing other agents or performing customization of Talos Linux OS.",
+      "hasSkillMd": true,
+      "name": "cfiso-customizer",
+      "path": "cfiso-customizer",
+      "status": "draft"
+    },
+    {
+      "description": "Expert guide for authoring, modifying, debugging, and testing modules in the aisecops/gitlab-ci-templates repository (CortAIx Factory CI/CD Templates). Use this skill whenever you are: (1) adding or editing a YAML module under modules/, (2) touching the harness (.gitlab-ci-harness.yml or harness/*/), (3) adding feature flags or image references, (4) writing regression tests in tests/, (5) working on publish/, validate/, or sign/ modules, (6) debugging a pipeline job that misbehaves in gitlab-ci-local, or (7) auditing credential propagation across the catalog. Also triggers on: \"add a new module\", \"why is ARTIFACTS_DIR wrong\", \"add feature flag\", \"harness failing\", \"image not found\", \"add test\", \"IaC module\", \"proto publish\", \"helm publish\", \"security profile\", \"evidence collection\", \"cosign\", \"buf lint\", \"CSR control\", \"OSCAL\", \"compliance annotation\", \"coverage report\", \"ckodex:compliance\", \"CFY CSR Controls\", \"control-registry\", \"extract_frontmatter\", \"grype\", \"clamav\", \"container scan\", \"malware scan\", \"trivy\", \"pipeline-catalog\", \"image-catalog\", \"constraints.toml\", \"failure_class\", \"MALWARE_SCAN_BLOCKING\", \"CICD_CLAMAV_SKOPEO_OPTIONS\", \"credential propagation\", \"skopeo inspect\", \"JOB-TOKEN ***\", \"identity-token ***\", \"display redaction\", \"od -c\", \"commitlint feat!\", \"glab thales TLS\", \"preflight\", \"ARTIFACTORY_USER vs SRV_ACCOUNT_USER\", \"SIGSTORE_ID_TOKEN\".",
+      "hasSkillMd": true,
+      "name": "cfy-aisecops-ci",
+      "path": "cfy-aisecops-ci",
+      "status": "draft"
+    },
+    {
+      "description": "Analyze benchmark and eval artifacts for AISECops CI skill quality. Use for requests about pass rate, latency, token usage, run-to-run variance, eval expectation failures, and iteration comparisons in cfy-aisecops-ci-workspace. Trigger phrases include: benchmark delta, eval analysis, skill performance, with-skill vs without-skill, iteration summary, and quality trend.",
+      "hasSkillMd": true,
+      "name": "cfy-aisecops-ci-workspace",
+      "path": "cfy-aisecops-ci-workspace",
+      "status": "draft"
+    },
+    {
+      "description": "Use this skill to generate well-branded interfaces and assets for cortAIx Factory (Thales's AI technology factory), either for production or throwaway prototypes/mocks/etc. Contains essential design guidelines, colors, type, fonts, assets, and UI kit components for prototyping trusted-AI / critical-systems operator interfaces in the Thales + cortAIx visual identity.",
+      "hasSkillMd": true,
+      "name": "cfy-design-system",
+      "path": "cfy-design-system",
+      "status": "draft"
+    },
+    {
+      "description": "Use when generating, verifying, or crafting GitLab security scanner reports or cortAIx CFY governance reports (pipeline compliance, assurance profile, evidence manifest, ClamAV malware scan). Use when deciding which verifier or builder class to use, when populating CFY assurance profiles, or when merging multi-scanner reports.",
+      "hasSkillMd": true,
+      "name": "cfy-gl-report-sdk",
+      "path": "cfy-gl-report-sdk",
+      "status": "draft"
+    },
+    {
+      "description": "Comprehensive instructional guide for platform preflight validation, secure MicroVM control-plane booting, and cryptographic PKI bootstrapping utilizing local cfytt-cli transparency tools.",
+      "hasSkillMd": true,
+      "name": "cfy-runbase-bootstrapper",
+      "path": "cfy-runbase-bootstrapper",
+      "status": "draft"
+    },
+    {
+      "description": "Comprehensive skill for the NextGen-CICD Catalog — the Thales inner-source CI/CD step library deployed across all Software Factory instances. Covers all 50 reusable pipeline steps, 21 CI Catalog templates, config project management, certificate add-on injection, step publishing workflows, and architectural decisions (LADRs). Use when authoring, debugging, extending, or deploying NextGen-CICD pipelines.\n",
+      "hasSkillMd": true,
+      "name": "cicd-nextgen",
+      "path": "cicd-nextgen",
+      "status": "draft"
+    },
+    {
+      "description": "Render editorial-quality, proof-aware governance announcements as standalone HTML for the CKODEX v15.0/v16.0 framework. Four types — changelog, security-alert, feature-showcase, architecture-walkthrough — each enforcing MCDESIGN v1.3 tokens, WCAG AAA contrast, the one-accent rule, and proof-plane references (PCA / UCA / DCA / TIP). Use whenever the user asks to publish, announce, draft, or share a CKODEX release note, version bump, semver delta, CVE notice, security advisory, vulnerability disclosure, EP-NNN incident bulletin, feature launch, GAL escalation rollout, capability showcase, or architecture deep-dive / walkthrough / runbook / RFC. Trigger on \"release note\", \"advisory\", \"bulletin\", \"what's new\", \"what shipped\", \"changelog entry\", \"post-mortem brief\", or any request to convert a JSON spec or markdown draft into a signed announcement bundle. Do not use for generic blog posts, marketing copy, or unstructured prose; this skill produces governed, attestation-bearing artifacts only.",
+      "hasSkillMd": true,
+      "name": "ckodex-announcements",
+      "path": "ckodex-announcements",
+      "status": "draft"
+    },
+    {
+      "description": "Governed SAST-LLM audit runner for cfy-sast-llm. Use this skill whenever the user asks to run a security audit, SAST scan, or vulnerability assessment on a codebase with CKODEX governance — even if they just say \"audit this repo\", \"run the scanner\", or \"security scan\". The skill wraps the sast-orchestrator agent with the full CKODEX governance contract: ActionEnvelope framing, DAL gating, pre-flight conformance vector checks (CV-SAFE / CV-ECON), post-audit evidence bundle assembly (CV-EVID), BPL lineage for promotion-critical runs, and a signed DecisionTrace. Always prefer this skill over invoking the sast-orchestrator directly when CKODEX governance is required or when the user is running an audit that will feed a promotion gate, compliance report, or regulatory submission.",
+      "hasSkillMd": true,
+      "name": "ckodex-audit",
+      "path": "ckodex-audit",
+      "status": "draft"
+    },
+    {
+      "description": "Enterprise-grade React/Next.js architecture patterns with high-assurance governance. Use when building production React apps with accessibility, security, i18n, and provider-agnostic auth.",
+      "hasSkillMd": true,
+      "name": "ckodex-canonica-frontend",
+      "path": "ckodex-canonica-frontend",
+      "status": "draft"
+    },
+    {
+      "description": "Run a four-phase deep-comprehension pass over a codebase and emit a persistent, evidence-pinned REPO-MODEL artifact (architecture, hidden flows, patterns, falsifiable invariants, discrepancies) so subsequent sessions and coding agents never re-derive the repo from zero. Use this skill whenever the user asks to \"review this project/repo/codebase\", \"extract the architecture\", \"map the flows\", \"build deep knowledge of the code\", \"onboard onto this repo\", \"understand this codebase before we work on it\", or at the start of any session on a repo that has no fresh REPO-MODEL. Also use it to refresh a stale REPO-MODEL (invariant check failures) or to feed comprehension into ckx-codeindex / codegraph / LanceDB (Rawda). Bias toward triggering: any non-trivial work on an unfamiliar repo should start here.",
+      "hasSkillMd": true,
+      "name": "ckodex-comprehend",
+      "path": "ckodex-comprehend",
+      "status": "draft"
+    },
+    {
+      "description": "Produces governed visual artifacts: (a) editorial-quality diagrams for governance, architecture, threat-modelling, SecOps/AISecOps, AI/ML, evidence graphs, and CKODEX cartography as offline-safe HTML with inline SVG paired with Mermaid source and an integrity manifest; and (b) Slidev-compatible slide decks for executive briefing, architecture walkthrough, security briefing, training, handoff, evidence-review, and the Codex Maxxing storyline, bound by a deck manifest carrying per-slide claims, speaker notes, and conformance. Use to visualize proof chains, governance structures, FSM/GAL transitions, tenant isolation, AI/ML pipelines, supply-chain evidence, recursive evidence runtimes, xBOM lineage, blast-radius graphs, context-memory planes, signing and air-gap promotion, or UML/TOGAF views; or to produce briefing, architecture-walkthrough, training, or evidence-review decks with claims and manifests. Do not use for generic flowcharts, simple lists, marketing funnels, or content better expressed as a table.\n",
+      "hasSkillMd": true,
+      "name": "ckodex-diagrams",
+      "path": "ckodex-diagrams",
+      "status": "draft"
+    },
+    {
+      "description": "Skill for ckodex diagrams as code.",
+      "hasSkillMd": true,
+      "name": "ckodex-diagrams-as-code",
+      "path": "ckodex-diagrams-as-code",
+      "status": "draft"
+    },
+    {
+      "description": "Imported skill for ckodex-diagrams-as-code-workspace.",
+      "hasSkillMd": true,
+      "name": "ckodex-diagrams-as-code-workspace",
+      "path": "ckodex-diagrams-as-code-workspace",
+      "status": "draft"
+    },
+    {
+      "description": "Skill for ckodex diagrams html.",
+      "hasSkillMd": true,
+      "name": "ckodex-diagrams-html",
+      "path": "ckodex-diagrams-html",
+      "status": "draft"
+    },
+    {
+      "description": "Imported skill for ckodex-diagrams-html-workspace.",
+      "hasSkillMd": true,
+      "name": "ckodex-diagrams-html-workspace",
+      "path": "ckodex-diagrams-html-workspace",
+      "status": "draft"
+    },
+    {
+      "description": null,
+      "hasSkillMd": false,
+      "name": "ckodex-ds",
+      "path": "ckodex-ds",
+      "status": "draft"
+    },
+    {
+      "description": "Catalogue of identity marks (SVG glyphs) for the CKODEX v16.0 skill fleet. Ships twelve MCDESIGN-compliant marks — one per shipped skill — at a fixed 48×48 viewBox, on a 4-px grid, in ink (currentColor) with no per-glyph colour. The consumer (a tile, a card, a wordmark) supplies the focal accent under MCDESIGN's one-accent rule. Use whenever the user asks to brand, mark, identify, or visually distinguish CKODEX skills in a registry, catalogue tile, dashboard row, fellowship deck, or proof-bundle cover. Refuses requests to colourise every mark, to animate marks, to use marks as load indicators or click affordances without labels, or to mint per-skill logos in the conventional commercial sense.",
+      "hasSkillMd": true,
+      "name": "ckodex-skill-marks",
+      "path": "ckodex-skill-marks",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for cloud and SaaS security posture management - combining Defender for Cloud CSPM (IaaS/PaaS) and Defender for Cloud Apps SSPM (SaaS) to assess and harden posture across cloud and SaaS apps. Covers Secure Score, MCSB, attack-path analysis, SSPM recommendations, and governance. WHEN: cloud security posture, SaaS security posture management, SSPM, CSPM, secure cloud apps, posture recommendations, harden SaaS configuration, app security posture, multicloud and SaaS hardening, harden Microsoft 365 SaaS settings, find misconfigured Salesforce or ServiceNow settings, SaaS app misconfiguration. DO NOT USE for IaaS/PaaS workload threat protection plans (use defender-for-cloud-hardening) or for SaaS threat detection only (use defender-for-cloud-apps).",
+      "hasSkillMd": true,
+      "name": "cloud-app-security-posture",
+      "path": "cloud-app-security-posture",
+      "status": "draft"
+    },
+    {
+      "description": "Run an extremely strict maintainability and structural-simplification review of a diff. Hunts for \"code judo\" — behavior-preserving restructurings that delete whole branches, layers, and concepts rather than rearranging them. Use for a thermo-nuclear review, thermonuclear code review, deep code-quality audit, harsh maintainability review, or any time the user wants an unusually demanding review focused on abstraction quality, file sprawl, and spaghetti-condition growth rather than surface nits.",
+      "hasSkillMd": true,
+      "name": "code-quality-review",
+      "path": "code-quality-review",
+      "status": "draft"
+    },
+    {
+      "description": "Imported skill for codex-primary-runtime.",
+      "hasSkillMd": true,
+      "name": "codex-primary-runtime",
+      "path": "codex-primary-runtime",
+      "status": "draft"
+    },
+    {
+      "description": "Use when creating git commits, writing commit messages, or when about to run git commit -- enforces structured commit message format with imperative mood, capitalized subjects, 72-char wrapping, and atomic commits",
+      "hasSkillMd": true,
+      "name": "commit-messages",
+      "path": "commit-messages",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for responding to and recovering from a significant identity/tenant compromise - regaining administrative control, evicting the adversary in a single coordinated action, and hardening to prevent reentry. Covers trusted foundation (PAW), containment, eviction, identity recovery (krbtgt, federation), and post-eviction hardening. WHEN: compromise recovery, incident response, regain control after breach, evict attacker, tenant compromise, rebuild trust, ransomware recovery, post-breach hardening, kick out adversary, emergency response, attacker is in our tenant right now, ransomware hit our organisation, regain admin access after a breach, adversary has domain admin or Global Admin. DO NOT USE for routine SOC investigation (use defender-xdr / sentinel) or for preventive hardening with no active compromise (use security-architecture / entra-id).",
+      "hasSkillMd": true,
+      "name": "compromise-recovery",
+      "path": "compromise-recovery",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Entra Conditional Access (CA) and multifactor authentication — the Zero Trust policy engine that enforces grant/block decisions based on user, device, location, app, and risk signals. Covers a baseline 6-policy set, authentication strengths for phishing-resistant MFA, report-only rollout, break-glass exclusions, session controls, and policy lifecycle. WHEN: Conditional Access, MFA enforcement, require compliant device, block legacy authentication, Zero Trust access policy, phishing-resistant MFA, FIDO2, passkey, session controls, sign-in frequency, CA policy design, require MFA for admins, baseline CA policies, report-only mode, What If tool, exclude break-glass, named locations, app protection policy grant, terms of use. DO NOT USE for risk-based detection signal sources (use entra-id-protection) or PIM activation (use azure-pim).",
+      "hasSkillMd": true,
+      "name": "conditional-access-mfa",
+      "path": "conditional-access-mfa",
+      "status": "draft"
+    },
+    {
+      "description": "Skill for conformance.",
+      "hasSkillMd": true,
+      "name": "conformance",
+      "path": "conformance",
+      "status": "draft"
+    },
+    {
+      "description": "Skill for context control.",
+      "hasSkillMd": true,
+      "name": "context-control",
+      "path": "context-control",
+      "status": "draft"
+    },
+    {
+      "description": "Use this skill to generate well-branded interfaces and assets for cortAIx Factory (Thales's AI technology factory), production or throwaway prototypes/mocks. Ships design tokens, 21 React components, four-mode WCAG 2.2 theming, a shadcn/ui bridge, and the design-doctor governance rules for trusted-AI / critical-systems operator interfaces.",
+      "hasSkillMd": true,
+      "name": "cortaix-factory-ds",
+      "path": "cortaix-factory-ds",
+      "status": "draft"
+    },
+    {
+      "description": "CKODEX skill bundle for Dagger platform documentation and workflows.",
+      "hasSkillMd": true,
+      "name": "dagger-skill",
+      "path": "dagger-skill",
+      "status": "draft"
+    },
+    {
+      "description": "Automated data quality and transformation capabilities for Dataform/dbt/BigQuery pipelines. Processes data sourced from BigQuery or Cloud Storage (GCS), applying best practices for data ingestion, movement, schema mapping, and comprehensive data cleaning.",
+      "hasSkillMd": true,
+      "name": "data-autocleaning",
+      "path": "data-autocleaning",
+      "status": "draft"
+    },
+    {
+      "description": "Expertise in generating clean, correct, and efficient Dataform pipeline code for BigQuery ELT. Use this when creating or modifying Dataform pipelines, actions, or source declarations, when Dataform, SQLX, or BigQuery are mentioned in a transformation, when data needs to be ingested from GCS into BigQuery via Dataform, or when setting up a new Dataform project or configuring workflow_settings.yaml.",
+      "hasSkillMd": true,
+      "name": "dataform-bigquery",
+      "path": "dataform-bigquery",
+      "status": "draft"
+    },
+    {
+      "description": "Expert guidance for creating, modifying, and optimizing dbt pipelines for BigQuery. Use this skill whenever user asks for generating or modifying a dbt model or project. Activate this skill when the user - Creates, modifies, or troubleshoots **dbt models or pipelines** - Needs to **optimize SQL** within a dbt project - Is **setting up a new dbt project** or configuring existing one",
+      "hasSkillMd": true,
+      "name": "dbt-bigquery",
+      "path": "dbt-bigquery",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Defender for APIs — a Defender for Cloud plan that discovers, prioritizes by risk, and protects APIs published in Azure API Management against threats and abuse. Covers onboarding, security findings, and threat detection. WHEN: Defender for APIs, API threat protection, secure APIs in API Management, API security posture, detect API abuse, onboard APIs to Defender, API attack detection, sensitive data exposure in APIs.",
+      "hasSkillMd": true,
+      "name": "defender-for-apis",
+      "path": "defender-for-apis",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Defender for Cloud Apps (MDA) — the CASB for SaaS discovery, app governance, session controls, and threat detection. Covers Cloud Discovery via Defender for Endpoint integration, OAuth app governance, Conditional Access App Control (reverse-proxy session policies), and SaaS security posture (SSPM). WHEN: Defender for Cloud Apps, MDA, CASB, shadow IT discovery, cloud app governance, OAuth app risk, session control, Conditional Access App Control, SaaS security posture management, SSPM, sanction or unsanction app, Cloud App Catalog, app connectors. DO NOT USE for IaaS / PaaS posture (use defender-for-cloud-hardening), endpoint EDR (use defender-for-endpoint), or DLP (use purview-dlp-policy).",
+      "hasSkillMd": true,
+      "name": "defender-for-cloud-apps",
+      "path": "defender-for-cloud-apps",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Defender for Cloud — cloud security posture management (CSPM) and cloud workload protection (CWPP) across Azure, AWS, and GCP. Covers Foundational vs Defender CSPM, Secure Score, Defender plans (Servers, Storage, Containers, Databases, App Service, Key Vault, APIs, AI), agentless scanning, attack path analysis, and remediation prioritisation. WHEN: Defender for Cloud, CSPM, cloud workload protection, Secure Score, harden cloud posture, Defender plans, attack path analysis, multicloud security, remediate recommendations, cloud security hardening, improve Azure Secure Score, harden Azure subscription, protect VMs and containers, multicloud CSPM across AWS and GCP, cloud security graph. DO NOT USE for SaaS posture (use cloud-app-security-posture), Sentinel SIEM (use sentinel), or extending Azure to on-prem servers (use azure-arc).",
+      "hasSkillMd": true,
+      "name": "defender-for-cloud-hardening",
+      "path": "defender-for-cloud-hardening",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Defender for Endpoint (MDE) — enterprise endpoint security with next-gen AV, EDR, attack surface reduction (ASR), Defender Vulnerability Management, automated investigation and remediation (AIR), and live response. Covers Plan 1 vs Plan 2 selection, onboarding paths (Intune, Configuration Manager, GPO, scripts), ASR rule rollout in audit→block, EDR in block mode, tamper protection, device groups and RBAC, and response actions (isolate, restrict, live response). WHEN: Defender for Endpoint, MDE, MDE onboarding, endpoint EDR, attack surface reduction rules, ASR rules audit mode, next-gen antivirus policy, device isolation, endpoint vulnerability management, EDR block mode, tamper protection, onboard devices to Defender, live response, MDE Plan 1 vs Plan 2, security settings management, MDE for Linux, MDE for macOS, controlled folder access. DO NOT USE for non-endpoint Defender workloads (use defender-xdr for cross-workload, defender-for-cloud-hardening for Azure resources).",
+      "hasSkillMd": true,
+      "name": "defender-for-endpoint",
+      "path": "defender-for-endpoint",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Defender for Identity (MDI) — identity threat detection (ITDR) across on-premises Active Directory, AD CS, AD FS, and Entra Connect using sensors. Covers sensor placement, prerequisites, posture assessments, and lateral-movement detection. WHEN: Defender for Identity, MDI, MDI sensors, detect lateral movement, on-prem AD threat detection, identity security posture, AD CS monitoring, ADCS abuse, domain controller sensor, detect Kerberoasting, DCSync, Golden Ticket, identity ITDR, honeytoken, gMSA Directory Service Account, suspicious LDAP, ESC1 ESC8. DO NOT USE when the goal is cloud identity protection in Entra ID (use entra-id-protection) or correlating cross-workload incidents (use defender-xdr).",
+      "hasSkillMd": true,
+      "name": "defender-for-identity",
+      "path": "defender-for-identity",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Defender for Office 365 (MDO) — protection for email and collaboration (Teams, SharePoint, OneDrive) against phishing, malware, spoofing, and business email compromise. Covers Plan 1 vs Plan 2 selection, preset security policies (Standard/Strict), Safe Links, Safe Attachments, anti-phishing impersonation protection, configuration analyzer drift detection, Submissions portal triage, Threat Explorer hunting, AIR, and attack simulation training. WHEN: Defender for Office 365, MDO, email security policy, Safe Links, Safe Attachments, anti-phishing, anti-spoofing, impersonation protection, preset security policies, Standard preset, Strict preset, configuration analyzer, phishing protection, attack simulation training, Threat Explorer, Submissions portal, tenant allow block list, BEC, business email compromise, DMARC, MDO Plan 1 vs Plan 2. DO NOT USE for endpoint protection (use defender-for-endpoint) or M365 oversharing (use purview-copilot-oversharing).",
+      "hasSkillMd": true,
+      "name": "defender-for-office-365",
+      "path": "defender-for-office-365",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Defender XDR — the unified extended detection and response suite that correlates signals across endpoints, identities, email, and cloud apps into prioritised incidents with attack-graph context. Covers onboarding the four core workloads, incident investigation, advanced hunting in KQL, custom detection rules, automatic attack disruption, AIR, and unified RBAC. WHEN: Microsoft Defender XDR, XDR incident investigation, correlate alerts across workloads, advanced hunting KQL, automatic attack disruption, AIR, Defender portal incidents, cross-domain detection, how do I investigate an attack across multiple Microsoft 365 products, alert correlation across endpoint and identity, unified incident view, attack graph, custom detection rule, unified RBAC. DO NOT USE when the need is SIEM log ingestion or custom KQL detections from third-party sources (use sentinel), merging Sentinel into the Defender portal (use unified-secops-platform), or endpoint-only EDR (use defender-for-endpoint).",
+      "hasSkillMd": true,
+      "name": "defender-xdr",
+      "path": "defender-xdr",
+      "status": "draft"
+    },
+    {
+      "description": "Skill for deploy.",
+      "hasSkillMd": true,
+      "name": "deploy",
+      "path": "deploy",
+      "status": "draft"
+    },
+    {
+      "description": "Skill for design lint.",
+      "hasSkillMd": true,
+      "name": "design-lint",
+      "path": "design-lint",
+      "status": "draft"
+    },
+    {
+      "description": "A repository of BigQuery-specific logic, knowledge, and specialized standards.\nUse this skill whenever you are doing anything with BigQuery, including:\n  1. BigQuery query optimization\n  2. BigFrames Python code\n  3. BigQuery ML/AI functions.\n",
+      "hasSkillMd": true,
+      "name": "developing-with-bigquery",
+      "path": "developing-with-bigquery",
+      "status": "draft"
+    },
+    {
+      "description": "Finds and inspects data assets within Google Cloud.\nRelevant when any of the following conditions are true:\n  1. The user request involves finding, exploring, or inspecting data assets\n     in Google Cloud, such as:\n       - BigQuery datasets, tables, or views\n       - BigLake catalog or tables\n       - Spanner instances, databases or tables\n       - etc.\n  2. You need to retrieve the schema, metadata, or governance policies for a\n     GCP data asset.\n  3. You have a keyword or topic (e.g., \"sales data\") but lack the specific\n     table or resource ID.\n  4. You are attempting to find data using `bq ls`, as this skill offers a\n     superior approach.\nDon't use when:\n  - Assets are outside Google Cloud\n",
+      "hasSkillMd": true,
+      "name": "discovering-gcp-data-assets",
+      "path": "discovering-gcp-data-assets",
+      "status": "draft"
+    },
+    {
+      "description": "Use when the task involves reading, creating, or editing `.docx` documents, especially when formatting or layout fidelity matters; prefer `python-docx` plus the bundled `scripts/render_docx.py` for visual checks.",
+      "hasSkillMd": true,
+      "name": "doc",
+      "path": "doc",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Entra ID (formerly Azure AD) — cloud identity and access management and the control plane for Zero Trust. Covers tenant and identity model, authentication methods (passkeys, FIDO2, certificate-based), hybrid identity with Entra Connect or Cloud Sync, app registrations and consent governance, groups and administrative units, break-glass accounts, and Zero Trust identity foundations. WHEN: Microsoft Entra ID, Azure AD, identity provider setup, SSO, hybrid identity, Entra Connect, Cloud Sync, authentication methods, passwordless, passkey, FIDO2, certificate-based auth, app registration, enterprise application, illicit consent grant, break-glass account, emergency access, administrative units, SSPR, password writeback. DO NOT USE for risk-based detection (use entra-id-protection), Conditional Access design (use conditional-access-mfa), PIM (use azure-pim), or identity governance lifecycle (use entra-id-governance).",
+      "hasSkillMd": true,
+      "name": "entra-id",
+      "path": "entra-id",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Entra ID Governance — automating identity lifecycle and access with entitlement management (access packages), access reviews, lifecycle workflows for joiner-mover-leaver, separation of duties, and guest access governance. Covers when to use access packages vs direct group assignment, reviewer choice and fallback actions, and integration with PIM for privileged access. WHEN: Entra ID Governance, entitlement management, access packages, access reviews, lifecycle workflows, joiner mover leaver, JML, certify access, separation of duties, govern guest access, B2B guest expiration, identity lifecycle automation, sponsor approval, recertify access. DO NOT USE for risk-based detection (use entra-id-protection), CA policy authoring (use conditional-access-mfa), or PIM activation (use azure-pim).",
+      "hasSkillMd": true,
+      "name": "entra-id-governance",
+      "path": "entra-id-governance",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Entra ID Protection — risk-based identity security that detects user and sign-in risk and automates remediation. Covers risk detections, risk-based Conditional Access, self-remediation via MFA / secure password change, risky-user investigation, and streaming risk to Sentinel. WHEN: Entra ID Protection, identity risk policy, risky users, risky sign-ins, user risk policy, sign-in risk policy, risk-based Conditional Access, leaked credentials, anonymous IP detection, atypical travel, automate identity remediation, alert about leaked credentials, user flagged as risky, force password reset for compromised accounts, block sign-in when identity risk is high, EID P2 risk policy. DO NOT USE for on-prem AD attack detection (use defender-for-identity), CA policy authoring without risk signals (use conditional-access-mfa), or PIM activation (use azure-pim).",
+      "hasSkillMd": true,
+      "name": "entra-id-protection",
+      "path": "entra-id-protection",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Entra Permissions Management (CIEM) — discovers, right-sizes, and monitors permissions across Microsoft Azure, AWS, and Google Cloud. Covers cloud onboarding, the Permission Creep Index (PCI), generating least-privilege policies from observed activity, on-demand permission grants, and workload identity coverage. WHEN: Entra Permissions Management, CIEM, multicloud permissions, Permission Creep Index, PCI, right-size permissions, unused permissions, least privilege across AWS GCP Azure, cloud entitlement management, over-privileged workload identity, IAM right-sizing, multicloud IAM posture. DO NOT USE for Azure-only RBAC role choice (use azure-role-selector) or Defender for Cloud security posture (use defender-for-cloud-hardening).",
+      "hasSkillMd": true,
+      "name": "entra-permissions-management",
+      "path": "entra-permissions-management",
+      "status": "draft"
+    },
+    {
+      "description": "Use the Figma MCP server to fetch design context, screenshots, variables, and assets from Figma, and to translate Figma nodes into production code. Trigger when a task involves Figma URLs, node IDs, design-to-code implementation, or Figma MCP setup and troubleshooting.",
+      "hasSkillMd": true,
+      "name": "figma",
+      "path": "figma",
+      "status": "draft"
+    },
+    {
+      "description": "Translate Figma nodes into production-ready code with 1:1 visual fidelity using the Figma MCP workflow (design context, screenshots, assets, and project-convention translation). Trigger when the user provides Figma URLs or node IDs, or asks to implement designs or components that must match Figma specs. Requires a working Figma MCP server connection.",
+      "hasSkillMd": true,
+      "name": "figma-implement-design",
+      "path": "figma-implement-design",
+      "status": "draft"
+    },
+    {
+      "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.",
+      "hasSkillMd": true,
+      "name": "find-skills",
+      "path": "find-skills",
+      "status": "draft"
+    },
+    {
+      "description": "Fine-tune models on Azure AI Foundry using SFT (supervised), DPO (preference), or RFT (reinforcement with graders). Covers dataset preparation, training job submission, deployment, and evaluation. USE FOR: fine-tune, SFT, DPO, RFT, training data, grader, distillation, fine-tuned model, training job, large file upload, calibrate grader, deploy fine-tuned model, evaluate fine-tuned model. DO NOT USE FOR: general model deployment without fine-tuning (use deploy-model), agent creation (use agents), prompt optimization without training (use prompt-optimizer).",
+      "hasSkillMd": true,
+      "name": "finetuning",
+      "path": "finetuning",
+      "status": "draft"
+    },
+    {
+      "description": "Skill for freshness.",
+      "hasSkillMd": true,
+      "name": "freshness",
+      "path": "freshness",
+      "status": "draft"
+    },
+    {
+      "description": "Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or when styling/beautifying any web UI). Generates creative, polished code and UI design that avoids generic AI aesthetics.",
+      "hasSkillMd": true,
+      "name": "frontend-design",
+      "path": "frontend-design",
+      "status": "draft"
+    },
+    {
+      "description": "Guidelines for identifying and resolving missing Google Cloud authentication and Application Default Credentials (ADC). Use this skill if `gcloud`, `bq`, `dataform`, or Python libraries return authentication errors.",
+      "hasSkillMd": true,
+      "name": "gcloud-auth-verification",
+      "path": "gcloud-auth-verification",
+      "status": "draft"
+    },
+    {
+      "description": "Provides expert guidance for troubleshooting Cloud Composer (Apache Airflow) and Orchestration pipelines. Use this skill when the user asks to generate Root Cause Analysis (RCA), troubleshoot or fix a failed pipeline, DAG in Composer environment and generate RCA report.\n",
+      "hasSkillMd": true,
+      "name": "gcp-composer-troubleshooting",
+      "path": "gcp-composer-troubleshooting",
+      "status": "draft"
+    },
+    {
+      "description": "Primary entry point for building, managing, and orchestrating data pipelines on Google Cloud. Guides users to the appropriate skill for dbt, Dataflow (Apache Beam), Dataform, Spark (Dataproc Serverless), BigQuery Data Transfer Service (DTS) or orchestration pipeline using Cloud Composer. Clarify requirements and resolve ambiguity for creating, updating and running data pipelines.\n",
+      "hasSkillMd": true,
+      "name": "gcp-data-pipelines",
+      "path": "gcp-data-pipelines",
+      "status": "draft"
+    },
+    {
+      "description": "Provides guidance for writing, packaging and executing Apache Beam pipelines on GCP using Cloud Dataflow. Use when: - Creating an Apache Beam Dataflow pipeline. - Creating a Google Flex Template.\n",
+      "hasSkillMd": true,
+      "name": "gcp-dataflow",
+      "path": "gcp-dataflow",
+      "status": "draft"
+    },
+    {
+      "description": "This skill helps the agent generate or update orchestration pipeline definitions for Google Cloud Composer to initialize orchestration pipeline or update the orchestration definition for orchestration of various data pipelines, like dbt pipelines, notebooks, Spark jobs, Dataform, Python scripts or inline BigQuery SQL queries. This skill also helps deploy and trigger orchestration pipelines.",
+      "hasSkillMd": true,
+      "name": "gcp-pipeline-orchestration",
+      "path": "gcp-pipeline-orchestration",
+      "status": "draft"
+    },
+    {
+      "description": "Automates declarative resource creation and provisioning for data pipelines, supporting BigQuery, Dataform, Dataproc, BigQuery Data Transfer Service (DTS), and other resources. It manages environment-specific configurations (dev, staging, prod) through a deployment.yaml file.\nUse when:\n- Modifying or creating deployment.yaml for deployment settings.\n- Resolving environment-specific variables (e.g., Project IDs, Regions) for deployment.\n- Provisioning supported infrastructure like BigQuery datasets/tables, Dataform resources, or DTS resources via deployment.yaml.\nDo not use when:\n- Resources already exist.\n- Managing resources not supported by `gcloud beta orchestration-pipelines resource-types list`.\n- Managing general cloud infrastructure (VMs, networks, Kubernetes, IAM policies), which are better suited for Terraform.\n- Infrastructure spans multiple cloud providers (AWS, Azure, etc.).\n- Already uses Terraform for the target resources.\n",
+      "hasSkillMd": true,
+      "name": "gcp-pipeline-resource-provisioning",
+      "path": "gcp-pipeline-resource-provisioning",
+      "status": "draft"
+    },
+    {
+      "description": "Develops and executes Spark code on Dataproc Clusters and Serverless.\nReads and writes data using BigLake Iceberg catalogs, BigQuery and Spanner.\nDebugs execution failures.\nUse when:\n- Writing Spark ETL pipelines on GCP.\n- Training or running inference with ML models with spark on GCP.\n- Managing Spark clusters, jobs, batches, and interactive sessions.\nDon't use when:\n- Writing generic Python scripts that don't use Spark.\n- Performing simple SQL queries that can be done directly in BigQuery.\n",
+      "hasSkillMd": true,
+      "name": "gcp-spark",
+      "path": "gcp-spark",
+      "status": "draft"
+    },
+    {
+      "description": "Use this skill when building applications with Gemini models, Gemini API, working with multimodal content (text, images, audio, video), implementing function calling, using structured outputs, or needing current model specifications. Covers SDK usage (google-genai for Python, @google/genai for JavaScript/TypeScript, com.google.genai:google-genai for Java, google.golang.org/genai for Go), model selection, and API capabilities.",
+      "hasSkillMd": true,
+      "name": "gemini-api-dev",
+      "path": "gemini-api-dev",
+      "status": "draft"
+    },
+    {
+      "description": "Monitor a GitLab MR's pipeline until green. Classifies failures (flaky, master-broken, lint, coverage, real), retries jobs where appropriate, makes light-touch auto-fixes, and posts findings as an MR comment.",
+      "hasSkillMd": true,
+      "name": "gitlab-babysit-mr",
+      "path": "gitlab-babysit-mr",
+      "status": "draft"
+    },
+    {
+      "description": "Master skill for GitLab — the complete agent companion for CI/CD pipeline authoring, REST/GraphQL API engineering, security scanning (SAST/DAST/Container/Dependency), supply chain governance (SLSA/Cosign/in-toto), GitLab Duo AI flows, runner infrastructure, and full JSON schema compliance across all 108 GitLab validator schemas. Use when working with any GitLab resource or configuration.\n",
+      "hasSkillMd": true,
+      "name": "gitlab-ci",
+      "path": "gitlab-ci",
+      "status": "draft"
+    },
+    {
+      "description": "Build GitLab CI/CD pipelines with multi-stage workflows, caching, and distributed runners for scalable automation. Use when implementing GitLab CI/CD, optimizing pipeline performance, or setting up automated testing and deployment.",
+      "hasSkillMd": true,
+      "name": "gitlab-ci-patterns",
+      "path": "gitlab-ci-patterns",
+      "status": "draft"
+    },
+    {
+      "description": "Inspect GitLab local ClickHouse tables, schemas, ingestion paths, and data patterns. Use for CH table questions, DESCRIBE TABLE, schema and source-of-truth checks under db/click_house, ingestion debugging, and investigating aggregates, distributions, outliers, or anomalous ClickHouse data in a GitLab GDK environment.",
+      "hasSkillMd": true,
+      "name": "gitlab-clickhouse",
+      "path": "gitlab-clickhouse",
+      "status": "draft"
+    },
+    {
+      "description": "Investigate GitLab MR pipeline failures. Fetches logs, classifies failures (flaky, master-broken, lint, real), searches for known issues, and provides a structured summary.",
+      "hasSkillMd": true,
+      "name": "gitlab-pipeline-investigate",
+      "path": "gitlab-pipeline-investigate",
+      "status": "draft"
+    },
+    {
+      "description": "Watch GitLab MR pipelines and react to state changes",
+      "hasSkillMd": true,
+      "name": "gitlab-pipeline-watch",
+      "path": "gitlab-pipeline-watch",
+      "status": "draft"
+    },
+    {
+      "description": "Inspect GitLab GDK PostgreSQL test and development databases with gdk psql. Use for Postgres schema checks, table and index inspection, read-only SQL queries, migration verification, and investigating GitLab application data in local test or development databases.",
+      "hasSkillMd": true,
+      "name": "gitlab-psql",
+      "path": "gitlab-psql",
+      "status": "draft"
+    },
+    {
+      "description": "Validates GitLab security report JSON files (SAST, DAST, container scanning, dependency scanning, cluster image scanning, secret detection, coverage fuzzing) against official JSON Schema Draft-07 schemas. Runs as a standalone Go CLI or via a Dagger module. Independent of the upstream gitlab-org repository.\n",
+      "hasSkillMd": true,
+      "name": "gitlab-report-validator",
+      "path": "gitlab-report-validator",
+      "status": "draft"
+    },
+    {
+      "description": "GitLab workflow automation using glab CLI",
+      "hasSkillMd": true,
+      "name": "glab",
+      "path": "glab",
+      "status": "draft"
+    },
+    {
+      "description": null,
+      "hasSkillMd": true,
+      "name": "go-pkgsite",
+      "path": "go-pkgsite",
+      "status": "draft"
+    },
+    {
+      "description": "Use when configuring, running, or interpreting golangci-lint v2 in a Go project — authoring .golangci.yml, selecting linters, migrating v1→v2, or producing a reproducible, cosign-signed SSDLC evidence bundle (SARIF, SBOM, in-toto provenance) via the bundled Dagger module. Trigger phrases include \"golangci-lint\", \"lint my Go code\", \".golangci.yml\", \"lint SARIF\", \"lint evidence\", \"lint in CI\".",
+      "hasSkillMd": true,
+      "name": "golangci-lint",
+      "path": "golangci-lint",
+      "status": "draft"
+    },
+    {
+      "description": "GSAP animation reference for HyperFrames. Covers gsap.to(), from(), fromTo(), easing, stagger, defaults, timelines (gsap.timeline(), position parameter, labels, nesting, playback), and performance (transforms, will-change, quickTo). Use when writing GSAP animations in HyperFrames compositions.",
+      "hasSkillMd": true,
+      "name": "gsap",
+      "path": "gsap",
+      "status": "draft"
+    },
+    {
+      "description": "Create video compositions, animations, title cards, overlays, captions, voiceovers, audio-reactive visuals, and scene transitions in HyperFrames HTML. Use when asked to build any HTML-based video content, add captions or subtitles synced to audio, generate text-to-speech narration, create audio-reactive animation (beat sync, glow, pulse driven by music), add animated text highlighting (marker sweeps, hand-drawn circles, burst lines, scribble, sketchout), or add transitions between scenes (crossfades, wipes, reveals, shader transitions). Covers composition authoring, timing, media, and the full video production workflow. For CLI commands (init, lint, preview, render, transcribe, tts) see the hyperframes-cli skill.",
+      "hasSkillMd": true,
+      "name": "hyperframes",
+      "path": "hyperframes",
+      "status": "draft"
+    },
+    {
+      "description": "HyperFrames CLI tool — hyperframes init, lint, preview, render, transcribe, tts, doctor, browser, info, upgrade, compositions, docs, benchmark. Use when scaffolding a project, linting or validating compositions, previewing in the studio, rendering to video, transcribing audio, generating TTS, or troubleshooting the HyperFrames environment.",
+      "hasSkillMd": true,
+      "name": "hyperframes-cli",
+      "path": "hyperframes-cli",
+      "status": "draft"
+    },
+    {
+      "description": "Install and wire registry blocks and components into HyperFrames compositions. Use when running hyperframes add, installing a block or component, wiring an installed item into index.html, or working with hyperframes.json. Covers the add command, install locations, block sub-composition wiring, component snippet merging, and registry discovery.",
+      "hasSkillMd": true,
+      "name": "hyperframes-registry",
+      "path": "hyperframes-registry",
+      "status": "draft"
+    },
+    {
+      "description": "Skill for icon construction.",
+      "hasSkillMd": true,
+      "name": "icon-construction",
+      "path": "icon-construction",
+      "status": "draft"
+    },
+    {
+      "description": "Use when the user asks to generate or edit images via the OpenAI Image API (for example: generate image, edit/inpaint/mask, background removal or replacement, transparent background, product shots, concept art, covers, or batch variants); run the bundled CLI (`scripts/image_gen.py`) and require `OPENAI_API_KEY` for live calls.",
+      "hasSkillMd": true,
+      "name": "imagegen",
+      "path": "imagegen",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for establishing a Microsoft Purview Insider Risk Management (IRM) baseline - detecting and managing risky insider activity (data theft, leaks, policy violations) with privacy-by-design. Covers prerequisites, HR connector, policy templates, indicators, pseudonymisation, triage workflow, and Adaptive Protection integration. WHEN: Insider Risk Management, IRM, detect data theft by departing employee, insider threat, risky user activity, IRM policy templates, pseudonymization, Adaptive Protection, insider risk indicators, HR connector, departing user, separation of duties.",
+      "hasSkillMd": true,
+      "name": "insider-risk-baseline",
+      "path": "insider-risk-baseline",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Intune app protection policies (MAM) — protecting corporate data inside mobile apps with or without device enrollment. Covers MAM-WE for BYOD vs APP on managed devices, data-relocation controls (cut/copy/paste, Save As, encryption), app PIN/biometric and offline grace, selective wipe of corporate data, and pairing with Conditional Access grant control 'Require app protection policy'. WHEN: Intune app protection policy, app protection policy, APP, MAM, MAM-WE, MAM without enrollment, protect data in mobile apps, BYOD data protection, selective wipe, restrict copy paste, app-based Conditional Access, manage apps without enrollment, Intune SDK apps. DO NOT USE for full device management (use intune-device-mgmt) or disk encryption (use bitlocker-design).",
+      "hasSkillMd": true,
+      "name": "intune-app-protection",
+      "path": "intune-app-protection",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Intune device management — enrollment, configuration, compliance, and security baselines across Windows, macOS, iOS/iPadOS, and Android. Covers Autopilot vs corporate-vs-BYOD enrollment, compliance policies that feed Conditional Access, Intune security baselines, update rings / Autopatch, and using filters and ring-based rollouts to avoid lockouts. WHEN: Microsoft Intune, MDM, device enrollment, Autopilot, Apple ABM, Android Enterprise, compliance policy, security baseline, configuration profile, settings catalog, manage devices, device compliance for Conditional Access, endpoint management, Windows Autopatch, update rings. DO NOT USE for app-only protection on BYOD (use intune-app-protection), endpoint detection / EDR (use defender-for-endpoint), or disk encryption only (use bitlocker-design).",
+      "hasSkillMd": true,
+      "name": "intune-device-mgmt",
+      "path": "intune-device-mgmt",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for governing and managing Microsoft 365 collaboration sprawl — Teams/group lifecycle, sharing and guest access governance, and SharePoint Advanced Management — to keep the data estate secure and Copilot-ready. WHEN: Microsoft 365 governance, Teams sprawl, group lifecycle, guest access governance, external sharing controls, SharePoint Advanced Management, site lifecycle, manage collaboration sprawl, container governance.",
+      "hasSkillMd": true,
+      "name": "m365-govern-manage",
+      "path": "m365-govern-manage",
+      "status": "draft"
+    },
+    {
+      "description": "Ensures proper Python dependency management, avoiding global `pip install` and\nadhering to project-specific tooling.\n\nUse this skill if any of the following are true:\n  1. Attempting to run `pip install {package_name}`.\n  2. Python packages or dependencies need to be added or modified.\n  3. Initiating a new Python project.\n  4. Creating a new notebook, even if just using BigQuery cells.\n  5. Generating Python code that includes `import` statements for third-party libraries.\n  6. Before executing Python scripts via the terminal to ensure the correct virtual environment is active.\n",
+      "hasSkillMd": true,
+      "name": "managing-python-dependencies",
+      "path": "managing-python-dependencies",
+      "status": "draft"
+    },
+    {
+      "description": "Deploy, evaluate, fine-tune, and manage Foundry agents end-to-end: Docker build, ACR push, hosted/prompt agent create, batch eval, continuous eval, prompt optimizer, Agent Optimizer scaffold, agent.yaml, dataset curation from traces, model fine-tuning (SFT/DPO/RFT). USE FOR: deploy agent, hosted agent, create agent, add tool to agent, invoke agent, evaluate agent, continuous eval, continuous monitoring, optimize prompt, improve prompt, optimize agent instructions, agent optimizer, deploy model, Foundry project, RBAC, role assignment, permissions, quota, capacity, region, troubleshoot agent, deployment failure, AI Services, create Foundry resource, provision, knowledge index, customize deployment, onboard, availability, fine-tune, SFT, DPO, RFT, training-data, grader, distillation, fine-tuned model, large file upload. DO NOT USE FOR: Azure Functions, App Service, general Azure deploy (use azure-deploy), general Azure prep (use azure-prepare).",
+      "hasSkillMd": true,
+      "name": "microsoft-foundry",
+      "path": "microsoft-foundry",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Priva — privacy risk management and subject rights requests. Covers Priva Privacy Risk Management and Priva Subject Rights Requests to find privacy risks and fulfill data subject requests (GDPR/CCPA). WHEN: Microsoft Priva, privacy risk management, subject rights request, DSAR, data subject request, GDPR fulfillment, privacy risk policies, data minimization, overexposed personal data.",
+      "hasSkillMd": true,
+      "name": "microsoft-priva",
+      "path": "microsoft-priva",
+      "status": "draft"
+    },
+    {
+      "description": "Router skill for the Microsoft Security skill bundle. WHEN: the user asks which Microsoft Security skill to use, needs a cross-domain path, or wants the bundle organized before execution. DO NOT USE when the exact leaf skill is already obvious.",
+      "hasSkillMd": true,
+      "name": "microsoft-security",
+      "path": "microsoft-security",
+      "status": "draft"
+    },
+    {
+      "description": "CRITICAL RULE: You MUST use this skill whenever the task involves any machine learning tasks or data analysis.\nUse this skill if the user's prompt or requirements mention any of the following:\n  * Clustering\n  * Classification\n  * Regression\n  * Time series forecasting\n  * Statistical testing\n  * Model comparison\n  * ML\n  * Data analysis\n\nSQL/BigQuery ML HANDOFF: If the user requires a SQL solution, use this skill to dictate the ANALYSIS STEPS (e.g., markdown analysis cells, visualization logic), but defer to `bigquery` for all SQL syntax.\n",
+      "hasSkillMd": true,
+      "name": "ml-best-practices",
+      "path": "ml-best-practices",
+      "status": "draft"
+    },
+    {
+      "description": "Recommend suitable prompts from 6000+ Nano Banana Pro image generation prompts based on user needs.\nUse this skill when users want to:\n- Generate images with AI (Nano Banana Pro model)\n- Find inspiration for image generation prompts\n- Get prompt recommendations for specific use cases (portraits, landscapes, product photos, etc.)\n- Create illustrations for articles, videos, podcasts, or other content\n- Translate and understand prompt techniques",
+      "hasSkillMd": true,
+      "name": "nano-banana-pro",
+      "path": "nano-banana-pro",
+      "status": "draft"
+    },
+    {
+      "description": "This skill guides the use of Jupyter notebooks for data analysis, exploration, and visualization, particularly with BigQuery. It outlines best practices for notebook execution and validation (supporting both cell-by-cell execution and full notebook generation depending on tool availability), library installation, and structuring notebooks for clarity. It also covers specific rules for data cleaning, plotting, and integrating with BigQuery SQL and machine learning workflows.\nRelevant when any of the following conditions are true:\n  1. The user request involves a data analysis, data exploration, data visualization, or data insights task that requires multiple steps, queries, or visualizations to answer.\n  2. The user explicitly requests a notebook (.ipynb).\n  3. You are creating, editing, or executing cells in a Jupyter notebook.\n  4. You need to query BigQuery from within a notebook. DO NOT use the Python BigQuery client library; instead, you MUST use the `%%bqsql` magics explained in this skill.",
+      "hasSkillMd": true,
+      "name": "notebook-guidance",
+      "path": "notebook-guidance",
+      "status": "draft"
+    },
+    {
+      "description": "Use when the user asks how to build with OpenAI products or APIs and needs up-to-date official documentation with citations (for example: Codex, Responses API, Chat Completions, Apps SDK, Agents SDK, Realtime, model capabilities or limits); prioritize OpenAI docs MCP tools and restrict any fallback browsing to official OpenAI domains.",
+      "hasSkillMd": true,
+      "name": "openai-docs",
+      "path": "openai-docs",
+      "status": "draft"
+    },
+    {
+      "description": "Iteratively test and refine prompts, skills, and agent configurations using opencode run",
+      "hasSkillMd": true,
+      "name": "opencode-refine",
+      "path": "opencode-refine",
+      "status": "draft"
+    },
+    {
+      "description": "Author, read, validate, convert, or reason about OSCAL (Open Security Controls Assessment Language) — NIST's machine-readable format for compliance content. Use whenever the user mentions OSCAL, NIST 800-53/800-171 in machine-readable form, FedRAMP automation, SSP, POA&M, control catalogs, profiles, baselines, component definitions, assessment plans, assessment results, profile resolution, compliance-as-code, or maps controls across frameworks (ISO 27001, NIST CSF, SOC 2). Also trigger on OSCAL tooling (oscal-cli, compliance-trestle, complyctl, C2P, Lula, oscal-pydantic, oscal-sdk-go) and on XML/JSON/YAML files whose root keys are catalog, profile, system-security-plan, component-definition, assessment-plan, assessment-results, plan-of-action-and-milestones, or mapping-collection. Even when only the problem is described (\"make our security plan auditor-ingestible\", \"build an evidence bundle\"), surface this skill — OSCAL is almost always the right answer.",
+      "hasSkillMd": true,
+      "name": "oscal",
+      "path": "oscal",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for designing Privileged Access Workstations (PAW) and the Microsoft privileged access strategy (enterprise access model, clean source principle, tiered admin isolation). Covers when to use Enterprise vs Specialized vs Privileged device profiles, hardening (Entra-join, Intune, app allowlisting, Credential Guard), Conditional Access enforcement, and rollout. WHEN: privileged access workstation, PAW, secure admin workstation, enterprise access model, privileged access strategy, admin isolation, secured workstation, clean source principle, tier 0 protection, control plane, dedicated admin device, hardened workstation, Credential Guard, FIDO2 admin. DO NOT USE for general endpoint hardening (use defender-for-endpoint) or device compliance policy (use intune-device-mgmt).",
+      "hasSkillMd": true,
+      "name": "paw-design",
+      "path": "paw-design",
+      "status": "draft"
+    },
+    {
+      "description": "Use when tasks involve reading, creating, or reviewing PDF files where rendering and layout matter; prefer visual checks by rendering pages (Poppler) and use Python tools such as `reportlab`, `pdfplumber`, and `pypdf` for generation and extraction.",
+      "hasSkillMd": true,
+      "name": "pdf",
+      "path": "pdf",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for designing public key infrastructure (PKI) and certificate management on Azure and hybrid environments. Covers CA strategy (offline root + issuing CAs, AD CS vs managed/third-party vs public CA), Azure Key Vault certificates, HSM key protection, Entra certificate-based authentication (CBA), certificate lifecycle (issuance, renewal, rotation, revocation), and Intune SCEP/PKCS distribution. WHEN: PKI design, certificate authority, root CA offline, issuing CA, certificate management, Key Vault certificates, certificate-based authentication, CBA, certificate lifecycle, issue and rotate certificates, mTLS certificates, code signing, CRL OCSP, certificate expiry, certificate rotation, AD CS, HSM, Managed HSM. DO NOT USE for Entra ID identity model (use entra-id) or Key Vault secrets/keys only (use azure-key-vault).",
+      "hasSkillMd": true,
+      "name": "pki-design",
+      "path": "pki-design",
+      "status": "draft"
+    },
+    {
+      "description": "Automates browser interactions for web testing, form filling, screenshots, and data extraction. Use when the user needs to navigate websites, interact with web pages, fill forms, take screenshots, test web applications, or extract information from web pages.",
+      "hasSkillMd": true,
+      "name": "playwright-cli",
+      "path": "playwright-cli",
+      "status": "draft"
+    },
+    {
+      "description": "Documentation-first project planning that produces governed, implementation-ready blueprints and single-shot coding-agent prompts. Generates five interconnected documents — SPECIFICATION.md, IMPLEMENTATION.md, TASKS.md, BRANDING.md, PROMPT.md — with interactive tech-stack selection, design-pattern recommendations, and architecture trade-off analysis. Trigger when user wants to: plan a project, create specs, architect a system, break work into tasks, choose a tech stack, get design-pattern advice, generate a coding-agent prompt, or do documentation-first development. Phrases: \"plan my project\", \"spec this out\", \"architect\", \"help me plan\", \"what stack should I use\", \"generate a prompt\", \"break this into tasks\", \"project docs\", \"I want to build X\".\n",
+      "hasSkillMd": true,
+      "name": "project-architect",
+      "path": "project-architect",
+      "status": "draft"
+    },
+    {
+      "description": "Skill for proof audit.",
+      "hasSkillMd": true,
+      "name": "proof-audit",
+      "path": "proof-audit",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for advanced Microsoft Purview DLP capabilities - Adaptive Protection (risk-based DLP driven by Insider Risk), Exact Data Match, contextual conditions, and advanced Endpoint DLP egress controls. Covers dynamic, risk-adaptive enforcement and high-precision matching for mature programs. WHEN: advanced DLP, Adaptive Protection, risk-based DLP, Exact Data Match DLP, dynamic DLP enforcement, Insider Risk driven DLP, advanced Endpoint DLP, contextual DLP conditions, dynamic block actions.",
+      "hasSkillMd": true,
+      "name": "purview-advanced-dlp",
+      "path": "purview-advanced-dlp",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for securing and governing AI agents (Microsoft 365 Copilot agents, Copilot Studio agents, and Security Copilot agents) with Microsoft Purview - applying DSPM for AI, DLP, sensitivity labels, Communication Compliance, and audit to agent data interactions and identities. WHEN: secure AI agents, govern Copilot agents, Purview for agents, agent data security, DLP for agents, audit agent interactions, Copilot Studio agent security, agent oversharing, agent compliance, agent identity governance.",
+      "hasSkillMd": true,
+      "name": "purview-agent-365-security",
+      "path": "purview-agent-365-security",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Purview Audit (Standard and Premium) - logging and searching user/admin activity across Microsoft 365 for investigations and compliance. Covers tier differences, default and extended retention, high-value events, audit search UX, Office 365 Management Activity API / Microsoft Graph audit API, and Sentinel/SIEM integration. WHEN: Purview Audit, audit log search, Microsoft 365 audit, Audit Premium, investigate user activity, audit log retention, Microsoft Graph audit API, forensic logging, crucial audit events, MailItemsAccessed.",
+      "hasSkillMd": true,
+      "name": "purview-audit",
+      "path": "purview-audit",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Purview Communication Compliance — detecting and remediating policy violations and risky/inappropriate messages across Exchange, Teams, Viva Engage, and connected platforms, including AI prompt risks. Covers policy design, privacy controls, and remediation workflow. WHEN: communication compliance, monitor messages, detect harassment or sensitive info in chat, code of conduct policy, regulatory communication monitoring, Teams message compliance, pseudonymization reviewers.",
+      "hasSkillMd": true,
+      "name": "purview-communication-compliance",
+      "path": "purview-communication-compliance",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for assessing and remediating oversharing before and during Microsoft 365 Copilot adoption, using SharePoint Advanced Management (SAM), sensitivity labels, restricted content discovery, and DLP for Copilot so Copilot only surfaces content users should access. Covers data access governance reports, EEEU cleanup, and ongoing governance. WHEN: Copilot oversharing, prepare data for Copilot, restrict Copilot access, SharePoint Advanced Management, data access governance, oversharing remediation, Copilot readiness data security, limit Copilot content, Copilot is surfacing files users should not see, too many people have access to SharePoint sites, tighten up permissions before Copilot rollout, how do I make SharePoint Copilot-ready. DO NOT USE when the goal is monitoring what sensitive data users are actively sending in AI prompts (use purview-dspm-ai).",
+      "hasSkillMd": true,
+      "name": "purview-copilot-oversharing",
+      "path": "purview-copilot-oversharing",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for the Microsoft Purview Unified Catalog (data catalog) — business-friendly discovery, governance domains, data products, glossary terms, and data quality on top of the Data Map. Covers governance domains, data products, and curation. WHEN: Purview data catalog, unified catalog, data products, governance domain, business glossary, data quality, data discovery for analysts, curate data assets, data stewardship.",
+      "hasSkillMd": true,
+      "name": "purview-data-catalog",
+      "path": "purview-data-catalog",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Purview data classification and sensitivity labels - sensitive information types (SITs), trainable classifiers, exact data match, and sensitivity label taxonomy with auto-labelling. Covers building a label taxonomy, picking detection methods, and rolling out auto-labelling in simulation. WHEN: data classification, sensitivity labels, sensitive information types, SIT, trainable classifier, exact data match EDM, auto-labelling, label taxonomy, classify data, information protection labels, MIP labels.",
+      "hasSkillMd": true,
+      "name": "purview-data-classification",
+      "path": "purview-data-classification",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Purview Data Lifecycle Management and Records Management - retention labels and policies to retain and delete content across Microsoft 365, plus declaring records. Covers retention strategy, adaptive vs static scopes, principle of precedence, disposition review, and regulatory records. WHEN: data lifecycle management, retention policy, retention label, records management, declare record, disposition review, adaptive scopes, retain and delete content, file plan, regulatory retention, immutable records.",
+      "hasSkillMd": true,
+      "name": "purview-data-lifecycle",
+      "path": "purview-data-lifecycle",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for the Microsoft Purview Data Map - the foundation that scans and maps data sources across multicloud and on-premises estates to power cataloging and governance. Covers source registration, integration runtimes (managed vs self-hosted), scan rule sets, classifications, collections, and cost control. WHEN: Purview Data Map, scan data sources, register data source, data discovery, integration runtime, map enterprise data, multicloud data scanning, classification scan, collections, glossary.",
+      "hasSkillMd": true,
+      "name": "purview-data-map",
+      "path": "purview-data-map",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for designing baseline Microsoft Purview Data Loss Prevention (DLP) policies across Exchange, SharePoint, OneDrive, Teams, and Endpoint. Covers locations, conditions (SITs/labels/classifiers), severity-tiered actions, simulation mode, exception handling, Endpoint DLP onboarding, and tuning. WHEN: Purview DLP, data loss prevention policy, prevent data exfiltration, Endpoint DLP, DLP rule conditions, DLP simulation mode, block sensitive sharing, policy tips, DLP across Microsoft 365, tune DLP false positives.",
+      "hasSkillMd": true,
+      "name": "purview-dlp-policy",
+      "path": "purview-dlp-policy",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Purview Data Security Posture Management for AI (DSPM for AI) - discovering, monitoring, and protecting sensitive data interactions with generative AI apps like Microsoft 365 Copilot, Security Copilot, Copilot Studio agents, and third-party AI (ChatGPT, Gemini). Covers AI usage visibility, one-click recommendations, oversharing risk surfaced to AI, and DLP for AI. WHEN: DSPM for AI, AI data security posture, Copilot data risk, monitor AI prompts, sensitive data in AI, generative AI data protection, third-party AI usage visibility, secure Copilot data, what sensitive data is being sent to AI, monitor what users are putting into Copilot prompts, detect sensitive data in AI responses, ChatGPT data leakage risk. DO NOT USE when the goal is remediating overshared SharePoint content before Copilot rollout (use purview-copilot-oversharing) or building IRM policies for departing users (use insider-risk-baseline).",
+      "hasSkillMd": true,
+      "name": "purview-dspm-ai",
+      "path": "purview-dspm-ai",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Purview eDiscovery (unified experience consolidating prior Standard and Premium) - identifying, preserving, collecting, reviewing, analysing, and exporting content across Microsoft 365 for legal cases, regulatory requests, and investigations. Covers cases, custodians, legal holds, searches, review sets, analytics, and export. WHEN: eDiscovery, legal hold, preserve content, collect for litigation, review set, export evidence, eDiscovery case, custodian, search and hold Microsoft 365, legal investigation, EDRM workflow, defensible collection.",
+      "hasSkillMd": true,
+      "name": "purview-ediscovery",
+      "path": "purview-ediscovery",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for applying Microsoft Purview data security and compliance across Microsoft 365 workloads (Exchange, SharePoint, OneDrive, Teams) - coordinating labels, DLP, retention, and Copilot data protection per workload with each workload's distinct behaviour. WHEN: Purview for Microsoft 365, protect SharePoint and Teams data, M365 compliance, labels and DLP across Office, retention for Exchange, Teams data security, OneDrive governance, Microsoft 365 data protection, per-workload Purview.",
+      "hasSkillMd": true,
+      "name": "purview-for-m365",
+      "path": "purview-for-m365",
+      "status": "draft"
+    },
+    {
+      "description": "Orientation skill for the Microsoft Purview data security, governance, and compliance suite. Helps choose the right Purview solution for a goal and understand the unified portal, roles, and licensing model. WHEN: Microsoft Purview overview, which Purview solution, Purview portal, data governance vs data security vs compliance, Purview roles and permissions, where to start with Purview, Purview licensing, I do not know which Purview feature to use, what does Purview cover, getting started with Purview, Purview product overview, which compliance tool do I need. Use this skill first for Purview orientation, then follow up with the specific skill for your use case.",
+      "hasSkillMd": true,
+      "name": "purview-general",
+      "path": "purview-general",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for an end-to-end Microsoft Purview information governance / information protection strategy - sequencing classification, labelling, protection, lifecycle, and risk into a coherent program aligned to the Zero Trust data pillar. Covers maturity-based rollout sequencing, ownership, and metrics. WHEN: information governance, information protection strategy, data protection program, sequence Purview rollout, MIP strategy, protect and govern data end to end, Zero Trust data pillar program, Purview roadmap, data security maturity.",
+      "hasSkillMd": true,
+      "name": "purview-information-governance",
+      "path": "purview-information-governance",
+      "status": "draft"
+    },
+    {
+      "description": "React and Next.js performance optimization guidelines from Vercel Engineering. This skill should be used when writing, reviewing, or refactoring React/Next.js code to ensure optimal performance patterns. Triggers on tasks involving React components, Next.js pages, data fetching, bundle optimization, or performance improvements.",
+      "hasSkillMd": true,
+      "name": "react-best-practices",
+      "path": "react-best-practices",
+      "status": "draft"
+    },
+    {
+      "description": "Best practices for Remotion - Video creation in React",
+      "hasSkillMd": true,
+      "name": "remotion-best-practices",
+      "path": "remotion-best-practices",
+      "status": "draft"
+    },
+    {
+      "description": "Skill for responsive.",
+      "hasSkillMd": true,
+      "name": "responsive",
+      "path": "responsive",
+      "status": "draft"
+    },
+    {
+      "description": "Run commands in a temporary tmux pane with full interactive zsh environment (login shell, shims, PATH, aliases, TTY).",
+      "hasSkillMd": true,
+      "name": "run-in-tmux-pane",
+      "path": "run-in-tmux-pane",
+      "status": "draft"
+    },
+    {
+      "description": "Use when the user explicitly asks for a desktop or system screenshot (full screen, specific app or window, or a pixel region), or when tool-specific capture capabilities are unavailable and an OS-level capture is needed.",
+      "hasSkillMd": true,
+      "name": "screenshot",
+      "path": "screenshot",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for designing security architecture using Zero Trust, the Microsoft Cybersecurity Reference Architectures (MCRA), Cloud Adoption Framework Secure methodology, and Well-Architected Security pillar. Covers the six Zero Trust pillars, defense-in-depth, and reference architecture alignment. WHEN: security architecture, Zero Trust design, MCRA, defense in depth, security reference architecture, CAF secure methodology, Well-Architected security pillar, end-to-end security design, security strategy, target state. DO NOT USE for tactical product configuration (use the product-specific skill) or for SOC tooling design (use sentinel / unified-secops-platform).",
+      "hasSkillMd": true,
+      "name": "security-architecture",
+      "path": "security-architecture",
+      "status": "draft"
+    },
+    {
+      "description": "Security audit of a codebase — web apps, APIs, services, CLI tools, libraries, daemons, and more. Use when asked to find security bugs, do a security review, audit for vulnerabilities, or pen-test the code. Focuses on exploitable issues with real impact, not theoretical concerns or industry-standard behavior. Confirmed findings can be runtime-proven in an isolated sandbox (dynamic verification).",
+      "hasSkillMd": true,
+      "name": "security-audit-dynamic-sandbox",
+      "path": "security-audit-dynamic-sandbox",
+      "status": "draft"
+    },
+    {
+      "description": "Perform language and framework specific security best-practice reviews and suggest improvements. Trigger only when the user explicitly requests security best practices guidance, a security review/report, or secure-by-default coding help. Trigger only for supported languages (python, javascript/typescript, go). Do not trigger for general code review, debugging, or non-security tasks.",
+      "hasSkillMd": true,
+      "name": "security-best-practices",
+      "path": "security-best-practices",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Security Copilot - the generative-AI security platform that helps analysts investigate, hunt, summarise, and respond using natural language, plugins, promptbooks, and embedded experiences. Covers SCU provisioning, plugins, promptbooks, governance, and the standalone vs embedded experience choice. WHEN: Microsoft Security Copilot, AI for SOC, security copilot units SCU, promptbooks, Copilot plugins, natural language investigation, summarise incident with AI, Copilot for Security setup, how do I use AI in my SOC, explain a KQL query with AI, summarise an alert for a stakeholder. DO NOT USE when the goal is configuring autonomous triage or remediation agents (use security-copilot-agents).",
+      "hasSkillMd": true,
+      "name": "security-copilot",
+      "path": "security-copilot",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Microsoft Security Copilot agents — autonomous, purpose-built AI agents (e.g., phishing triage, alert triage, conditional access optimization, vulnerability remediation) that work within Security Copilot. Covers available agents, identity/permissions, and supervision. WHEN: Security Copilot agents, autonomous SOC agent, phishing triage agent, alert triage agent, agent identity, supervise AI agent, agentic security, Copilot agent permissions, automate phishing triage, AI agent for SOC, autonomous alert triage, hands-off triage of high-volume alerts. DO NOT USE for basic Security Copilot setup, SCU provisioning, or promptbooks (use security-copilot).",
+      "hasSkillMd": true,
+      "name": "security-copilot-agents",
+      "path": "security-copilot-agents",
+      "status": "draft"
+    },
+    {
+      "description": "Skill for security review.",
+      "hasSkillMd": true,
+      "name": "security-review",
+      "path": "security-review",
+      "status": "draft"
+    },
+    {
+      "description": "Repository-grounded threat modeling that enumerates trust boundaries, assets, attacker capabilities, abuse paths, and mitigations, and writes a concise Markdown threat model. Trigger only when the user explicitly asks to threat model a codebase or path, enumerate threats/abuse paths, or perform AppSec threat modeling. Do not trigger for general architecture summaries, code review, or non-security design work.",
+      "hasSkillMd": true,
+      "name": "security-threat-model",
+      "path": "security-threat-model",
+      "status": "draft"
+    },
+    {
+      "description": "Help engineers write performance tests that detect regressions, using k6 for load testing and sitespeed.io for frontend Core Web Vitals. Use when the user is adding or changing API endpoints, database queries, critical paths, or frontend pages and needs to decide whether to write a performance test, what kind, or how to integrate it into CI. Also activate when the user mentions load testing, stress testing, response times, benchmarking, performance budgets, CPT, component performance testing, MR pipeline performance testing, or wants to run tests against staging - this skill enforces shared infrastructure safety rules. Does not cover profiling, APM, or debugging production incidents.",
+      "hasSkillMd": true,
+      "name": "self-service-performance-testing",
+      "path": "self-service-performance-testing",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for designing and operating Microsoft Sentinel, the cloud-native SIEM and SOAR delivered through the Defender portal. Covers workspace design, data connectors, ingestion tiers (Analytics/Basic/Auxiliary/ADX), analytics rules, hunting, watchlists, automation playbooks, and cost/commitment-tier optimisation. WHEN: deploy Microsoft Sentinel, design SIEM, onboard data connectors, write analytics rule, KQL detection, Sentinel playbook, SOAR automation, Sentinel cost optimization, log ingestion tiers, commitment tier, Sentinel workspace design, how do I set up a SIEM, collect logs from third-party tools, ingest firewall or Linux syslog into Azure, write a detection rule, automate incident response, how much does Sentinel cost, Auxiliary logs, Basic logs, ADX archive, codeless connector. DO NOT USE when the goal is correlating Microsoft 365 XDR alerts into incidents (use defender-xdr) or onboarding Sentinel into the unified Defender portal (use unified-secops-platform).",
+      "hasSkillMd": true,
+      "name": "sentinel",
+      "path": "sentinel",
+      "status": "draft"
+    },
+    {
+      "description": "Manages shadcn components and projects — adding, searching, fixing, debugging, styling, and composing UI. Provides project context, component docs, and usage examples. Applies when working with shadcn/ui, component registries, presets, --preset codes, or any project with a components.json file. Also triggers for \"shadcn init\", \"create an app with --preset\", or \"switch to --preset\".",
+      "hasSkillMd": true,
+      "name": "shadcn",
+      "path": "shadcn",
+      "status": "draft"
+    },
+    {
+      "description": "Use this to fix and re-install agent skills that have failed installation.\nThis skill provides the necessary context and permissions to surgically update\nthe `manifest.json` after a fix has been applied.\n",
+      "hasSkillMd": true,
+      "name": "skill-repair",
+      "path": "skill-repair",
+      "status": "draft"
+    },
+    {
+      "description": "Canonical skill for managing the full lifecycle of other skills and operating\nthe SkillPack system. Use when the user asks to create, migrate, update,\nrefine, evolve, or operate any aspect of the skillpack system.\n",
+      "hasSkillMd": true,
+      "name": "skill-steward",
+      "path": "skill-steward",
+      "status": "draft"
+    },
+    {
+      "description": "Skill for state vector.",
+      "hasSkillMd": true,
+      "name": "state-vector",
+      "path": "state-vector",
+      "status": "draft"
+    },
+    {
+      "description": "Author, validate, and render Structurizr DSL for C4 model architecture diagrams. Use when working with .dsl files, workspace/model/views definitions, C4 diagrams (system context, container, component, deployment, dynamic, filtered, custom, image views), Structurizr themes/styling, or when the user mentions Structurizr, C4 model, or software architecture diagrams as code.",
+      "hasSkillMd": true,
+      "name": "structurizr-dsl",
+      "path": "structurizr-dsl",
+      "status": "draft"
+    },
+    {
+      "description": "Write, review, or improve SwiftUI code following best practices for state management, view composition, performance, modern APIs, Swift concurrency, and iOS 26+ Liquid Glass adoption. Use when building new SwiftUI features, refactoring existing views, reviewing code quality, or adopting modern SwiftUI patterns.",
+      "hasSkillMd": true,
+      "name": "swiftui-expert-skill",
+      "path": "swiftui-expert-skill",
+      "status": "draft"
+    },
+    {
+      "description": "Comprehensively reviews SwiftUI code for best practices on modern APIs, maintainability, and performance. Use when reading, writing, or reviewing SwiftUI projects.",
+      "hasSkillMd": true,
+      "name": "swiftui-pro",
+      "path": "swiftui-pro",
+      "status": "draft"
+    },
+    {
+      "description": "Use when working with Terraform or OpenTofu - creating modules, writing tests (native test framework, Terratest), setting up CI/CD pipelines, reviewing configurations, choosing between testing approaches, debugging state issues, implementing security scanning (trivy, checkov), or making infrastructure-as-code architecture decisions",
+      "hasSkillMd": true,
+      "name": "terraform",
+      "path": "terraform",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for threat modelling using STRIDE and the Microsoft Security Development Lifecycle (SDL). Covers data-flow diagrams, trust boundaries, the STRIDE categories, mitigation mapping, and tooling (Microsoft Threat Modeling Tool). WHEN: threat modeling, STRIDE, data flow diagram, trust boundary, identify threats, SDL threat modeling, security design review, threat model a system, mitigation mapping, Microsoft Threat Modeling Tool, secure design review, design-time security. DO NOT USE for org-wide security architecture (use security-architecture) or for runtime detection (use sentinel / defender-xdr).",
+      "hasSkillMd": true,
+      "name": "threat-modelling",
+      "path": "threat-modelling",
+      "status": "draft"
+    },
+    {
+      "description": "Skill for token migration.",
+      "hasSkillMd": true,
+      "name": "token-migration",
+      "path": "token-migration",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for the Microsoft unified security operations platform that brings Microsoft Sentinel, Microsoft Defender XDR, Security Copilot, Threat Intelligence, and Microsoft Security Exposure Management together in the Microsoft Defender portal. Covers prerequisites, onboarding Sentinel, unified incident queue, advanced hunting across SIEM+XDR, and RBAC. WHEN: unified SecOps, onboard Sentinel to Defender portal, single SOC pane of glass, unified incident queue, connect Sentinel workspace to Defender XDR, exposure management, unified portal, merge Sentinel and Defender XDR, reduce context-switching for analysts, single pane of glass, move off the Azure Sentinel portal. DO NOT USE for Sentinel-only workspace design (use sentinel) or Defender XDR-only incident investigation (use defender-xdr).",
+      "hasSkillMd": true,
+      "name": "unified-secops-platform",
+      "path": "unified-secops-platform",
+      "status": "draft"
+    },
+    {
+      "description": "Use this to safely upgrade installed agent skills to newer versions.\nInvoke when the user asks to upgrade skills, check for skill updates,\nupdate installed skills, refresh skill packages, or reconcile skill\nversions across agent surfaces (Claude, Gemini, Codex, Cursor).\n",
+      "hasSkillMd": true,
+      "name": "upgrade",
+      "path": "upgrade",
+      "status": "draft"
+    },
+    {
+      "description": "Input validation, schema enforcement, and data integrity checks. Use when validating user inputs, API payloads, configuration files, or any data at system boundaries.",
+      "hasSkillMd": true,
+      "name": "validation",
+      "path": "validation",
+      "status": "draft"
+    },
+    {
+      "description": "Skill for vector state.",
+      "hasSkillMd": true,
+      "name": "vector-state",
+      "path": "vector-state",
+      "status": "draft"
+    },
+    {
+      "description": "React composition patterns that scale. Use when refactoring components with boolean prop proliferation, building flexible component libraries, or designing reusable APIs. Triggers on tasks involving compound components, render props, context providers, or component architecture.",
+      "hasSkillMd": true,
+      "name": "vercel-composition-patterns",
+      "path": "vercel-composition-patterns",
+      "status": "draft"
+    },
+    {
+      "description": "React and Next.js performance optimization guidelines from Vercel Engineering. This skill should be used when writing, reviewing, or refactoring React/Next.js code to ensure optimal performance patterns. Triggers on tasks involving React components, Next.js pages, data fetching, bundle optimization, or performance improvements.",
+      "hasSkillMd": true,
+      "name": "vercel-react-best-practices",
+      "path": "vercel-react-best-practices",
+      "status": "draft"
+    },
+    {
+      "description": "React Native and Expo best practices for building performant mobile apps. Use when building React Native components, optimizing list performance, implementing animations, or working with native modules. Triggers on tasks involving React Native, Expo, mobile performance, or native platform APIs.",
+      "hasSkillMd": true,
+      "name": "vercel-react-native-skills",
+      "path": "vercel-react-native-skills",
+      "status": "draft"
+    },
+    {
+      "description": "Review UI code for Web Interface Guidelines compliance. Use when asked to \"review my UI\", \"check accessibility\", \"audit design\", \"review UX\", or \"check my site against best practices\".",
+      "hasSkillMd": true,
+      "name": "web-design-guidelines",
+      "path": "web-design-guidelines",
+      "status": "draft"
+    },
+    {
+      "description": "Comprehensive guide for developing WebGPU-enabled Three.js applications using TSL (Three.js Shading Language). Covers WebGPU renderer setup, TSL syntax and node materials, compute shaders, post-processing effects, and WGSL integration. Use this skill when working with Three.js WebGPU, TSL shaders, node materials, or GPU compute in Three.js.",
+      "hasSkillMd": true,
+      "name": "webgpu-threejs-tsl",
+      "path": "webgpu-threejs-tsl",
+      "status": "draft"
+    },
+    {
+      "description": "Capture a website and create a HyperFrames video from it. Use when: (1) a user provides a URL and wants a video, (2) someone says \"capture this site\", \"turn this into a video\", \"make a promo from my site\", (3) the user wants a social ad, product tour, or any video based on an existing website, (4) the user shares a link and asks for any kind of video content. Even if the user just pastes a URL — this is the skill to use.",
+      "hasSkillMd": true,
+      "name": "website-to-hyperframes",
+      "path": "website-to-hyperframes",
+      "status": "draft"
+    },
+    {
+      "description": "Guidance for Windows Hello for Business (WHfB) — passwordless, phishing-resistant authentication using a PIN or biometric backed by an asymmetric key or certificate. Covers trust model selection (cloud Kerberos trust default for hybrid; key trust legacy; certificate trust niche), prerequisites (Entra join, MFA registration, Entra Kerberos for cloud Kerberos trust), Intune-based provisioning, multi-factor unlock, and Conditional Access authentication strengths. WHEN: Windows Hello for Business, WHfB, passwordless Windows, biometric sign-in, PIN sign-in, cloud Kerberos trust, key trust, certificate trust, hybrid sign-in, Entra Kerberos, multi-factor unlock, FIDO2 vs Hello, Hello provisioning. DO NOT USE for FIDO2 security keys (use entra-id), CA policy authoring (use conditional-access-mfa), or Intune compliance baseline (use intune-device-mgmt).",
+      "hasSkillMd": true,
+      "name": "windows-hello",
+      "path": "windows-hello",
+      "status": "draft"
+    },
+    {
+      "description": "Write large files reliably using chunked bash append (>> heredoc)",
+      "hasSkillMd": true,
+      "name": "write-large-file",
+      "path": "write-large-file",
+      "status": "draft"
+    }
+  ]
+}

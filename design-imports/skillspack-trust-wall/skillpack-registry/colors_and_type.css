@@ -1,0 +1,456 @@
+/* ============================================================
+ * CKODEX-DS-1 v1.4.0 · Tokens
+ * Governance-first design system. Token-driven, APCA-themed,
+ * built on bentography primitives.
+ * ------------------------------------------------------------
+ * Three themes, same geometry:
+ *   :root, [data-theme="dark"]  → canonical (deep blue)
+ *   [data-theme="light"]        → off-white + deep blue text
+ *   [data-theme="hc"]           → pure black + white + gold
+ * Dark is default.
+ * ============================================================ */
+
+/* ---------- FONTS ---------- */
+/* Roboto (display) · Lato (body) · JetBrains Mono (code, SVG labels, CNDL 2.0 notation)
+   — all self-hosted brand files in fonts/. No external font CDN. */
+
+/* JetBrains Mono · variable (wght 100–800), upright + italic */
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('fonts/JetBrainsMono-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('fonts/JetBrainsMono-Italic-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Roboto · variable (wght 100–900), upright + italic */
+@font-face {
+  font-family: 'Roboto';
+  src: url('fonts/Roboto-VariableFont_wdth_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-stretch: 75% 125%;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Roboto';
+  src: url('fonts/Roboto-Italic-VariableFont_wdth_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-stretch: 75% 125%;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Lato · static weights 100 / 300 / 400 / 700 / 900, upright + italic */
+@font-face { font-family: 'Lato'; src: url('fonts/Lato-Thin.ttf')        format('truetype'); font-weight: 100; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Lato'; src: url('fonts/Lato-ThinItalic.ttf')  format('truetype'); font-weight: 100; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Lato'; src: url('fonts/Lato-Light.ttf')       format('truetype'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Lato'; src: url('fonts/Lato-LightItalic.ttf') format('truetype'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Lato'; src: url('fonts/Lato-Regular.ttf')     format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Lato'; src: url('fonts/Lato-Italic.ttf')      format('truetype'); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Lato'; src: url('fonts/Lato-Bold.ttf')        format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Lato'; src: url('fonts/Lato-BoldItalic.ttf')  format('truetype'); font-weight: 700; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Lato'; src: url('fonts/Lato-Black.ttf')       format('truetype'); font-weight: 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Lato'; src: url('fonts/Lato-BlackItalic.ttf') format('truetype'); font-weight: 900; font-style: italic; font-display: swap; }
+
+/* ============================================================
+ * 1 · CORE PALETTE (raw, theme-independent)
+ * ============================================================ */
+:root {
+  /* Canonical four */
+  --ck-deep-blue:    #00152b;  /* ink, canonical surface-0 */
+  --ck-teal:         #38a3a5;  /* primary accent, stroke default */
+  --ck-lavender:     #bc96e6;  /* secondary accent, witness */
+  --ck-yellow:       #fcca46;  /* nucleus, attestation, emergency */
+
+  /* Structural neutrals */
+  --ck-slate-050:    #F1F5F9;  /* soft-white, canonical foreground on dark */
+  --ck-slate-100:    #E2E8F0;
+  --ck-slate-200:    #CBD5E1;
+  --ck-slate-300:    #94A3B8;
+  --ck-slate-400:    #64748B;
+  --ck-slate-500:    #475569;
+  --ck-slate-600:    #334155;
+  --ck-slate-700:    #1E293B;
+  --ck-slate-800:    #0F172A;
+  --ck-slate-900:    #00152b;  /* = deep-blue */
+
+  /* Governance signals */
+  --ck-teal-deep:    #0F766E;  /* light-theme stroke (APCA-safe) */
+  --ck-amber-deep:   #B45309;  /* light-theme text-role (APCA-safe) */
+  --ck-gold:         #FFD700;  /* HC theme links/focus only */
+  --ck-deny-rose:    #E11D48;  /* deny edge terminus */
+  --ck-deny-rose-dk: #881337;  /* deny edge on light */
+
+  /* Geometry */
+  --ck-chamfer:      10px;     /* canonical corner cut */
+  --ck-tick:         6px;      /* canonical cardinal tick length */
+  --ck-tick-half:    3px;      /* NW sanctioned asymmetry */
+  --ck-stroke-1:     1px;
+  --ck-stroke-2:     2.5px;    /* canonical component border */
+  --ck-stroke-3:     4px;      /* emergency / emphasis */
+
+  /* Spacing · 4px base, proof-grid */
+  --ck-sp-0:  0;
+  --ck-sp-1:  4px;
+  --ck-sp-2:  8px;
+  --ck-sp-3:  12px;
+  --ck-sp-4:  16px;
+  --ck-sp-5:  20px;
+  --ck-sp-6:  24px;
+  --ck-sp-8:  32px;
+  --ck-sp-10: 40px;
+  --ck-sp-12: 48px;
+  --ck-sp-16: 64px;
+
+  /* Elevation (bentography has no drop-shadows; we use inner ring + tick rail instead) */
+  --ck-ring-encaps:  inset 0 0 0 1px color-mix(in oklab, var(--ck-teal) 35%, transparent);
+  --ck-ring-focus:   0 0 0 2px var(--ck-yellow);
+  --ck-ring-deny:    0 0 0 2px var(--ck-deny-rose);
+
+  /* Motion */
+  --ck-resolve:      1.8s;
+  --ck-ease-resolve: cubic-bezier(.22, .61, .36, 1); /* governed, not bouncy */
+}
+
+/* ============================================================
+ * 2 · THEME: DARK (canonical / default)
+ * ============================================================ */
+:root,
+[data-theme="dark"] {
+  --ck-bg-0:      var(--ck-deep-blue);
+  --ck-bg-1:      #041C37;                       /* surface-1, 1 step up */
+  --ck-bg-2:      #0A2747;
+  --ck-bg-elev:   #062038;
+
+  --ck-fg-1:      var(--ck-slate-050);           /* primary text */
+  --ck-fg-2:      #B8C5D6;                       /* secondary */
+  --ck-fg-3:      #7C8DA6;                       /* tertiary, annotation */
+  --ck-fg-mute:   #4A5B75;                       /* 7-9px annotations, hash-tick text */
+
+  --ck-stroke:    var(--ck-teal);
+  --ck-stroke-2c: color-mix(in oklab, var(--ck-teal) 50%, transparent);
+  --ck-rail:      var(--ck-teal);
+
+  --ck-accent:    var(--ck-yellow);              /* nucleus / focus */
+  --ck-witness:   var(--ck-lavender);            /* secondary accent */
+  --ck-text-role: var(--ck-yellow);              /* text-role amber */
+  --ck-link:      var(--ck-teal);
+  --ck-link-hov:  #5CC0C2;
+
+  --ck-deny:      var(--ck-deny-rose);
+
+  color-scheme: dark;
+}
+
+/* ============================================================
+ * 3 · THEME: LIGHT
+ * ============================================================ */
+[data-theme="light"] {
+  --ck-bg-0:      #FBFBF7;                       /* off-white */
+  --ck-bg-1:      #F3F3EC;
+  --ck-bg-2:      #E8E8DF;
+  --ck-bg-elev:   #FFFFFF;
+
+  --ck-fg-1:      var(--ck-deep-blue);
+  --ck-fg-2:      #1F3551;
+  --ck-fg-3:      #425775;
+  --ck-fg-mute:   #7C8DA6;
+
+  --ck-stroke:    var(--ck-teal-deep);           /* APCA-safe teal */
+  --ck-stroke-2c: color-mix(in oklab, var(--ck-teal-deep) 50%, transparent);
+  --ck-rail:      var(--ck-teal-deep);
+
+  --ck-accent:    var(--ck-yellow);
+  --ck-witness:   #6B3FA0;                       /* darker lavender for APCA */
+  --ck-text-role: var(--ck-amber-deep);          /* dark amber for text */
+  --ck-link:      var(--ck-teal-deep);
+  --ck-link-hov:  #0D5C55;
+
+  --ck-deny:      var(--ck-deny-rose-dk);
+
+  color-scheme: light;
+}
+
+/* ============================================================
+ * 4 · THEME: HIGH CONTRAST
+ * ============================================================ */
+[data-theme="hc"] {
+  --ck-bg-0:      #000000;
+  --ck-bg-1:      #000000;
+  --ck-bg-2:      #0A0A0A;
+  --ck-bg-elev:   #000000;
+
+  --ck-fg-1:      #FFFFFF;
+  --ck-fg-2:      #FFFFFF;
+  --ck-fg-3:      #E6E6E6;
+  --ck-fg-mute:   #CCCCCC;
+
+  --ck-stroke:    #FFFFFF;
+  --ck-stroke-2c: #FFFFFF;
+  --ck-rail:      #FFFFFF;
+
+  --ck-accent:    var(--ck-gold);
+  --ck-witness:   var(--ck-gold);
+  --ck-text-role: var(--ck-gold);
+  --ck-link:      var(--ck-gold);
+  --ck-link-hov:  #FFE94D;
+
+  --ck-deny:      var(--ck-gold);
+
+  color-scheme: dark;
+}
+/* HC opacity floor 0.9; forbid semi-transparency */
+[data-theme="hc"] * { opacity: 1 !important; }
+
+/* ============================================================
+ * 5 · TYPOGRAPHY
+ * ============================================================
+ *
+ * Families
+ *   --ck-ff-display  Roboto         covers, titles, numeric displays
+ *   --ck-ff-body     Lato           paragraphs, UI labels
+ *   --ck-ff-mono     JetBrains Mono code, SVG labels, CNDL 2.0 notation, invariants
+ *
+ * APCA Lc targets
+ *   |Lc| ≥ 60   14px+ headers
+ *   |Lc| ≥ 75   10-13px body
+ *   |Lc| ≥ 90   7-9px annotations
+ */
+:root {
+  --ck-ff-display: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ck-ff-body:    'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ck-ff-mono:    'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Scale (display) */
+  --ck-fs-display: 56px;   --ck-lh-display: 1.05;  --ck-ls-display: -0.02em;
+  --ck-fs-h1:      40px;   --ck-lh-h1:      1.1;   --ck-ls-h1:      -0.015em;
+  --ck-fs-h2:      28px;   --ck-lh-h2:      1.2;   --ck-ls-h2:      -0.01em;
+  --ck-fs-h3:      20px;   --ck-lh-h3:      1.3;   --ck-ls-h3:       0;
+  --ck-fs-h4:      16px;   --ck-lh-h4:      1.35;  --ck-ls-h4:       0.01em;
+
+  /* Body */
+  --ck-fs-body:    15px;   --ck-lh-body:    1.55;
+  --ck-fs-body-sm: 13px;   --ck-lh-body-sm: 1.5;
+  --ck-fs-caption: 12px;   --ck-lh-caption: 1.4;
+  --ck-fs-micro:    9px;   --ck-lh-micro:   1.2;   /* annotations, hash-tick labels */
+  --ck-fs-invar:    7px;   --ck-lh-invar:   1.2;   /* verbatim invariants in diagrams */
+
+  /* Code (JetBrains Mono — reads slightly smaller than body) */
+  --ck-fs-code:    13px;   --ck-lh-code:    1.55;
+  --ck-fs-code-sm: 11px;
+}
+
+/* ---- Semantic type roles ---- */
+.ck-display, h1.ck-display {
+  font-family: var(--ck-ff-display);
+  font-weight: 900;
+  font-size: var(--ck-fs-display);
+  line-height: var(--ck-lh-display);
+  letter-spacing: var(--ck-ls-display);
+  color: var(--ck-fg-1);
+}
+h1, .ck-h1 {
+  font-family: var(--ck-ff-display);
+  font-weight: 700;
+  font-size: var(--ck-fs-h1);
+  line-height: var(--ck-lh-h1);
+  letter-spacing: var(--ck-ls-h1);
+  color: var(--ck-fg-1);
+}
+h2, .ck-h2 {
+  font-family: var(--ck-ff-display);
+  font-weight: 700;
+  font-size: var(--ck-fs-h2);
+  line-height: var(--ck-lh-h2);
+  letter-spacing: var(--ck-ls-h2);
+  color: var(--ck-fg-1);
+}
+h3, .ck-h3 {
+  font-family: var(--ck-ff-display);
+  font-weight: 500;
+  font-size: var(--ck-fs-h3);
+  line-height: var(--ck-lh-h3);
+  color: var(--ck-fg-1);
+}
+h4, .ck-h4 {
+  font-family: var(--ck-ff-body);
+  font-weight: 700;
+  font-size: var(--ck-fs-h4);
+  line-height: var(--ck-lh-h4);
+  letter-spacing: var(--ck-ls-h4);
+  color: var(--ck-fg-1);
+  text-transform: uppercase;
+}
+p, .ck-body {
+  font-family: var(--ck-ff-body);
+  font-weight: 400;
+  font-size: var(--ck-fs-body);
+  line-height: var(--ck-lh-body);
+  color: var(--ck-fg-2);
+  text-wrap: pretty;
+}
+.ck-body-sm   { font-family: var(--ck-ff-body); font-size: var(--ck-fs-body-sm); line-height: var(--ck-lh-body-sm); color: var(--ck-fg-2); }
+.ck-caption   { font-family: var(--ck-ff-body); font-size: var(--ck-fs-caption); line-height: var(--ck-lh-caption); color: var(--ck-fg-3); letter-spacing: 0.02em; }
+.ck-label     { font-family: var(--ck-ff-body); font-weight: 700; font-size: var(--ck-fs-caption); text-transform: uppercase; letter-spacing: 0.12em; color: var(--ck-fg-3); }
+
+code, .ck-code, kbd, samp, pre {
+  font-family: var(--ck-ff-mono);
+  font-weight: 400;
+  font-size: var(--ck-fs-code);
+  line-height: var(--ck-lh-code);
+  color: var(--ck-fg-1);
+  font-variant-ligatures: none;
+}
+.ck-code-sm   { font-family: var(--ck-ff-mono); font-size: var(--ck-fs-code-sm); }
+.ck-annot     { font-family: var(--ck-ff-mono); font-weight: 500; font-size: var(--ck-fs-micro); line-height: var(--ck-lh-micro); color: var(--ck-fg-mute); letter-spacing: 0.04em; }
+
+/* Verbatim invariant · first-class design element.
+   Canonical sentences like "mode changes deployment, not governance semantics"
+   are rendered with this class — 7px amber JetBrains Mono 600. */
+.ck-invariant {
+  font-family: var(--ck-ff-mono);
+  font-weight: 600;
+  font-size: var(--ck-fs-invar);
+  line-height: var(--ck-lh-invar);
+  color: var(--ck-text-role);
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+a, .ck-link {
+  color: var(--ck-link);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  text-underline-offset: 3px;
+}
+a:hover, .ck-link:hover { color: var(--ck-link-hov); }
+a:focus-visible, .ck-link:focus-visible {
+  outline: none;
+  box-shadow: var(--ck-ring-focus);
+}
+
+/* ============================================================
+ * 6 · GLOBAL RESET (minimal)
+ * ============================================================ */
+html { background: var(--ck-bg-0); color: var(--ck-fg-1); }
+body {
+  margin: 0;
+  background: var(--ck-bg-0);
+  color: var(--ck-fg-1);
+  font-family: var(--ck-ff-body);
+  font-size: var(--ck-fs-body);
+  line-height: var(--ck-lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+::selection { background: color-mix(in oklab, var(--ck-yellow) 60%, transparent); color: var(--ck-deep-blue); }
+
+/* ============================================================
+ * 7 · BENTOGRAPHY PRIMITIVES (CSS-only component bases)
+ * Chamfered polygons replace rounded rects. No border-radius:9999
+ * pills; no pulse dots; no plain rounded rects.
+ * ============================================================ */
+
+/* Chamfered box — 10px canonical cut on all corners via clip-path.
+   Use .ck-bento for any container that would otherwise be a rounded rect. */
+.ck-bento {
+  --_c: var(--ck-chamfer);
+  background: var(--ck-bg-1);
+  clip-path: polygon(
+    var(--_c) 0, calc(100% - var(--_c)) 0,
+    100% var(--_c), 100% calc(100% - var(--_c)),
+    calc(100% - var(--_c)) 100%, var(--_c) 100%,
+    0 calc(100% - var(--_c)), 0 var(--_c)
+  );
+  position: relative;
+}
+/* Bentography stroke + inner encapsulation ring.
+   Because clip-path eats borders, we paint the contour as a background layer. */
+.ck-bento--stroked {
+  background:
+    /* inner encapsulation 1px */
+    linear-gradient(var(--ck-stroke-2c), var(--ck-stroke-2c)) padding-box,
+    var(--ck-bg-1);
+  padding: 1px;
+}
+.ck-bento--stroked > .ck-bento__inner {
+  --_c: calc(var(--ck-chamfer) - 1px);
+  clip-path: polygon(
+    var(--_c) 0, calc(100% - var(--_c)) 0,
+    100% var(--_c), 100% calc(100% - var(--_c)),
+    calc(100% - var(--_c)) 100%, var(--_c) 100%,
+    0 calc(100% - var(--_c)), 0 var(--_c)
+  );
+  background: var(--ck-bg-1);
+  padding: var(--ck-sp-4) var(--ck-sp-5);
+}
+
+/* Tick rail — 6 equal <i> slots rendered as rect segments.
+   GAL indicators and progress meters. NEVER Unicode rail glyphs. */
+.ck-rail {
+  display: inline-grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 2px;
+  width: 84px;
+  height: 6px;
+}
+.ck-rail > i {
+  display: block;
+  background: var(--ck-rail);
+  opacity: 0.25;
+}
+.ck-rail > i.on { opacity: 1; }
+
+/* Typed arrows — five variants (CSS classes for inline SVG use).
+   Consumers apply via <svg class="ck-arrow ck-arrow--attested">. */
+.ck-arrow              { stroke: var(--ck-stroke); fill: none; }
+.ck-arrow--kernel      { stroke-width: 1; }        /* double-stroke drawn as 2 lines, no head */
+.ck-arrow--attested    { stroke-width: 1; }        /* + hash ticks + teal head */
+.ck-arrow--deny        { stroke: var(--ck-deny); stroke-width: 1.25; } /* X terminus */
+.ck-arrow--promotion   { stroke: var(--ck-stroke); stroke-width: 1.25; } /* teal chevron */
+.ck-arrow--emergency   { stroke: var(--ck-accent); stroke-width: 2; }   /* yellow + triple tick */
+
+/* Motion — Resolve. 4-beat: outline → witness → nucleus → anchor, 1.8s total. */
+@keyframes ck-resolve-outline { 0%,100%{opacity:0}   5%,25%{opacity:1} 25%,100%{opacity:1} }
+@keyframes ck-resolve-witness { 0%,25%{opacity:0}  30%,50%{opacity:1} 50%,100%{opacity:1} }
+@keyframes ck-resolve-nucleus { 0%,50%{opacity:0}  55%,75%{opacity:1} 75%,100%{opacity:1} }
+@keyframes ck-resolve-anchor  { 0%,75%{opacity:0}  80%,100%{opacity:1} }
+.ck-resolve-outline  { animation: ck-resolve-outline var(--ck-resolve) var(--ck-ease-resolve) 1 both; }
+.ck-resolve-witness  { animation: ck-resolve-witness var(--ck-resolve) var(--ck-ease-resolve) 1 both; }
+.ck-resolve-nucleus  { animation: ck-resolve-nucleus var(--ck-resolve) var(--ck-ease-resolve) 1 both; }
+.ck-resolve-anchor   { animation: ck-resolve-anchor  var(--ck-resolve) var(--ck-ease-resolve) 1 both; }
+
+/* Orb breathing — single kinetic focal anchor, suppressed under reduced motion */
+@keyframes ck-orb-breathe {
+  0%,100% { transform: scale(1);    opacity: 1;   }
+  50%     { transform: scale(1.04); opacity: 0.92; }
+}
+.ck-orb__ring { animation: ck-orb-breathe 4s var(--ck-ease-resolve) infinite; transform-origin: center; }
+@media (prefers-reduced-motion: reduce) {
+  .ck-orb__ring,
+  .ck-resolve-outline, .ck-resolve-witness,
+  .ck-resolve-nucleus, .ck-resolve-anchor { animation: none; }
+}
+
+/* ============================================================
+ * 8 · GUARDRAILS
+ * No border-radius pills. No pulse. No generic rounded rects.
+ * These selectors are cosmetic enforcement — the package_cnsb.py
+ * rejection-tester is the real gate.
+ * ============================================================ */
+/* utilities */
+.ck-stack-1 { display: flex; flex-direction: column; gap: var(--ck-sp-1); }
+.ck-stack-2 { display: flex; flex-direction: column; gap: var(--ck-sp-2); }
+.ck-stack-3 { display: flex; flex-direction: column; gap: var(--ck-sp-3); }
+.ck-stack-4 { display: flex; flex-direction: column; gap: var(--ck-sp-4); }
+.ck-row-2   { display: flex; align-items: center; gap: var(--ck-sp-2); }
+.ck-row-3   { display: flex; align-items: center; gap: var(--ck-sp-3); }
+.ck-row-4   { display: flex; align-items: center; gap: var(--ck-sp-4); }

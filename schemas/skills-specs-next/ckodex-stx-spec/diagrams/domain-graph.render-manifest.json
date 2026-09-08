@@ -1,0 +1,41 @@
+{
+  "apiVersion": "ckodex.org/diagram-manifest/v1",
+  "kind": "DiagramRenderManifest",
+  "diagram": {
+    "id": "stx.domain-graph",
+    "title": "STX v1 — Domain Graph",
+    "tier": "T1",
+    "type": "ckodex-native",
+    "subtype": "domain-graph",
+    "palette": "mcdesign-v1.3",
+    "accent_use": "single",
+    "accent_target": "CapabilityDescriptor (handshake focal)",
+    "proof_targets": ["EvidenceBundle", "AttestationChain"]
+  },
+  "sources": {
+    "html": "diagrams/domain-graph.html",
+    "mmd":  "diagrams/domain-graph.mmd"
+  },
+  "claims": [
+    "CapabilityDescriptor defaultPrivacyMode is audit-private",
+    "Harness has 1..n Sessions",
+    "Session has 0..n SkillStates and 0..n PolicyGates",
+    "SkillState has 0..n TierTransitions",
+    "TierTransition references EvidenceBundle iff GAL >= 3",
+    "EvidenceBundle has AttestationChain iff GAL >= 4",
+    "Schema is source of truth; transports project identically"
+  ],
+  "accessibility": {
+    "role": "img",
+    "has_aria_label": true,
+    "respects_prefers_reduced_motion": true,
+    "contrast_minimum": "AAA"
+  },
+  "verifier": {
+    "wcag_violations": 0,
+    "off_palette_colors": 0,
+    "jetbrains_mono_uses": 0,
+    "script_tags": 0,
+    "img_tags": 0
+  }
+}

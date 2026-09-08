@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  # OCI 1.2 registry for skill artifacts — push/pull via `sctl push/pull`
+  zot-registry:
+    image: ghcr.io/project-zot/zot-linux-amd64:latest
+    container_name: zot-registry
+    ports:
+      - "5000:5000"
+    volumes:
+      - zot-data:/var/lib/registry
+      - ./configs/zot-config.json:/etc/zot/config.json:ro
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5000/v2/"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+
+  skillpack-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: skillpack-server:local
+    container_name: skillpack-server
+    ports:
+      - "50051:50051"   # gRPC
+      - "50052:50052"   # HTTP (SSE + REST + health)
+    environment:
+      - SKILLPACK_PORT=50051
+      - SKILLPACK_HTTP_PORT=50052
+      - SKILLPACK_DB_PATH=/data/skillpack.db
+      - RUST_LOG=info
+    volumes:
+      - skillpack-data:/data
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:50052/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  skillpack-data:
+  zot-data:

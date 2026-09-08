@@ -1,0 +1,19 @@
+%% CKODEX STX v1 — Domain Graph (T1 ckodex-native)
+%% MCDESIGN v1.3 · ink + muted base, proof-violet for evidence/attestation, accent rust for the capability node (focal)
+graph TD
+    Harness["Harness<br/><span style='font-family:Geist Mono;font-size:11px'>urn:ckodex:harness:*</span>"]
+    Capability["CapabilityDescriptor<br/><span style='font-family:Geist Mono;font-size:11px'>defaultPrivacyMode = audit-private</span>"]
+    Session["Session<br/><span style='font-family:Geist Mono;font-size:11px'>GAL + privacyMode</span>"]
+    SkillState["SkillState<br/><span style='font-family:Geist Mono;font-size:11px'>tier · score · skillId=sha256(...)</span>"]
+    TierTransition["TierTransition<br/><span style='font-family:Geist Mono;font-size:11px'>fromTier &rarr; toTier · trigger</span>"]
+    EvidenceBundle["EvidenceBundle<br/><span style='font-family:Geist Mono;font-size:11px'>predicate ckodex/skill-lifecycle@v1</span>"]
+    AttestationChain["AttestationChain<br/><span style='font-family:Geist Mono;font-size:11px'>cosign · dilithium3</span>"]
+    PolicyGate["PolicyGate<br/><span style='font-family:Geist Mono;font-size:11px'>pre_exec · runtime · post_exec</span>"]
+
+    Harness -- "has_capability" --> Capability
+    Harness -- "hasSession 1..n" --> Session
+    Session -- "hasSkillState 0..n" --> SkillState
+    SkillState -- "hasTransition 0..n" --> TierTransition
+    TierTransition -- "hasEvidence 0..1<br/>(GAL >= 3)" --> EvidenceBundle
+    EvidenceBundle -- "hasAttestation 0..1<br/>(GAL >= 4)" --> AttestationChain
+    Session -- "evaluatedBy 0..n" --> PolicyGate

@@ -1,0 +1,11 @@
+{
+  "stxVersion": "v1",
+  "transports": ["rest", "grpc", "graphql"],
+  "privacyModesSupported": ["debug-local", "audit-private", "public-anchor", "regulated-export"],
+  "defaultPrivacyMode": "audit-private",
+  "maxEventsPerSecond": 100,
+  "maxQueryDepth": 6,
+  "harnessId": "urn:ckodex:harness:demo",
+  "harnessVersion": "1.0.0",
+  "frameworkVersion": "v16.0"
+}

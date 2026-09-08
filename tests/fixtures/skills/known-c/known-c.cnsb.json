@@ -1,0 +1,23 @@
+{
+  "apiVersion": "cnsb.ckodex.org/v1",
+  "kind": "SkillBundle",
+  "metadata": {
+    "name": "known-c",
+    "urn": "urn:cnsb:known-c:1.0.0",
+    "version": "1.0.0"
+  },
+  "spec": {
+    "skills": [{
+      "name": "known-c",
+      "description": "C-grade fixture with no examples and empty verify hook.",
+      "asc": ["OIS-ASC-001"],
+      "galMin": 2,
+      "galMax": 4,
+      "lifecycle": {
+        "install":     {"command": "echo installing known-c"},
+        "uninstall":   {"command": "echo uninstalling known-c"},
+        "verify":      {"command": ""}
+      }
+    }]
+  }
+}

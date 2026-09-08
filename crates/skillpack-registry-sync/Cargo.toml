@@ -1,0 +1,31 @@
+[package]
+name = "skillpack-registry-sync"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "OCI 1.2 registry sync — centralized skill distribution across 19 AI coding assistants"
+
+[[bin]]
+name = "sctl"
+path = "src/main.rs"
+
+[dependencies]
+skillpack-domain = { path = "../skillpack-domain" }
+skillpack-adapters = { path = "../skillpack-adapters" }
+
+anyhow.workspace = true
+thiserror.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tokio = { workspace = true }
+tracing.workspace = true
+tracing-subscriber.workspace = true
+clap.workspace = true
+colored.workspace = true
+sha2.workspace = true
+hex.workspace = true
+walkdir.workspace = true
+chrono.workspace = true
+oci-client.workspace = true
+dirs = "5.0"

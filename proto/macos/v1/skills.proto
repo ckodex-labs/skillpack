@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package skills;
+
+service SkillsService {
+    // Triggers a full synchronization of skills
+    rpc SyncSkills (SyncRequest) returns (SyncResponse);
+    
+    // Gets the current state and number of skills
+    rpc GetStatus (StatusRequest) returns (StatusResponse);
+    
+    // Checks if a specific path violates the Thales IP boundary
+    rpc CheckBoundary (BoundaryRequest) returns (BoundaryResponse);
+}
+
+message SyncRequest {
+    bool dry_run = 1;
+    bool no_index = 2;
+    string only_agent = 3;
+}
+
+message SyncResponse {
+    bool success = 1;
+    string message = 2;
+    int32 skills_processed = 3;
+}
+
+message StatusRequest {}
+
+message StatusResponse {
+    string canonical_root = 1;
+    int32 total_skills = 2;
+    repeated string active_agents = 3;
+}
+
+message BoundaryRequest {
+    string target_path = 1;
+}
+
+message BoundaryResponse {
+    bool is_safe = 1;
+    string message = 2;
+}

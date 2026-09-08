@@ -1,0 +1,15 @@
+[package]
+name = "xtask"
+version = "1.0.0-beta.2"
+edition = "2024"
+rust-version = "1.95"
+publish = false
+
+[dependencies]
+anyhow = { workspace = true }
+clap = { workspace = true }
+fanring = "0.3.2"
+serde = { workspace = true }
+serde_json = { workspace = true }
+sha2 = { workspace = true }
+uuid = { workspace = true }

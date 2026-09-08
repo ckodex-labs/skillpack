@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "ckodex.org/pack-manifest/v1",
+  "pack": "ckodex-skill-lifecycle-rfc001",
+  "version": "0.2.0",
+  "framework": "CKODEX v16.0",
+  "files": [
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "sha256:5543b1b24681d2e64cfa296702de5c24700007bde7dd9afb4d48eb9404317030",
+      "bytes": 3767
+    },
+    {
+      "path": "README.md",
+      "sha256": "sha256:165235f06d81e5627d8824758a9b9fc832daa735ecd46310916b0964d2f47e40",
+      "bytes": 3982
+    },
+    {
+      "path": "RFC-001-skill-lifecycle.md",
+      "sha256": "sha256:f2c9839881300fb213cdce7ad81655ac7cc4aad5e4f0ee39b39a2b0aedb428df",
+      "bytes": 44858
+    },
+    {
+      "path": "conformance/README.md",
+      "sha256": "sha256:21fead54f85a1fbb4db2621308985cc0627957777dc2883d1fc349a9f10ec784",
+      "bytes": 2479
+    },
+    {
+      "path": "conformance/run.py",
+      "sha256": "sha256:3910c74f08e73f54695d73443d674160a5d290308d8325761cf67702d08ee6a0",
+      "bytes": 9437
+    },
+    {
+      "path": "conformance/vectors.json",
+      "sha256": "sha256:a7fe525ce46c4ad148eb1636e0083d3d3a850507b8153c9c072640e2f58829b5",
+      "bytes": 9503
+    },
+    {
+      "path": "diagrams/event-loop.html",
+      "sha256": "sha256:243e1915169a0f9401ac606c8416fcefa333c5cceafab6d0603e356929cf36c2",
+      "bytes": 20749
+    },
+    {
+      "path": "diagrams/event-loop.mmd",
+      "sha256": "sha256:6360dd420bb0560f88a269f03cc1d4149fa84041bef8be3e84bad282eddb39a3",
+      "bytes": 3384
+    },
+    {
+      "path": "diagrams/event-loop.render-manifest.json",
+      "sha256": "sha256:c937565e149734502b2c785bca207b4e69d8d9ff55e34aed6addad473fc6063e",
+      "bytes": 3635
+    },
+    {
+      "path": "diagrams/fsm-lifecycle.html",
+      "sha256": "sha256:aed08feb7f91566bf9e9c2fcb7133f12441d8961601d62c9033fc2ae3bb75e73",
+      "bytes": 20737
+    },
+    {
+      "path": "diagrams/fsm-lifecycle.mmd",
+      "sha256": "sha256:946d26ab4d7e3957148fc39a47cfe120a60f525bfc6c7181fac70e999bdbff3f",
+      "bytes": 2423
+    },
+    {
+      "path": "diagrams/fsm-lifecycle.render-manifest.json",
+      "sha256": "sha256:fa411d5e71caf49a9af4a16f06039ac8f5e9de524caa62f8b83fb8f4abd7e14e",
+      "bytes": 4157
+    },
+    {
+      "path": "reference/__init__.py",
+      "sha256": "sha256:71e1e860dc90568998da5f7b6ebafc66afdd97de31d1c3ac5ad62def688c7bb9",
+      "bytes": 1178
+    },
+    {
+      "path": "reference/kernel.py",
+      "sha256": "sha256:11c1b10db13d806305414606a7645f0719b17ac87f859ee29024c0754ce239eb",
+      "bytes": 17669
+    },
+    {
+      "path": "reference/scoring.py",
+      "sha256": "sha256:a01c50d3f1b7a808a358dadfd0ca91d3427978ecb2ae7e0decdac444de18cc6d",
+      "bytes": 8629
+    },
+    {
+      "path": "schemas/pca-lifecycle.v1.schema.json",
+      "sha256": "sha256:ad73f28610d432351d8c1fdc0f7d88c42cf175d9594b759caefe46534089f422",
+      "bytes": 4791
+    },
+    {
+      "path": "schemas/skill-runtime-capabilities.v1.schema.json",
+      "sha256": "sha256:6273f3caf570279fd2a85e65b0dbdc927a9d2afc72142000744e4bb274ea3a42",
+      "bytes": 2282
+    },
+    {
+      "path": "scripts/validate.sh",
+      "sha256": "sha256:9e89deb6be54dd15723f4e5782a10e022782d7b89e1a29bfd129c1ac1580430a",
+      "bytes": 4848
+    }
+  ],
+  "fileCount": 18
+}

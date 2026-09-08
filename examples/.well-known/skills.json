@@ -1,0 +1,16 @@
+{
+  "issuer": "https://skills.ckodex.org",
+  "skills_endpoint": "https://api.ckodex.org/v1/skills",
+  "index_endpoint": "https://api.ckodex.org/v1/skills/index",
+  "registry": "ghcr.io/ckodex/skills",
+  "signing_keys_uri": "https://skills.ckodex.org/.well-known/jwks.json",
+  "supported_versions": ["cnsb.ckodex.org/v1", "cnaab.ckodex.org/v1"],
+  "capabilities": {
+    "oci_push": true,
+    "oci_pull": true,
+    "signature_verification": true,
+    "sbom_attestation": true
+  },
+  "contact": "security@ckodex.org",
+  "documentation": "https://docs.ckodex.org/skills"
+}

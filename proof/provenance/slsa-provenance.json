@@ -1,0 +1,24 @@
+{
+  "$schema": "https://slsa.dev/provenance/v1",
+  "buildDefinition": {
+    "buildType": "https://ckodex.dev/skillpack/build-type/v1",
+    "externalParameters": {
+      "repository": "https://github.com/ckodex/skillpack",
+      "ref": "refs/tags/v1.0.0-beta.2"
+    },
+    "internalParameters": {
+      "workflow": ".dagger/pipeline.rs"
+    },
+    "resolvedDependencies": []
+  },
+  "runDetails": {
+    "builder": {
+      "id": "https://github.com/ckodex/skillpack/.dagger/pipeline.rs"
+    },
+    "metadata": {
+      "invocationId": "f0c840da-fa01-49ad-a5f5-8d6d080f474f",
+      "startedOn": "2026-09-08T15:05:04Z",
+      "finishedOn": "2026-09-08T15:05:04Z"
+    }
+  }
+}

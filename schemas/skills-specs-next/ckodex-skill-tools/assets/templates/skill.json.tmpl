@@ -1,0 +1,57 @@
+{
+  "apiVersion": "ckodex.org/skill/v1.1",
+  "kind": "Skill",
+  "metadata": {
+    "name": "${name}",
+    "description": "${description}",
+    "synopsis": "${synopsis}",
+    "version": "${version}",
+    "license": "${license}",
+    "authors": ["${author}"],
+    "keywords": []
+  },
+  "entrypoints": { "skillMd": "SKILL.md" },
+  "agentSkillsFrontmatter": {
+    "compatibility": "Filesystem-based agents.",
+    "allowedToolsRaw": "Read"
+  },
+  "capabilities": {
+    "requiresNetwork": false,
+    "requiresFilesystem": true,
+    "tools": [
+      { "name": "Read", "risk": "low" }
+    ]
+  },
+  "resources": {
+    "scripts":    ["scripts/validate.sh"],
+    "references": ["references/usage.md"]
+  },
+  "policy": {
+    "sandbox": "recommended",
+    "userConfirmation": "dangerous-only",
+    "dataHandling": { "pii": false, "secrets": false }
+  },
+  "governance": {
+    "galMinimum": 1,
+    "proofRequired": false,
+    "proofTypes": [],
+    "enforcementPoints": ["pre_exec"]
+  },
+  "ontology": {
+    "@context": "https://ckodex.org/skill-context/v1",
+    "subjects":    [],
+    "produces":    [],
+    "consumes":    [],
+    "related":     [],
+    "exclusiveOf": [],
+    "triggers":    [],
+    "galMinimum":  1,
+    "proofTypes":  []
+  },
+  "runtime": {
+    "implicitInvocation": true,
+    "minTier": "L1",
+    "maxTier": "L3",
+    "l4xAllowed": false
+  }
+}

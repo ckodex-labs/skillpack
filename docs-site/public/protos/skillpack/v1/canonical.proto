@@ -1,0 +1,316 @@
+syntax = "proto3";
+
+package skillpack.v1;
+
+option go_package = "github.com/ckodex/skillpack/gen/go/skillpack/v1";
+
+// ========================================
+// Canonical Store Service
+// Manages canonical skill store, agent sync,
+// IP boundary checks, and skill migration.
+// ========================================
+
+service CanonicalStoreService {
+  // Trigger canonical store sync to agents
+  rpc SyncAgents(SyncAgentsRequest) returns (SyncAgentsResponse);
+
+  // Check IP boundary for a path or skill name
+  rpc CheckBoundary(CheckBoundaryRequest) returns (CheckBoundaryResponse);
+
+  // Migrate all physical skills from agent dirs to canonical store
+  rpc MigrateAll(MigrateAllRequest) returns (MigrateAllResponse);
+
+  // Import an external skill into canonical store
+  rpc ImportSkill(ImportSkillRequest) returns (ImportSkillResponse);
+
+  // Promote a candidate skill to active canonical store
+  rpc PromoteSkill(PromoteSkillRequest) returns (PromoteSkillResponse);
+
+  // Get canonical store status (skill count, agents, health)
+  rpc GetStatus(GetStatusRequest) returns (GetStatusResponse);
+
+  // Stream sync progress
+  rpc SyncAgentsStream(SyncAgentsRequest) returns (stream SyncEvent);
+
+  // Rollback last sync for one or all agents
+  rpc RollbackSync(RollbackSyncRequest) returns (RollbackSyncResponse);
+
+  // Package a skill as an OCI artifact for distribution
+  rpc PackageSkill(PackageSkillRequest) returns (PackageSkillResponse);
+
+  // Pull a skill from an OCI registry
+  rpc PullSkill(PullSkillRequest) returns (PullSkillResponse);
+
+  // Migrate skills in canonical store (adds missing frontmatter fields)
+  rpc MigrateSkills(MigrateSkillsRequest) returns (MigrateSkillsResponse);
+
+  // Migrate agent skills in ~/.config/agents/skills
+  rpc MigrateAgents(MigrateAgentsRequest) returns (MigrateAgentsResponse);
+
+  // Migrate Claude agent definitions in ~/.claude/agents
+  rpc MigrateClaudeAgents(MigrateClaudeAgentsRequest) returns (MigrateClaudeAgentsResponse);
+
+  // Migrate agent harness rules in ~/.config/agents/skills/*/rules
+  rpc MigrateHarnesses(MigrateHarnessesRequest) returns (MigrateHarnessesResponse);
+}
+
+// ========================================
+// Sync Agents
+// ========================================
+
+message SyncAgentsRequest {
+  bool dry_run = 1;
+  bool no_index = 2;
+  optional string only_agent = 3;
+  optional string namespace = 4;
+}
+
+message SyncAgentsResponse {
+  bool success = 1;
+  string message = 2;
+  int32 skills_processed = 3;
+  repeated AgentSyncResult agent_results = 4;
+}
+
+message AgentSyncResult {
+  string agent_name = 1;
+  bool success = 2;
+  string message = 3;
+  int32 skills_synced = 4;
+}
+
+// ========================================
+// Check Boundary
+// ========================================
+
+message CheckBoundaryRequest {
+  string target_path = 1;
+  optional string skill_name = 2;
+}
+
+message CheckBoundaryResponse {
+  bool is_safe = 1;
+  string message = 2;
+  repeated string violations = 3;
+}
+
+// ========================================
+// Migrate All
+// ========================================
+
+message MigrateAllRequest {
+  string canonical_root = 1;
+}
+
+message MigrateAllResponse {
+  bool success = 1;
+  string message = 2;
+  repeated MigrateResult results = 3;
+  int32 migrated_count = 4;
+  int32 replaced_count = 5;
+  int32 skipped_linked_count = 6;
+  int32 skipped_ip_count = 7;
+}
+
+message MigrateResult {
+  string agent_name = 1;
+  string skill_name = 2;
+  string source_path = 3;
+  MigrateOutcome outcome = 4;
+  optional string message = 5;
+}
+
+enum MigrateOutcome {
+  MIGRATE_OUTCOME_UNSPECIFIED = 0;
+  MIGRATE_OUTCOME_MIGRATED = 1;
+  MIGRATE_OUTCOME_REPLACED_WITH_LINK = 2;
+  MIGRATE_OUTCOME_SKIPPED_ALREADY_LINKED = 3;
+  MIGRATE_OUTCOME_SKIPPED_IP_VIOLATION = 4;
+  MIGRATE_OUTCOME_FAILED = 5;
+}
+
+// ========================================
+// Import Skill
+// ========================================
+
+message ImportSkillRequest {
+  string source_path = 1;
+  optional string target_name = 2;
+}
+
+message ImportSkillResponse {
+  bool success = 1;
+  string message = 2;
+  string skill_name = 3;
+  string canonical_path = 4;
+}
+
+// ========================================
+// Promote Skill
+// ========================================
+
+message PromoteSkillRequest {
+  string candidate_name = 1;
+}
+
+message PromoteSkillResponse {
+  bool success = 1;
+  string message = 2;
+  string skill_name = 3;
+}
+
+// ========================================
+// Get Status
+// ========================================
+
+message GetStatusRequest {}
+
+message GetStatusResponse {
+  string canonical_root = 1;
+  int32 total_skills = 2;
+  repeated AgentStatus active_agents = 3;
+  bool is_healthy = 4;
+}
+
+message AgentStatus {
+  string name = 1;
+  string path = 2;
+  AgentIntegrationType integration_type = 3;
+  bool is_active = 4;
+  int32 skills_count = 5;
+}
+
+enum AgentIntegrationType {
+  AGENT_INTEGRATION_TYPE_UNSPECIFIED = 0;
+  AGENT_INTEGRATION_TYPE_SYMLINK = 1;
+  AGENT_INTEGRATION_TYPE_INDEX_FILE = 2;
+}
+
+// ========================================
+// Sync Stream
+// ========================================
+
+message SyncEvent {
+  oneof event {
+    SyncProgress progress = 1;
+    SyncComplete complete = 2;
+    SyncError error = 3;
+  }
+}
+
+message SyncProgress {
+  string agent_name = 1;
+  string skill_name = 2;
+  string status = 3;
+  int32 current = 4;
+  int32 total = 5;
+}
+
+message SyncComplete {
+  bool success = 1;
+  string message = 2;
+  int32 skills_processed = 3;
+}
+
+message SyncError {
+  string agent_name = 1;
+  string skill_name = 2;
+  string error_message = 3;
+}
+
+// ========================================
+// Rollback Sync
+// ========================================
+
+message RollbackSyncRequest {
+  optional string agent_name = 1;
+}
+
+message RollbackSyncResponse {
+  bool success = 1;
+  string message = 2;
+  repeated string restored_agents = 3;
+  int32 removed_skills = 4;
+}
+
+// ========================================
+// OCI Distribution
+// ========================================
+
+message PackageSkillRequest {
+  string skill_ref = 1;
+  optional string registry_url = 2;
+  optional string namespace = 3;
+}
+
+message PackageSkillResponse {
+  bool success = 1;
+  string message = 2;
+  string artifact_digest = 3;
+  string manifest_url = 4;
+}
+
+message PullSkillRequest {
+  string skill_ref = 1;
+  string source_registry = 2;
+  optional string namespace = 3;
+}
+
+message PullSkillResponse {
+  bool success = 1;
+  string message = 2;
+  string local_path = 3;
+  string skill_name = 4;
+}
+
+// ========================================
+// Migration RPCs
+// ========================================
+
+message MigrateSkillsRequest {
+  optional string canonical_root = 1;
+}
+
+message MigrateSkillsResponse {
+  bool success = 1;
+  string message = 2;
+  int32 total_scanned = 3;
+  int32 migrated_count = 4;
+  int32 already_compliant_count = 5;
+  repeated string migrated_names = 6;
+}
+
+message MigrateAgentsRequest {}
+
+message MigrateAgentsResponse {
+  bool success = 1;
+  string message = 2;
+  int32 total_scanned = 3;
+  int32 migrated_count = 4;
+  int32 already_compliant_count = 5;
+  repeated string migrated_names = 6;
+}
+
+message MigrateClaudeAgentsRequest {
+  optional string agents_dir = 1;
+}
+
+message MigrateClaudeAgentsResponse {
+  bool success = 1;
+  string message = 2;
+  int32 total_scanned = 3;
+  int32 migrated_count = 4;
+  int32 already_compliant_count = 5;
+  repeated string migrated_names = 6;
+}
+
+message MigrateHarnessesRequest {}
+
+message MigrateHarnessesResponse {
+  bool success = 1;
+  string message = 2;
+  int32 total_scanned = 3;
+  int32 migrated_count = 4;
+  int32 already_compliant_count = 5;
+  repeated string migrated_names = 6;
+}

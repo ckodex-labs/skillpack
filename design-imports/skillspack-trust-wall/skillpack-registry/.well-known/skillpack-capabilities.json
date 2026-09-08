@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "protocolVersion": 1,
+  "supportedTransports": ["gRPC", "REST"],
+  "features": [
+    { "id": "assessment", "rpc": "SkillPackService.Assess", "streaming": true },
+    { "id": "grading", "rpc": "SkillPackService.Grade", "streaming": false },
+    { "id": "registry", "rpc": "IndexService.Search", "streaming": false },
+    { "id": "lifecycle", "rpc": "LifecycleService.WatchLifecycleEvents", "streaming": true },
+    { "id": "migration", "rpc": "EvolveService.MigrateSandboxed", "streaming": true }
+  ],
+  "limits": { "unaryTimeoutSec": 30, "streamTimeoutSec": 300, "maxPayloadMB": 32 },
+  "auth": { "scheme": "Bearer", "source": "SKILLPACK_TOKEN" },
+  "keepalive": { "grpcPingSec": 30, "restPollSec": 60, "ackTimeoutSec": 10 }
+}

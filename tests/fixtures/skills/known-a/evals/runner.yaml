@@ -1,0 +1,10 @@
+runner: builtin
+cases:
+  - id: smoke-001
+    input: "echo hello"
+    expected_substring: "hello"
+hitl:
+  required: true
+  approver_roles: ["sec-lead", "qa-lead"]
+  promotion_thresholds:
+    grade_minimum: B

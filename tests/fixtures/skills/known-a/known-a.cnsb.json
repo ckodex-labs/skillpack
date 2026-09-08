@@ -1,0 +1,31 @@
+{
+  "apiVersion": "cnsb.ckodex.org/v1",
+  "kind": "SkillBundle",
+  "metadata": {
+    "name": "known-a",
+    "urn": "urn:cnsb:known-a:1.0.0",
+    "version": "1.0.0"
+  },
+  "spec": {
+    "skills": [{
+      "name": "known-a",
+      "description": "Reference A-grade fixture covering full SkillPack canonical 9-dimension surface.",
+      "asc": ["OIS-ASC-001", "OIS-ASC-014", "OIS-ASC-042"],
+      "galMin": 2,
+      "galMax": 4,
+      "examples": [
+        {"title": "basic", "input": "echo hello", "expected": "hello"}
+      ],
+      "lifecycle": {
+        "pack":        {"command": "tar czf known-a.tgz ."},
+        "unpack":      {"command": "tar xzf known-a.tgz"},
+        "install":     {"command": "echo installing known-a"},
+        "upgrade":     {"command": "echo upgrading known-a"},
+        "uninstall":   {"command": "echo uninstalling known-a"},
+        "verify":      {"command": "test -f SKILL.md"},
+        "preInstall":  {"command": "echo preflight"},
+        "postInstall": {"command": "echo done"}
+      }
+    }]
+  }
+}

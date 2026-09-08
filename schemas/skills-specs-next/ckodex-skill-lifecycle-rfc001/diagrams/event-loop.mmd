@@ -1,0 +1,76 @@
+---
+ckodex:
+  framework: v16.0
+  designSystem: mcdesign-v1.3.0
+diagram:
+  type: T4-swimlane-activity
+  tenant: ckodex-labs
+  slug: rfc001-event-loop
+  title: "RFC-001 Agent Event Loop — Per-Turn Skill Lifecycle"
+  brand_status: tenant-applied
+  governance_status: draft-non-attested
+  themes:
+    supported: [light, dark, high-contrast, forced-colors]
+    testing_floor: [light, dark]
+  semantics:
+    node_count: 8
+    edge_count: 10
+    proof_nodes: 1
+    focal_accent_count: 2
+references:
+  - "RFC-001 v0.2.0 §3 (six-tier FSM)"
+  - "RFC-001 v0.2.0 §4 (multi-signal scoring)"
+  - "RFC-001 v0.2.0 §5 (hysteresis bands)"
+  - "RFC-001 v0.2.0 §6 (eviction policy)"
+  - "RFC-001 v0.2.0 §8 (reference algorithm)"
+  - "RFC-001 v0.2.0 §9 (PCA privacy modes)"
+---
+%% Each node carries a governance claim. Each edge carries a labeled
+%% transition or transported data. No silent state. No bare arrows.
+
+flowchart LR
+
+  %% ─────────────── LANE: Adapter ────────────────
+  subgraph adapter ["Adapter lane"]
+    direction LR
+    N1["<b>Receive turn</b><br/><i>claim:</i> turn boundary t<sub>n</sub><br/><i>ingress:</i> msg + recent K turns"]
+    N7["<b>Respond</b><br/><i>claim:</i> skills at L2+ in context<br/><i>egress:</i> assistant reply"]
+  end
+
+  %% ─────────────── LANE: Router ─────────────────
+  subgraph router ["Router lane"]
+    direction LR
+    N2["<b>Embed ctx + S<sub>pol</sub> filter</b><br/><i>claim:</i> policy-dominated candidacy<br/><i>filter:</i> GAL · scope · framework"]
+    N3{{"<b>Score signals</b><br/><i>claim:</i> bounded ∈ [0,1]<br/>S<sub>lex</sub>+S<sub>sem</sub>+S<sub>ont</sub>+S<sub>co</sub>+S<sub>rec</sub>+S<sub>usr</sub>"}}
+  end
+
+  %% ─────────────── LANE: Kernel FSM ─────────────
+  subgraph kernel ["Kernel FSM lane"]
+    direction LR
+    N4["<b>Promote</b><br/><i>FSM:</i> L1→L2 @ τ<sub>syn</sub>=0.45<br/>L2→L3 @ τ<sub>full</sub>=0.65 ∧ intent"]
+    D1{"Σ tokens(loaded)<br/>&gt; B<sub>pool</sub>?"}
+    N5["<b>Demote + Evict</b><br/><i>triggers:</i> drift≥0.35 · idle&gt;N · mutex<br/><i>order:</i> argmin score, lowest tier first"]
+  end
+
+  %% ─────────────── LANE: Evidence ───────────────
+  subgraph evidence ["Evidence lane"]
+    direction LR
+    N6[["<b>Emit PCA</b><br/><i>predicate:</i> ckodex/skill-lifecycle@v1<br/><i>mode:</i> audit-private<br/>sha256:&lt;12-char-prefix&gt;..."]]
+  end
+
+  %% ─────────────── EDGES (all labeled, all orthogonal in HTML render) ───────────────
+  N1 -->|"msg ⊕ K turns"| N2
+  N2 -->|"candidates: S<sub>pol</sub>=1"| N3
+  N3 -->|"∀ s: score ≥ τ<sub>load</sub>"| N4
+  N4 -->|"post-promotion pool"| D1
+  D1 -->|"no — within budget"| N6
+  D1 -->|"yes — over budget"| N5
+  N5 -->|"trigger=budget · drift · idle"| N6
+  N6 -->|"PCA digest · audit-private"| N7
+  N7 -.->|"loop — next turn t<sub>n+1</sub>"| N1
+
+  %% ─────────────── PROOF NODE STYLING (semantic role: cryptographic attestation) ───────────────
+  classDef proof stroke-width:2px;
+  classDef focal stroke-width:2px;
+  class N6 proof;
+  class N3 focal;

@@ -1,0 +1,18 @@
+{
+  "id": "urn:ckodex:evidence:00000000-0000-0000-0000-000000000001",
+  "subject": {
+    "urn": "urn:ckodex:skill:known-a:1.0.0",
+    "kind": "SkillBundle"
+  },
+  "statement": {
+    "type": "SkillAssessment",
+    "payload": {
+      "grade": "A",
+      "dimensions": {"IdentityAndManifest": 100, "Security": 100, "Provenance": 100},
+      "skill": {"name": "known-a", "version": "1.0.0"}
+    }
+  },
+  "issued_at": "2026-05-10T00:00:00Z",
+  "actor": {"kind": "agent", "id": "skillpack"},
+  "signatures": [{"algo": "noop", "keyid": "test", "sig": "test"}]
+}

@@ -1,0 +1,161 @@
+{
+    "$id": "https://schemas.ckodex.org/common/types.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "CKODEX Common Types",
+    "type": "object",
+    "$defs": {
+        "Urn": {
+            "title": "URN",
+            "type": "string",
+            "pattern": "^urn:",
+            "minLength": 4,
+            "description": "Loose URN — accepts any urn: prefix for future-proofing. Prefer CkodexUrn for first-party resources."
+        },
+        "CkodexUrn": {
+            "title": "CkodexUrn",
+            "type": "string",
+            "pattern": "^urn:ckodex:[a-z]+:[A-Za-z0-9._:-]+$",
+            "minLength": 12,
+            "description": "Strict CKODEX-namespace URN. Format: urn:ckodex:<type>:<id> where type is lowercase alpha and id is alphanumeric with dots, underscores, hyphens, or colons. Examples: urn:ckodex:skill:azure-ai:1.0.0, urn:ckodex:cnsb:my-bundle:0.2.0."
+        },
+        "Timestamp": {
+            "title": "Timestamp",
+            "type": "string",
+            "format": "date-time",
+            "description": "RFC 3339 / ISO 8601 timestamp in UTC."
+        },
+        "LabelMap": {
+            "title": "LabelMap",
+            "type": "object",
+            "additionalProperties": {
+                "type": "string"
+            },
+            "description": "Arbitrary key/value labels for selection and grouping."
+        },
+        "ActorType": {
+            "title": "ActorType",
+            "type": "string",
+            "enum": [
+                "Human",
+                "Agent",
+                "Service",
+                "System"
+            ]
+        },
+        "GAL": {
+            "title": "Governance Autonomy Level",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5
+        },
+        "ASC": {
+            "title": "Atomic Security Control",
+            "type": "string",
+            "description": "Symbolic identifier for an atomic security control (e.g. 'ASC_SLSA4', 'ASC_AGENT_SANDBOXED')."
+        },
+        "Actor": {
+            "title": "Actor",
+            "type": "object",
+            "required": [
+                "urn",
+                "type"
+            ],
+            "properties": {
+                "urn": {
+                    "$ref": "#/$defs/CkodexUrn"
+                },
+                "type": {
+                    "$ref": "#/$defs/ActorType"
+                },
+                "displayName": {
+                    "type": "string"
+                },
+                "tenantUrn": {
+                    "$ref": "#/$defs/Urn",
+                    "description": "Optional tenant the actor belongs to."
+                },
+                "labels": {
+                    "$ref": "#/$defs/LabelMap"
+                }
+            },
+            "additionalProperties": false
+        },
+        "Signature": {
+            "title": "Signature",
+            "type": "object",
+            "required": [
+                "alg",
+                "value",
+                "keyId"
+            ],
+            "properties": {
+                "alg": {
+                    "type": "string",
+                    "description": "Signature algorithm identifier (e.g. 'ed25519', 'ecdsa-p256-sha256', 'dilithium3', 'hybrid-ecdsa-dilithium3')."
+                },
+                "value": {
+                    "type": "string",
+                    "contentEncoding": "base64",
+                    "description": "Raw signature bytes, base64-encoded."
+                },
+                "keyId": {
+                    "$ref": "#/$defs/Urn",
+                    "description": "URN of the signing key or certificate."
+                },
+                "createdAt": {
+                    "$ref": "#/$defs/Timestamp"
+                }
+            },
+            "additionalProperties": false
+        },
+        "ResourceMetadata": {
+            "title": "ResourceMetadata",
+            "type": "object",
+            "required": [
+                "name",
+                "urn",
+                "version"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "urn": {
+                    "$ref": "#/$defs/CkodexUrn"
+                },
+                "version": {
+                    "type": "string",
+                    "description": "Semantic version, git SHA, or other opaque version identifier."
+                },
+                "description": {
+                    "type": "string"
+                },
+                "labels": {
+                    "$ref": "#/$defs/LabelMap"
+                },
+                "annotations": {
+                    "$ref": "#/$defs/LabelMap"
+                }
+            },
+            "additionalProperties": false
+        },
+        "EvidenceRef": {
+            "title": "EvidenceRef",
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "$ref": "#/$defs/CkodexUrn"
+                },
+                "kind": {
+                    "type": "string",
+                    "description": "Optional classifier for the evidence type (e.g. 'BuildProvenance', 'LifecycleTransition')."
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false
+}

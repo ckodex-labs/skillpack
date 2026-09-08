@@ -1,0 +1,24 @@
+[package]
+name = "skillpack-cni"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "SkillPack Container/Node Interface — headless programmatic client for CI/CD"
+keywords = ["skillpack", "cni", "ci", "cd", "headless"]
+categories = ["development-tools"]
+
+[[bin]]
+name = "skillpack-cni"
+path = "src/main.rs"
+
+[dependencies]
+skillpack-proto = { path = "../skillpack-proto" }
+anyhow.workspace = true
+tokio.workspace = true
+tonic.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+clap.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true

@@ -1,0 +1,23 @@
+[package]
+name = "skillpack-tests"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "SkillPack integration test binaries"
+keywords = ["skillpack", "ckodex", "ai-agent", "quality", "assessment"]
+categories = ["development-tools"]
+
+[[bin]]
+name = "skillpack-test-utils"
+path = "src/bin/skillpack_test_utils.rs"
+
+[dependencies]
+skillpack-domain = { path = "../skillpack-domain" }
+skillpack-adapters = { path = "../skillpack-adapters" }
+skillpack-application = { path = "../skillpack-application" }
+anyhow.workspace = true
+clap.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml.workspace = true

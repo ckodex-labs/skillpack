@@ -1,0 +1,578 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ckodex.org/skill.v1.1.schema.json",
+  "title": "CKODEX Skill Manifest v1.1",
+  "description": "Standalone superset of v1 adding metadata.synopsis, ontology, and runtime blocks. v1 and v1.1 are independent schemas — the validator routes by apiVersion. A v1 manifest (apiVersion=v1) validates under skill.v1.schema.json; a v1.1 manifest (apiVersion=v1.1) validates under this file.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "apiVersion",
+    "kind",
+    "metadata",
+    "entrypoints"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1,
+      "description": "AIPACK §10.1 — manifest schema version. Must be 1 for Skill v1.1."
+    },
+    "apiVersion": {
+      "type": "string",
+      "const": "ckodex.org/skill/v1.1"
+    },
+    "kind": {
+      "type": "string",
+      "const": "Skill"
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "name",
+        "description"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^(?!-)(?!.*--)[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "synopsis": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048,
+          "description": "v1.1 addition. Precomputed L2 synopsis (RFC-001 §3.3). A faithful ~400-token compression of SKILL.md body: what this does, when it triggers, what it produces, what it explicitly does NOT cover."
+        },
+        "synopsisHash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "description": "T-15 (§10.2) — SHA-256 digest of the synopsis field value (hex-encoded, prefixed sha256:). Used by T-02 runtime struct to detect stale synopses without re-reading SKILL.md."
+        },
+        "tier": {
+          "type": "string",
+          "enum": [
+            "experimental",
+            "beta",
+            "stable",
+            "deprecated",
+            "retired"
+          ],
+          "description": "T-15 (§10.2) — Deployment tier. Maps to the Tier type in the T-02 skillpack-domain Skill struct. Controls promotion gate eligibility and distribution fanout."
+        },
+        "version": {
+          "type": "string"
+        },
+        "license": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "authors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 256
+          }
+        },
+        "keywords": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 64
+          }
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "maxLength": 256
+          }
+        },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "maxLength": 2048
+          }
+        }
+      }
+    },
+    "entrypoints": {
+      "type": "object",
+      "required": [
+        "skillMd"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "skillMd": {
+          "type": "string",
+          "const": "SKILL.md"
+        },
+        "readme": {
+          "type": "string"
+        }
+      }
+    },
+    "agentSkillsFrontmatter": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "compatibility": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "maxLength": 1024
+          }
+        },
+        "allowedToolsRaw": {
+          "type": "string",
+          "maxLength": 2048
+        }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "requiresNetwork": {
+          "type": "boolean",
+          "default": false
+        },
+        "requiresFilesystem": {
+          "type": "boolean",
+          "default": true
+        },
+        "requiresGpu": {
+          "type": "boolean",
+          "default": false
+        },
+        "os": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 32
+          }
+        },
+        "arch": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 32
+          }
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "maxLength": 128
+              },
+              "scope": {
+                "type": "string",
+                "maxLength": 256
+              },
+              "risk": {
+                "type": "string",
+                "enum": [
+                  "low",
+                  "medium",
+                  "high"
+                ],
+                "default": "medium"
+              }
+            }
+          }
+        }
+      }
+    },
+    "aipackCapabilities": {
+      "type": "object",
+      "description": "AIPACK \u00a76.4 \u2014 5-flag capability declaration required on A4 Skill artifacts. Coexists with the CKODEX 'capabilities' block. A compatibility shim maps requiresNetwork \u2192 network and requiresFilesystem \u2192 filesystem when this block is absent.",
+      "additionalProperties": false,
+      "properties": {
+        "read": {
+          "type": "boolean",
+          "default": true,
+          "description": "Skill reads external state (files, APIs, registries)."
+        },
+        "write": {
+          "type": "boolean",
+          "default": false,
+          "description": "Skill writes or mutates external state."
+        },
+        "network": {
+          "type": "boolean",
+          "default": false,
+          "description": "Skill makes outbound network requests. Maps from capabilities.requiresNetwork."
+        },
+        "filesystem": {
+          "type": "boolean",
+          "default": true,
+          "description": "Skill accesses the local filesystem. Maps from capabilities.requiresFilesystem."
+        },
+        "execution": {
+          "type": "boolean",
+          "default": false,
+          "description": "Skill spawns subprocesses or executes code outside the harness sandbox."
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scripts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^scripts/[^\\s]+$"
+          }
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^references/[^\\s]+$"
+          }
+        },
+        "assets": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^assets/[^\\s]+$"
+          }
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sandbox": {
+          "type": "string",
+          "enum": [
+            "required",
+            "recommended",
+            "none"
+          ],
+          "default": "recommended"
+        },
+        "userConfirmation": {
+          "type": "string",
+          "enum": [
+            "always",
+            "dangerous-only",
+            "never"
+          ],
+          "default": "dangerous-only"
+        },
+        "dataHandling": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "pii": {
+              "type": "boolean",
+              "default": false
+            },
+            "secrets": {
+              "type": "boolean",
+              "default": true
+            },
+            "allowedOutputs": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 64
+              }
+            }
+          }
+        }
+      }
+    },
+    "supplyChain": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "repo": {
+              "type": "string",
+              "maxLength": 2048
+            },
+            "path": {
+              "type": "string",
+              "maxLength": 2048
+            },
+            "revision": {
+              "type": "string",
+              "maxLength": 256
+            }
+          }
+        },
+        "digest": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "sbom": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "spdx": {
+              "type": "string",
+              "maxLength": 2048
+            },
+            "cyclonedx": {
+              "type": "string",
+              "maxLength": 2048
+            }
+          }
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "inToto": {
+              "type": "string",
+              "maxLength": 2048
+            },
+            "slsaLevel": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4
+            }
+          }
+        },
+        "signatures": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "type",
+              "ref"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "cosign",
+                  "pgp",
+                  "x509"
+                ]
+              },
+              "ref": {
+                "type": "string",
+                "maxLength": 2048
+              }
+            }
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "galMinimum": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "proofRequired": {
+          "type": "boolean"
+        },
+        "proofTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "PCA",
+              "UCA",
+              "TIP",
+              "ZKP",
+              "DCA",
+              "TKP",
+              "WCAG",
+              "CLP",
+              "UFP"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "enforcementPoints": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "pre_exec",
+              "runtime",
+              "post_exec",
+              "promotion",
+              "emergency"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "emergencyProtocols": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^EP-\\d{3}$"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "ontology": {
+      "type": "object",
+      "required": [
+        "@context"
+      ],
+      "additionalProperties": false,
+      "description": "v1.1 addition. Structural semantics for ontology-aware skill routing. JSON-LD context fixed to the CKODEX v1 vocab.",
+      "properties": {
+        "@context": {
+          "type": "string",
+          "const": "https://ckodex.org/skill-context/v1"
+        },
+        "subjects": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "uniqueItems": true,
+          "description": "Topic identifiers. Used for Jaccard overlap in S_ont scoring (RFC-001 §4.1)."
+        },
+        "produces": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "uniqueItems": true,
+          "description": "Outputs / proof types / artifact classes this skill emits."
+        },
+        "consumes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "uniqueItems": true,
+          "description": "Inputs / proof types / artifact classes this skill ingests."
+        },
+        "related": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "uniqueItems": true,
+          "description": "Sibling skills that often appear together. Drives pre-warming. Weighted 0.5× in S_ont."
+        },
+        "exclusiveOf": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "uniqueItems": true,
+          "description": "Skill names that MUST be evicted when this skill is promoted (mutex)."
+        },
+        "triggers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "uniqueItems": true,
+          "description": "Lexical trigger phrases for BM25 / S_lex scoring."
+        },
+        "galMinimum": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5,
+          "description": "Minimum Governance Autonomy Level at which this skill is admissible."
+        },
+        "proofTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "PCA",
+              "UCA",
+              "TIP",
+              "ZKP",
+              "DCA",
+              "TKP",
+              "WCAG",
+              "CLP",
+              "UFP"
+            ]
+          },
+          "uniqueItems": true,
+          "description": "Closed enum to defend against unknown-predicate attacks."
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "v1.1 addition. Runtime hints for the harness lifecycle manager (RFC-001).",
+      "properties": {
+        "implicitInvocation": {
+          "type": "boolean",
+          "default": true,
+          "description": "If false, the harness MUST NOT auto-promote. Explicit mention only."
+        },
+        "minTier": {
+          "type": "string",
+          "enum": [
+            "L0",
+            "L1",
+            "L2",
+            "L3",
+            "L4R",
+            "L4X"
+          ],
+          "description": "Lower bound on the FSM tier where this skill may sit."
+        },
+        "maxTier": {
+          "type": "string",
+          "enum": [
+            "L1",
+            "L2",
+            "L3",
+            "L4R",
+            "L4X"
+          ],
+          "description": "Upper bound on the FSM tier where this skill may sit."
+        },
+        "l4xAllowed": {
+          "type": "boolean",
+          "default": false,
+          "description": "If false, the harness MUST refuse L3 → L4X transitions for this skill."
+        }
+      }
+    }
+  }
+}

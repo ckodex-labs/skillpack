@@ -1,0 +1,237 @@
+"""
+CKODEX Skills Transparency Exchange — GraphQL transport.
+
+Projects the shared domain model (stx-domain.v1.schema.json) into a
+GraphQL schema. The schema is normative; this file is a rendering of it.
+When the SDL and the JSON Schema disagree, the JSON Schema wins.
+
+Default privacy mode: audit-private. Other modes are negotiated via the
+capability() query at session start.
+"""
+
+scalar DateTime    # ISO 8601 with nanosecond precision
+scalar Sha256      # "sha256:<64-hex>"
+scalar Urn         # "urn:ckodex:<plane>:<id>"
+scalar JSONObject  # for opaque payloads
+
+enum Tier { L0 L1 L2 L3 L4R L4X }
+
+enum PrivacyMode {
+  DEBUG_LOCAL
+  AUDIT_PRIVATE       # default for v1
+  PUBLIC_ANCHOR
+  REGULATED_EXPORT
+}
+
+enum Transport { REST GRPC GRAPHQL }
+
+enum TriggerName {
+  SCORE_THRESHOLD
+  POLICY_PRE_FILTER
+  INTENT_TO_INVOKE
+  TOPIC_DRIFT
+  IDLE_TIMEOUT
+  SCORE_DECAY
+  BUDGET_PRESSURE
+  TASK_COMPLETE
+  MUTEX
+  FRAMEWORK_BREAK
+  CAPABILITY_DENIED
+  EMERGENCY_EVICT
+  EXPLICIT_USER_SIGNAL
+  RESOURCE_LOAD
+  EXECUTION_COMPLETE
+  POLICY_REVOKED
+}
+
+enum SignatureType { COSIGN PGP X509 DILITHIUM3 }
+
+enum PolicyGateName { PRE_EXEC RUNTIME POST_EXEC PROMOTION EMERGENCY }
+enum PolicyDecision { ALLOW DENY WARN }
+
+enum EventType {
+  SESSION_OPEN
+  SESSION_CLOSE
+  SKILL_REGISTERED
+  TIER_TRANSITION
+  EVIDENCE_EMITTED
+  ATTESTATION_SIGNED
+  POLICY_GATE_EVALUATED
+  CAPABILITY_UPDATED
+  EMERGENCY_PROTOCOL
+}
+
+enum QueryErrorCode {
+  NOT_FOUND
+  DENIED
+  RATE_LIMITED
+  INVALID_REQUEST
+  PRIVACY_VIOLATION
+  VERSION_MISMATCH
+  INTERNAL_ERROR
+}
+
+# ─────────────────────────────────────────────────────────────
+# Capability + handshake
+# ─────────────────────────────────────────────────────────────
+
+type CapabilityDescriptor {
+  stxVersion:             String!
+  transports:             [Transport!]!
+  privacyModesSupported:  [PrivacyMode!]!
+  defaultPrivacyMode:     PrivacyMode!
+  maxEventsPerSecond:     Int
+  maxQueryDepth:          Int
+  harnessId:              Urn
+  harnessVersion:         String
+  frameworkVersion:       String
+}
+
+# ─────────────────────────────────────────────────────────────
+# Graph nodes
+# ─────────────────────────────────────────────────────────────
+
+type Signature {
+  type: SignatureType!
+  ref:  String!
+}
+
+type Harness {
+  id:               Urn!
+  frameworkVersion: String!
+  capability:       CapabilityDescriptor!
+  sessions:         [Session!]!
+}
+
+type Session {
+  id:                       Urn!
+  harness:                  Harness!
+  startedAt:                DateTime!
+  endedAt:                  DateTime
+  currentGal:               Int!
+  privacyMode:              PrivacyMode!
+  skillPoolTokensBudget:    Int
+  skillPoolTokensCurrent:   Int
+  skillStates(tier: Tier):  [SkillState!]!
+  transitions(since: DateTime): [TierTransition!]!
+}
+
+type SkillState {
+  id:                       Urn!
+  session:                  Session!
+  skillId:                  Sha256!
+  skillName:                String          # redacted under PUBLIC_ANCHOR
+  skillVersion:             String
+  tier:                     Tier!
+  score:                    Float!
+  turnsSinceLastReference:  Int
+  tokenCost:                Int
+  locked:                   Boolean
+  transitions:              [TierTransition!]!
+}
+
+type TierTransition {
+  id:                Urn!
+  skillState:        SkillState!
+  timestamp:         DateTime!
+  fromTier:          Tier!
+  toTier:            Tier!
+  trigger:           TriggerName!
+  score:             Float
+  evidenceBundle:    EvidenceBundle      # nullable when GAL < 3 and debug-local
+}
+
+type EvidenceBundle {
+  id:                Urn!
+  predicate:         String!              # "ckodex/skill-lifecycle@v1"
+  subject:           Urn!
+  timestamp:         DateTime!
+  privacyMode:       PrivacyMode!
+  policyVersion:     String!
+  digest:            Sha256!
+  rekorAnchor:       String
+  transitions:       [TierTransition!]!
+  attestationChain:  AttestationChain     # nullable when GAL < 4
+}
+
+type AttestationChain {
+  id:           Urn!
+  issuer:       Urn!
+  signedAt:     DateTime!
+  signatures:   [Signature!]!
+  evidence:     [EvidenceBundle!]!
+}
+
+type PolicyGate {
+  id:           Urn!
+  name:         PolicyGateName!
+  decision:     PolicyDecision!
+  evaluatedAt:  DateTime!
+  reason:       String
+  skillState:   SkillState
+}
+
+# ─────────────────────────────────────────────────────────────
+# Query envelope
+# ─────────────────────────────────────────────────────────────
+
+type PageInfo {
+  hasNext: Boolean!
+  cursor:  String
+  total:   Int
+}
+
+type QueryError {
+  code:    QueryErrorCode!
+  message: String!
+  path:    String
+}
+
+# ─────────────────────────────────────────────────────────────
+# Event stream
+# ─────────────────────────────────────────────────────────────
+
+union GraphNodeUnion = Harness | Session | SkillState | TierTransition | EvidenceBundle | AttestationChain | PolicyGate
+
+type StxEvent {
+  apiVersion:   String!
+  sessionId:    Urn!
+  sequence:     Int!
+  timestamp:    DateTime!
+  eventType:    EventType!
+  payload:      GraphNodeUnion!
+  privacyMode:  PrivacyMode!
+  redacted:     [String!]
+}
+
+# ─────────────────────────────────────────────────────────────
+# Root types
+# ─────────────────────────────────────────────────────────────
+
+type Query {
+  "Capability handshake. Unauthenticated; reveals supported transports/modes."
+  capability: CapabilityDescriptor!
+
+  "Harness root."
+  harness: Harness!
+
+  "List sessions (paginated)."
+  sessions(cursor: String, limit: Int = 50): SessionConnection!
+
+  "Single session by URN."
+  session(id: Urn!): Session
+
+  "Single evidence bundle by URN."
+  evidence(id: Urn!): EvidenceBundle
+}
+
+type SessionConnection {
+  nodes:    [Session!]!
+  pageInfo: PageInfo!
+  errors:   [QueryError!]
+}
+
+type Subscription {
+  "Subscribe to the publisher event stream."
+  events(sessionId: Urn, sinceSequence: Int = 0): StxEvent!
+}

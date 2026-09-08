@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "service": "skillpack-registry",
+  "registry": "ckodex.canonical",
+  "host": "oci://reg.ckodex.org",
+  "issuer": "Ckodex Labs",
+  "protocolVersions": [1],
+  "transports": [
+    { "protocol": "gRPC", "endpoint": "grpc://reg.ckodex.org:50051", "primary": true },
+    { "protocol": "REST", "endpoint": "https://reg.ckodex.org:50052/api/v1", "primary": false }
+  ],
+  "features": ["assessment", "grading", "registry", "lifecycle", "streaming", "migration"],
+  "discovery": {
+    "search": "/api/v1/skills/search",
+    "profile": "/api/v1/skills/{id}",
+    "health": "/health",
+    "capabilities": "/.well-known/skillpack-capabilities.json"
+  },
+  "trust": {
+    "signing": "cosign",
+    "publicKey": "https://reg.ckodex.org/.well-known/cosign.pub",
+    "transparencyLog": "https://rekor.ckodex.org",
+    "trustList": ["ckodex.canonical", "skills.sh"]
+  },
+  "migration": {
+    "supported": true,
+    "targetApiVersion": "ckodex.skill/v1.1",
+    "adapters": ["skill.json@v1", "cursor.mdc", "openai.function", "skill.md"],
+    "sandbox": { "required": true, "boundaryClass": "ephemeral", "networkEgress": "denied" }
+  },
+  "privacyDefault": "audit-private",
+  "updated": "2026-05-28T19:00:00Z"
+}

@@ -1,0 +1,12 @@
+{
+  "_comment": "GraphQL query: enumerate all L3 skills in a session with their last transition.",
+  "transport": "graphql",
+  "operation": "query",
+  "query": "query SkillPool($sessionId: Urn!) {\n  session(id: $sessionId) {\n    id\n    currentGal\n    privacyMode\n    skillPoolTokensCurrent\n    skillPoolTokensBudget\n    skillStates(tier: L3) {\n      id\n      skillId\n      skillName\n      tier\n      score\n      transitions {\n        timestamp\n        fromTier\n        toTier\n        trigger\n      }\n    }\n  }\n}",
+  "variables": {
+    "sessionId": "urn:ckodex:session:demo-001"
+  },
+  "extensions": {
+    "stx": { "privacyMode": "audit-private" }
+  }
+}

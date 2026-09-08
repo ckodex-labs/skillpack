@@ -1,0 +1,385 @@
+{
+  "plugins": [
+    "react",
+    "import"
+  ],
+  "rules": {
+    "react/forbid-elements": [
+      "warn",
+      {
+        "forbid": []
+      }
+    ],
+    "no-restricted-imports": [
+      "warn",
+      {
+        "patterns": [
+          {
+            "group": [
+              "components/**",
+              "dotbg.js",
+              "redesign-v2/**",
+              "ui_kits/governance-console/**"
+            ],
+            "message": "Import design-system components from 'index.js', not component internals."
+          }
+        ]
+      }
+    ],
+    "no-restricted-syntax": [
+      "warn",
+      {
+        "selector": "Literal[value=/#[0-9a-fA-F]{3,8}\\b/]",
+        "message": "Raw hex color — use a design-system color token via var()."
+      },
+      {
+        "selector": "Literal[value=/\\b\\d+px\\b/]",
+        "message": "Raw px value — use a design-system spacing token via var()."
+      },
+      {
+        "selector": "Literal[value=/font-family\\s*:\\s*(?!['\\\"]?(?:JetBrains Mono|Geist|Instrument Serif))/i]",
+        "message": "Font not provided by the design system. Available: JetBrains Mono, Geist, Instrument Serif."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='AuditEntry'] > JSXAttribute > JSXIdentifier[name!=/^(?:action|actor|time|evidence|kind|key|ref|className|style|children)$/]",
+        "message": "<AuditEntry> doesn't accept that prop. Declared props: action, actor, time, evidence, kind."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='AuditEntry'] > JSXAttribute[name.name='kind'] > Literal[value!=/^(?:proof|alarm)$/]",
+        "message": "<AuditEntry> kind must be one of 'proof' | 'alarm'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='AuthorityProof'] > JSXAttribute > JSXIdentifier[name!=/^(?:urn|digest|signature|evbRef|rekorUrl|sealedAt|ciqr|key|ref|className|style|children)$/]",
+        "message": "<AuthorityProof> doesn't accept that prop. Declared props: urn, digest, signature, evbRef, rekorUrl, sealedAt, ciqr."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Button'] > JSXAttribute > JSXIdentifier[name!=/^(?:variant|children|key|ref|className|style|children)$/]",
+        "message": "<Button> doesn't accept that prop. Declared props: variant, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Button'] > JSXAttribute[name.name='variant'] > Literal[value!=/^(?:primary|quiet|ghost|emergency)$/]",
+        "message": "<Button> variant must be one of 'primary' | 'quiet' | 'ghost' | 'emergency'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='CkCiqr'] > JSXAttribute > JSXIdentifier[name!=/^(?:payload|size|attested|label|caption|key|ref|className|style|children)$/]",
+        "message": "<CkCiqr> doesn't accept that prop. Declared props: payload, size, attested, label, caption."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='CkIcon'] > JSXAttribute > JSXIdentifier[name!=/^(?:name|size|strokeWidth|label|key|ref|className|style|children)$/]",
+        "message": "<CkIcon> doesn't accept that prop. Declared props: name, size, strokeWidth, label."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='MatrixPolicy'] > JSXAttribute > JSXIdentifier[name!=/^(?:label|cells|key|ref|className|style|children)$/]",
+        "message": "<MatrixPolicy> doesn't accept that prop. Declared props: label, cells."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='DisclosureRecord'] > JSXAttribute > JSXIdentifier[name!=/^(?:title|period|authority|status|evidence|attested|basis|children|key|ref|className|style|children)$/]",
+        "message": "<DisclosureRecord> doesn't accept that prop. Declared props: title, period, authority, status, evidence, attested, basis, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='EntityCard'] > JSXAttribute > JSXIdentifier[name!=/^(?:kind|name|urn|version|owner|sealedAt|tier|digest|ciqr|children|key|ref|className|style|children)$/]",
+        "message": "<EntityCard> doesn't accept that prop. Declared props: kind, name, urn, version, owner, sealedAt, tier, digest, ciqr, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='EntityCard'] > JSXAttribute[name.name='tier'] > Literal[value!=/^(?:E0|E1|E3|E5)$/]",
+        "message": "<EntityCard> tier must be one of 'E0' | 'E1' | 'E3' | 'E5'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='EvidenceHash'] > JSXAttribute > JSXIdentifier[name!=/^(?:digest|label|onInspect|key|ref|className|style|children)$/]",
+        "message": "<EvidenceHash> doesn't accept that prop. Declared props: digest, label, onInspect."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='EvidenceReceipt'] > JSXAttribute > JSXIdentifier[name!=/^(?:time|event|details|kind|key|ref|className|style|children)$/]",
+        "message": "<EvidenceReceipt> doesn't accept that prop. Declared props: time, event, details, kind."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='EvidenceReceipt'] > JSXAttribute[name.name='kind'] > Literal[value!=/^(?:routine|proof|alarm)$/]",
+        "message": "<EvidenceReceipt> kind must be one of 'routine' | 'proof' | 'alarm'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='PageShell'] > JSXAttribute > JSXIdentifier[name!=/^(?:variant|brand|crumb|urn|headerRight|nav|margin|footerLeft|footerRight|children|key|ref|className|style|children)$/]",
+        "message": "<PageShell> doesn't accept that prop. Declared props: variant, brand, crumb, urn, headerRight, nav, margin, footerLeft, footerRight, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='PageShell'] > JSXAttribute[name.name='variant'] > Literal[value!=/^(?:console|document|reading)$/]",
+        "message": "<PageShell> variant must be one of 'console' | 'document' | 'reading'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='ProvenanceStamp'] > JSXAttribute > JSXIdentifier[name!=/^(?:digest|verb|key|ref|className|style|children)$/]",
+        "message": "<ProvenanceStamp> doesn't accept that prop. Declared props: digest, verb."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='ProvenanceStamp'] > JSXAttribute[name.name='verb'] > Literal[value!=/^(?:sealed|attested|exported|signed)$/]",
+        "message": "<ProvenanceStamp> verb must be one of 'sealed' | 'attested' | 'exported' | 'signed'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='QuietCard'] > JSXAttribute > JSXIdentifier[name!=/^(?:sealed|children|key|ref|className|style|children)$/]",
+        "message": "<QuietCard> doesn't accept that prop. Declared props: sealed, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Sparkline'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|width|height|pad|area|baseline|marker|strokeWidth|label|key|ref|className|style|children)$/]",
+        "message": "<Sparkline> doesn't accept that prop. Declared props: data, width, height, pad, area, baseline, marker, strokeWidth, label."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Sparkline'] > JSXAttribute[name.name='marker'] > Literal[value!=/^(?:last|none)$/]",
+        "message": "<Sparkline> marker must be one of 'last' | 'none'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='StateChip'] > JSXAttribute > JSXIdentifier[name!=/^(?:state|glyph|children|key|ref|className|style|children)$/]",
+        "message": "<StateChip> doesn't accept that prop. Declared props: state, glyph, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='StateChip'] > JSXAttribute[name.name='state'] > Literal[value!=/^(?:observed|inferred|claimed|attested|contradicted|quarantined)$/]",
+        "message": "<StateChip> state must be one of 'observed' | 'inferred' | 'claimed' | 'attested' | 'contradicted' | 'quarantined'."
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/index.js"
+      ],
+      "rules": {
+        "no-restricted-imports": "off"
+      }
+    }
+  ],
+  "x-omelette": {
+    "components": {
+      "AuditEntry": {
+        "replaces": []
+      },
+      "AuthorityProof": {
+        "replaces": []
+      },
+      "Button": {
+        "replaces": []
+      },
+      "CkCiqr": {
+        "replaces": []
+      },
+      "CkIcon": {
+        "replaces": []
+      },
+      "MatrixPolicy": {
+        "replaces": []
+      },
+      "DisclosureRecord": {
+        "replaces": []
+      },
+      "EntityCard": {
+        "replaces": []
+      },
+      "EvidenceHash": {
+        "replaces": []
+      },
+      "EvidenceReceipt": {
+        "replaces": []
+      },
+      "PageShell": {
+        "replaces": []
+      },
+      "ProvenanceStamp": {
+        "replaces": []
+      },
+      "QuietCard": {
+        "replaces": []
+      },
+      "Sparkline": {
+        "replaces": []
+      },
+      "StateChip": {
+        "replaces": []
+      }
+    },
+    "tokens": [
+      "--ck-accent",
+      "--ck-accent-ink",
+      "--ck-alarm",
+      "--ck-bento-cell",
+      "--ck-bento-cols",
+      "--ck-bento-gap",
+      "--ck-bg-0",
+      "--ck-bg-1",
+      "--ck-bg-2",
+      "--ck-chamfer",
+      "--ck-cls-confidential",
+      "--ck-cls-internal",
+      "--ck-cls-public",
+      "--ck-cls-restricted",
+      "--ck-ease",
+      "--ck-ff-display",
+      "--ck-ff-mono",
+      "--ck-ff-ui",
+      "--ck-fg-1",
+      "--ck-fg-2",
+      "--ck-fg-3",
+      "--ck-fg-mute",
+      "--ck-fs-body",
+      "--ck-fs-body-sm",
+      "--ck-fs-caption",
+      "--ck-fs-code",
+      "--ck-fs-display",
+      "--ck-fs-evidence",
+      "--ck-fs-h1",
+      "--ck-fs-h2",
+      "--ck-fs-h3",
+      "--ck-fs-h4",
+      "--ck-fs-invar",
+      "--ck-fs-micro",
+      "--ck-hairline",
+      "--ck-hairline-strong",
+      "--ck-ink",
+      "--ck-lh-body",
+      "--ck-lh-body-sm",
+      "--ck-lh-code",
+      "--ck-lh-display",
+      "--ck-lh-h1",
+      "--ck-lh-h2",
+      "--ck-lh-h3",
+      "--ck-lh-h4",
+      "--ck-link",
+      "--ck-link-hov",
+      "--ck-ls-h1",
+      "--ck-ls-h2",
+      "--ck-margin-w",
+      "--ck-margin-w-collapsed",
+      "--ck-measure",
+      "--ck-nav-w",
+      "--ck-paper",
+      "--ck-proof",
+      "--ck-red",
+      "--ck-resolve",
+      "--ck-ring-focus",
+      "--ck-rule",
+      "--ck-rust",
+      "--ck-seal",
+      "--ck-sp-0",
+      "--ck-sp-1",
+      "--ck-sp-10",
+      "--ck-sp-12",
+      "--ck-sp-16",
+      "--ck-sp-2",
+      "--ck-sp-20",
+      "--ck-sp-24",
+      "--ck-sp-3",
+      "--ck-sp-4",
+      "--ck-sp-5",
+      "--ck-sp-6",
+      "--ck-sp-8",
+      "--ck-stroke-1",
+      "--ck-stroke-3",
+      "--ck-stroke-seal",
+      "--ck-structural",
+      "--ck-t-micro",
+      "--ck-t-scene",
+      "--ck-t-state",
+      "--ck-teal",
+      "--ck-tone",
+      "--ck-vault-ground",
+      "--ck-vault-ink",
+      "--ck-vault-red",
+      "--ck-vault-rust",
+      "--ck-vault-tone",
+      "--ck-vault-violet",
+      "--ck-violet"
+    ],
+    "tokenKinds": {
+      "--ck-paper": "color",
+      "--ck-ink": "color",
+      "--ck-tone": "color",
+      "--ck-rust": "color",
+      "--ck-violet": "color",
+      "--ck-red": "color",
+      "--ck-vault-ground": "color",
+      "--ck-vault-ink": "color",
+      "--ck-vault-tone": "color",
+      "--ck-vault-rust": "color",
+      "--ck-vault-violet": "color",
+      "--ck-vault-red": "color",
+      "--ck-teal": "color",
+      "--ck-chamfer": "spacing",
+      "--ck-stroke-1": "color",
+      "--ck-stroke-seal": "color",
+      "--ck-stroke-3": "color",
+      "--ck-rule": "spacing",
+      "--ck-sp-0": "spacing",
+      "--ck-sp-1": "spacing",
+      "--ck-sp-2": "spacing",
+      "--ck-sp-3": "spacing",
+      "--ck-sp-4": "spacing",
+      "--ck-sp-5": "spacing",
+      "--ck-sp-6": "spacing",
+      "--ck-sp-8": "spacing",
+      "--ck-sp-10": "spacing",
+      "--ck-sp-12": "spacing",
+      "--ck-sp-16": "spacing",
+      "--ck-sp-20": "spacing",
+      "--ck-sp-24": "spacing",
+      "--ck-nav-w": "spacing",
+      "--ck-margin-w": "spacing",
+      "--ck-margin-w-collapsed": "spacing",
+      "--ck-measure": "spacing",
+      "--ck-t-micro": "other",
+      "--ck-t-state": "other",
+      "--ck-t-scene": "other",
+      "--ck-resolve": "other",
+      "--ck-ease": "other",
+      "--ck-bg-0": "color",
+      "--ck-bg-1": "color",
+      "--ck-bg-2": "color",
+      "--ck-fg-1": "color",
+      "--ck-fg-2": "color",
+      "--ck-fg-3": "color",
+      "--ck-fg-mute": "color",
+      "--ck-hairline": "color",
+      "--ck-hairline-strong": "color",
+      "--ck-seal": "color",
+      "--ck-structural": "color",
+      "--ck-accent": "color",
+      "--ck-accent-ink": "color",
+      "--ck-proof": "color",
+      "--ck-alarm": "color",
+      "--ck-cls-public": "color",
+      "--ck-cls-internal": "color",
+      "--ck-cls-confidential": "color",
+      "--ck-cls-restricted": "color",
+      "--ck-link": "color",
+      "--ck-link-hov": "color",
+      "--ck-ring-focus": "color",
+      "--ck-ff-display": "font",
+      "--ck-ff-ui": "font",
+      "--ck-ff-mono": "font",
+      "--ck-fs-display": "font",
+      "--ck-lh-display": "font",
+      "--ck-fs-h1": "font",
+      "--ck-lh-h1": "font",
+      "--ck-ls-h1": "font",
+      "--ck-fs-h2": "font",
+      "--ck-lh-h2": "font",
+      "--ck-ls-h2": "font",
+      "--ck-fs-h3": "font",
+      "--ck-lh-h3": "font",
+      "--ck-fs-h4": "font",
+      "--ck-lh-h4": "font",
+      "--ck-fs-body": "font",
+      "--ck-lh-body": "font",
+      "--ck-fs-body-sm": "font",
+      "--ck-lh-body-sm": "font",
+      "--ck-fs-caption": "font",
+      "--ck-fs-micro": "spacing",
+      "--ck-fs-code": "font",
+      "--ck-lh-code": "font",
+      "--ck-fs-evidence": "spacing",
+      "--ck-fs-invar": "spacing",
+      "--ck-bento-cols": "other",
+      "--ck-bento-gap": "spacing",
+      "--ck-bento-cell": "spacing"
+    },
+    "fontFamilies": [
+      "Geist",
+      "Instrument Serif",
+      "JetBrains Mono"
+    ]
+  }
+}

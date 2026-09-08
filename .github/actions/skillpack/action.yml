@@ -1,0 +1,89 @@
+name: 'SkillPack Assessment'
+description: 'AI Agent Skill Quality Assessment - CKODEX Compliant'
+author: 'CKODEX'
+
+branding:
+  icon: 'check-circle'
+  color: 'blue'
+
+inputs:
+  path:
+    description: 'Path to skill directory'
+    required: false
+    default: '.'
+  minimum-grade:
+    description: 'Minimum required grade (S+, S, A, B, C, D, F)'
+    required: false
+    default: 'C'
+  minimum-score:
+    description: 'Minimum required score (0-150)'
+    required: false
+    default: '0'
+  output-format:
+    description: 'Report output format (json, sarif, markdown)'
+    required: false
+    default: 'sarif'
+  upload-sarif:
+    description: 'Upload SARIF to GitHub Code Scanning'
+    required: false
+    default: 'true'
+
+outputs:
+  grade:
+    description: 'Assessment grade'
+    value: ${{ steps.assess.outputs.grade }}
+  score:
+    description: 'Total score'
+    value: ${{ steps.assess.outputs.score }}
+  passed:
+    description: 'Whether minimum requirements passed'
+    value: ${{ steps.assess.outputs.passed }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install SkillPack
+      shell: bash
+      run: |
+        curl -sSL https://github.com/ckodex/skillpack/releases/latest/download/skillpack-$(uname -m)-linux.tar.gz | tar xzf -
+        chmod +x skillpack
+        sudo mv skillpack /usr/local/bin/
+
+    - name: Run Assessment
+      id: assess
+      shell: bash
+      run: |
+        # Run grade command and capture output
+        GRADE_OUTPUT=$(skillpack grade ${{ inputs.path }} --minimum ${{ inputs.minimum-grade }} 2>&1 || true)
+        GRADE=$(echo "$GRADE_OUTPUT" | grep -oP 'Grade: \K[A-Z+]+' || echo "F")
+        SCORE=$(echo "$GRADE_OUTPUT" | grep -oP '\((\d+)/150\)' | grep -oP '\d+' || echo "0")
+        
+        echo "grade=$GRADE" >> $GITHUB_OUTPUT
+        echo "score=$SCORE" >> $GITHUB_OUTPUT
+        
+        # Run full check with minimum score
+        if skillpack check ${{ inputs.path }} --min-score ${{ inputs.minimum-score }}; then
+          echo "passed=true" >> $GITHUB_OUTPUT
+        else
+          echo "passed=false" >> $GITHUB_OUTPUT
+          exit 1
+        fi
+
+    - name: Generate SARIF Report
+      if: inputs.output-format == 'sarif' || inputs.upload-sarif == 'true'
+      shell: bash
+      run: |
+        skillpack report ${{ inputs.path }} --format sarif --output skillpack-results.sarif
+
+    - name: Upload SARIF to Code Scanning
+      if: inputs.upload-sarif == 'true'
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: skillpack-results.sarif
+        category: skillpack
+
+    - name: Generate Report
+      if: inputs.output-format != 'sarif'
+      shell: bash
+      run: |
+        skillpack report ${{ inputs.path }} --format ${{ inputs.output-format }}

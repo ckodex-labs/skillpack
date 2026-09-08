@@ -1,0 +1,41 @@
+{
+  "apiVersion": "ckodex.org/diagram-manifest/v1",
+  "kind": "DiagramRenderManifest",
+  "diagram": {
+    "id": "stx.publish-subscribe",
+    "title": "STX v1 — Publish-Subscribe Sequence",
+    "tier": "T4",
+    "type": "swimlane",
+    "subtype": "sequence",
+    "palette": "mcdesign-v1.3",
+    "accent_use": "single",
+    "accent_target": "capability handshake (steps 1-2)",
+    "proof_targets": ["evidence_emitted event at seq=2"]
+  },
+  "sources": {
+    "html": "diagrams/publish-subscribe.html",
+    "mmd":  "diagrams/publish-subscribe.mmd"
+  },
+  "claims": [
+    "Capability handshake is unauthenticated",
+    "Default privacy mode advertised is audit-private",
+    "Authenticated query uses Stx-Privacy-Mode header",
+    "Event stream is server-streamed (SSE / gRPC server-streaming / GraphQL Subscription)",
+    "Per-session sequence is monotonic from 0",
+    "evidence_emitted precedes its referencing tier_transition (vector P2)",
+    "Consumer rejects any event with sequence <= last_seen[sessionId]"
+  ],
+  "accessibility": {
+    "role": "img",
+    "has_aria_label": true,
+    "respects_prefers_reduced_motion": true,
+    "contrast_minimum": "AAA"
+  },
+  "verifier": {
+    "wcag_violations": 0,
+    "off_palette_colors": 0,
+    "jetbrains_mono_uses": 0,
+    "script_tags": 0,
+    "img_tags": 0
+  }
+}

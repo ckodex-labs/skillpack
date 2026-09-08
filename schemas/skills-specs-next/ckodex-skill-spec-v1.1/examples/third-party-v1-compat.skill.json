@@ -1,0 +1,12 @@
+{
+  "apiVersion": "ckodex.org/skill/v1",
+  "kind": "Skill",
+  "metadata": {
+    "name": "third-party-v1",
+    "description": "A v1-era third-party skill with no synopsis or ontology block. Demonstrates backward compatibility — this manifest validates under skill.v1.schema.json AND under skill.v1.1.schema.json (with apiVersion left at v1). v1.1-aware harnesses synthesize L2 content from the description field and treat S_ont as 0."
+  },
+  "entrypoints": { "skillMd": "SKILL.md" },
+  "resources": {
+    "references": ["references/usage.md"]
+  }
+}

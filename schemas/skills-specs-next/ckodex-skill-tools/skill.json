@@ -1,0 +1,60 @@
+{
+  "apiVersion": "ckodex.org/skill/v1.1",
+  "kind": "Skill",
+  "metadata": {
+    "name": "ckodex-skill-tools",
+    "description": "Scaffold new CKODEX v1.1 skills from a blank slate, and migrate existing Agent Skills v1 skills to v1.1 in place. Use whenever the user asks to create, start, bootstrap a skill, or upgrade/migrate a v1 skill to v1.1.",
+    "synopsis": "When the user asks to create a new skill, start a skill, bootstrap a skill, or migrate an existing v1 skill to v1.1: this skill provides two stdlib-only Python CLIs. scaffold.py produces a complete fresh skill tree (SKILL.md, skill.json with synopsis+ontology+runtime stubs, references/, scripts/validate.sh, MANIFEST.json) that passes validate.sh 0F/0W on first run. migrate.py upgrades an existing tree in place: parses SKILL.md frontmatter, composes a bounded synopsis from the body, bumps apiVersion to v1.1, adds ontology+runtime stubs marked with MIGRATION: comments, preserves all author-authored fields. Both tools default to dry-run and require --apply to write. Both refuse on conflict unless --force. NOT a substitute for hand-authoring complex ontology blocks; the stubs are starting points the author finishes by hand.",
+    "version": "0.1.0",
+    "license": "Apache-2.0",
+    "authors": ["ckodex-labs"],
+    "keywords": ["scaffold", "migrate", "skill", "v1.1", "bootstrap"]
+  },
+  "entrypoints": { "skillMd": "SKILL.md" },
+  "agentSkillsFrontmatter": {
+    "compatibility": "Python 3.10+, stdlib only. Filesystem write access required for --apply mode.",
+    "allowedToolsRaw": "Read Bash(python3:*)"
+  },
+  "capabilities": {
+    "requiresNetwork": false,
+    "requiresFilesystem": true,
+    "tools": [
+      { "name": "Read", "risk": "low" },
+      { "name": "Bash", "scope": "python3:*", "risk": "medium" }
+    ]
+  },
+  "resources": {
+    "scripts":    ["scripts/scaffold.py", "scripts/migrate.py", "scripts/validate.sh"],
+    "references": ["references/scaffolder.md", "references/migrator.md", "references/conformance.md"],
+    "assets":     ["assets/templates/SKILL.md.tmpl", "assets/templates/skill.json.tmpl", "assets/templates/usage.md.tmpl", "assets/templates/validate.sh.tmpl"]
+  },
+  "policy": {
+    "sandbox": "recommended",
+    "userConfirmation": "dangerous-only",
+    "dataHandling": { "pii": false, "secrets": false }
+  },
+  "governance": {
+    "galMinimum": 1,
+    "proofRequired": false,
+    "proofTypes": [],
+    "enforcementPoints": ["pre_exec"],
+    "emergencyProtocols": []
+  },
+  "ontology": {
+    "@context": "https://ckodex.org/skill-context/v1",
+    "subjects":    ["skill-authoring", "skill-migration", "ckodex-v1.1", "agent-skills-v1"],
+    "produces":    ["skill-bundle", "skill-manifest-v1.1"],
+    "consumes":    ["skill-manifest-v1"],
+    "related":     ["ckodex-skill-spec-v1.1", "ckodex-skill-lifecycle-rfc001"],
+    "exclusiveOf": [],
+    "triggers":    ["scaffold a skill", "create a skill", "bootstrap a skill", "migrate v1 to v1.1", "upgrade skill to v1.1", "new ckodex skill"],
+    "galMinimum":  1,
+    "proofTypes":  []
+  },
+  "runtime": {
+    "implicitInvocation": true,
+    "minTier": "L1",
+    "maxTier": "L4R",
+    "l4xAllowed": true
+  }
+}

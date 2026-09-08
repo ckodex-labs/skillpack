@@ -1,0 +1,642 @@
+/* ============================================================
+ * CKODEX Design System · root stylesheet
+ * CKODEX-DS-3 v3.0.0 — "Evidence Editorial"
+ * ------------------------------------------------------------
+ * Promoted 2026-06-11 from explorations/DS-3 Evidence Editorial.
+ * Single entry point for consumers. The constitution:
+ *   · The palette is the policy — color is an assertion.
+ *   · The margin keeps the books — evidence is never a tab.
+ *   · A violet mark requires a proof object.
+ *   · A red mark requires an emergency protocol.
+ * Predecessors: DS-1 (colors_and_type.css, untouched substrate),
+ * DS-2 (archive/ds2-styles.css). The DS-1/DS-2 deep blue survives
+ * as the Vault theme's ground — demoted, not deleted.
+ * ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap');
+
+/* JetBrains Mono — evidence face. Self-hosted, ligatures off
+   everywhere (we read digests literally). CNDL continuity. */
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('fonts/JetBrainsMono-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('fonts/JetBrainsMono-Italic-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ============================================================
+ * 1 · THE SEMANTIC BUDGET (raw, theme-independent)
+ * Six roles, closed set. Nothing else carries hue.
+ * ============================================================ */
+:root {
+  /* Ledger registers */
+  --ck-paper:        #F6F1E8;  /* ground · warm paper */
+  --ck-ink:          #211B14;  /* text · structure · data */
+  --ck-tone:         #6E6457;  /* routine state — pass/idle/info are tone, not green */
+  --ck-rust:         #B4532A;  /* user intent · focal action · ≤2 per view (Terracotta) */
+  --ck-violet:       #6D28D9;  /* cryptographic proof exists — attestations only (Seal) */
+  --ck-red:          #B91C1C;  /* containment · quarantine · active EP only */
+
+  /* Vault registers (same roles, deep-ink ground) */
+  --ck-vault-ground: #0A1322;  /* the legacy deep blue, demoted here */
+  --ck-vault-ink:    #EAE5DA;
+  --ck-vault-tone:   #9A9284;
+  --ck-vault-rust:   #D2693A;
+  --ck-vault-violet: #A78BFA;
+  --ck-vault-red:    #F87171;
+
+  /* Legacy, structural-only */
+  --ck-teal:         #38a3a5;  /* DEMOTED — structural stroke in Vault only; DS-1 archive */
+
+  /* Geometry — the chamfer is vocabulary now: sealed surfaces only */
+  --ck-chamfer:      10px;     /* sealed-corner cut · @kind radius */
+  --ck-stroke-1:     1px;      /* hairline · @kind other */
+  --ck-stroke-seal:  2px;      /* sealed contour · @kind other */
+  --ck-stroke-3:     4px;      /* emergency emphasis · @kind other */
+  --ck-rule:         2px;      /* receipt left-rule · @kind other */
+
+  /* Spacing · 4px proof-grid */
+  --ck-sp-0:  0; /* @kind spacing */
+  --ck-sp-1:  4px;
+  --ck-sp-2:  8px;
+  --ck-sp-3:  12px;
+  --ck-sp-4:  16px;
+  --ck-sp-5:  20px;
+  --ck-sp-6:  24px;
+  --ck-sp-8:  32px;
+  --ck-sp-10: 40px;
+  --ck-sp-12: 48px;
+  --ck-sp-16: 64px;
+  --ck-sp-20: 80px;
+  --ck-sp-24: 96px;
+
+  /* Layout registers */
+  --ck-nav-w:    232px;  /* shell nav rail · @kind spacing */
+  --ck-margin-w: 304px;  /* Evidence Margin — 280–320 legal band · @kind spacing */
+  --ck-measure:  72ch;   /* body text measure · @kind spacing */
+
+  /* Motion — tiers inherited from DS-2 (B3); Resolve stays the one ceremony */
+  --ck-t-micro:  160ms; /* @kind other */
+  --ck-t-state:  280ms; /* @kind other */
+  --ck-t-scene:  640ms; /* @kind other */
+  --ck-resolve:  1.8s;  /* @kind other */
+  --ck-ease:     cubic-bezier(.22, .61, .36, 1); /* @kind other */ /* governed, not bouncy */
+}
+
+/* ============================================================
+ * 2 · THEME: LEDGER (canonical / default) — warm paper
+ * ============================================================ */
+:root,
+[data-theme="ledger"] {
+  --ck-bg-0:      var(--ck-paper);
+  --ck-bg-1:      #FCF8F1;                 /* card, one step raised */
+  --ck-bg-2:      #EFE8DA;                 /* recessed tint, contradicted fill */
+
+  --ck-fg-1:      var(--ck-ink);
+  --ck-fg-2:      #4A4334;
+  --ck-fg-3:      var(--ck-tone);
+  --ck-fg-mute:   #8A8070;
+
+  --ck-hairline:        #E3DACB;
+  --ck-hairline-strong: #CDC2AC;
+  --ck-seal:            var(--ck-ink);     /* sealed contour color */
+  --ck-structural:      var(--ck-tone);    /* teal is NOT structural on paper */
+
+  --ck-accent:     var(--ck-rust);
+  --ck-accent-ink: #F6F1E8;                /* text on rust */
+  --ck-proof:      var(--ck-violet);
+  --ck-alarm:      var(--ck-red);
+
+  --ck-link:      var(--ck-ink);
+  --ck-link-hov:  var(--ck-rust);
+  --ck-ring-focus: 0 0 0 2px var(--ck-rust);
+
+  color-scheme: light;
+}
+
+/* ============================================================
+ * 3 · THEME: VAULT — operational night shift; deep blue survives
+ * ============================================================ */
+[data-theme="vault"] {
+  --ck-bg-0:      var(--ck-vault-ground);
+  --ck-bg-1:      #101C30;
+  --ck-bg-2:      #18263E;
+
+  --ck-fg-1:      var(--ck-vault-ink);
+  --ck-fg-2:      #C7BFAF;
+  --ck-fg-3:      var(--ck-vault-tone);
+  --ck-fg-mute:   #6B6457;
+
+  --ck-hairline:        #1D2A40;
+  --ck-hairline-strong: #2C3D5A;
+  --ck-seal:            var(--ck-vault-ink);
+  --ck-structural:      var(--ck-teal);    /* structural stroke only — never semantic */
+
+  --ck-accent:     var(--ck-vault-rust);
+  --ck-accent-ink: #0A1322;
+  --ck-proof:      var(--ck-vault-violet);
+  --ck-alarm:      var(--ck-vault-red);
+
+  --ck-link:      var(--ck-vault-ink);
+  --ck-link-hov:  var(--ck-vault-rust);
+  --ck-ring-focus: 0 0 0 2px var(--ck-vault-rust);
+
+  color-scheme: dark;
+}
+
+/* ============================================================
+ * 4 · THEME: HIGH CONTRAST — pure black/white, gold focus
+ * ============================================================ */
+[data-theme="hc"] {
+  --ck-bg-0:      #000000;
+  --ck-bg-1:      #000000;
+  --ck-bg-2:      #141414;
+
+  --ck-fg-1:      #FFFFFF;
+  --ck-fg-2:      #FFFFFF;
+  --ck-fg-3:      #E6E6E6;
+  --ck-fg-mute:   #CCCCCC;
+
+  --ck-hairline:        #FFFFFF;
+  --ck-hairline-strong: #FFFFFF;
+  --ck-seal:            #FFFFFF;
+  --ck-structural:      #FFFFFF;
+
+  --ck-accent:     #FFD700;                /* gold continuity — focus + action */
+  --ck-accent-ink: #000000;
+  --ck-proof:      #D8C7FF;
+  --ck-alarm:      #FF9A9A;
+
+  --ck-link:      #FFD700;
+  --ck-link-hov:  #FFE94D;
+  --ck-ring-focus: 0 0 0 2px #FFD700;
+
+  color-scheme: dark;
+}
+/* HC opacity floor — no semi-transparency, ever */
+[data-theme="hc"] * { opacity: 1 !important; }
+
+/* ============================================================
+ * 4b · THEME: FORCED COLORS — system palette always wins
+ * ============================================================ */
+@media (forced-colors: active) {
+  :root,
+  [data-theme="ledger"],
+  [data-theme="vault"],
+  [data-theme="hc"] {
+    --ck-bg-0:      Canvas;
+    --ck-bg-1:      Canvas;
+    --ck-bg-2:      Canvas;
+    --ck-fg-1:      CanvasText;
+    --ck-fg-2:      CanvasText;
+    --ck-fg-3:      CanvasText;
+    --ck-fg-mute:   GrayText;
+    --ck-hairline:        ButtonText;
+    --ck-hairline-strong: ButtonText;
+    --ck-seal:            ButtonText;
+    --ck-structural:      ButtonText;
+    --ck-accent:     LinkText;
+    --ck-accent-ink: Canvas;
+    --ck-proof:      LinkText;
+    --ck-alarm:      LinkText;
+    --ck-link:      LinkText;
+    --ck-link-hov:  LinkText;
+    color-scheme: light dark;
+  }
+  /* clip-path hides borders from a forced palette — restore real outlines */
+  .ck-sealed, button, input, select, textarea, [role="button"] {
+    forced-color-adjust: none;
+    outline: 1px solid ButtonText;
+  }
+  * { opacity: 1 !important; }
+}
+
+/* ============================================================
+ * 5 · TYPOGRAPHY — Instrument Serif · Geist · JetBrains Mono
+ * Display speaks rarely; the interface is quiet; evidence is mono.
+ * Floor: nothing renders under 11px (B6, inherited).
+ * ============================================================ */
+:root {
+  --ck-ff-display: 'Instrument Serif', Georgia, 'Times New Roman', serif; /* @kind font */
+  --ck-ff-ui:      'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; /* @kind font */
+  --ck-ff-mono:    'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace; /* @kind font */
+
+  --ck-fs-display: clamp(40px, 5vw, 64px); /* @kind font */ --ck-lh-display: 1.04; /* @kind font */
+  --ck-fs-h1:      32px;   /* @kind font */ --ck-lh-h1: 1.12; /* @kind font */ --ck-ls-h1: -0.014em; /* @kind font */
+  --ck-fs-h2:      24px;   /* @kind font */ --ck-lh-h2: 1.2;  /* @kind font */ --ck-ls-h2: -0.008em; /* @kind font */
+  --ck-fs-h3:      18px;   /* @kind font */ --ck-lh-h3: 1.3;  /* @kind font */
+  --ck-fs-h4:      15px;   /* @kind font */ --ck-lh-h4: 1.4;  /* @kind font */
+
+  --ck-fs-body:    15px;   /* @kind font */ --ck-lh-body: 1.6; /* @kind font */
+  --ck-fs-body-sm: 13.5px; /* @kind font */ --ck-lh-body-sm: 1.55; /* @kind font */
+  --ck-fs-caption: 12.5px; /* @kind font */
+  --ck-fs-micro:   11px;   /* the floor — nothing smaller renders · @kind font */
+
+  --ck-fs-code:     13px;  /* @kind font */ --ck-lh-code: 1.55; /* @kind font */
+  --ck-fs-evidence: 11.5px;/* receipts, digests, margin entries · @kind font */
+  --ck-fs-invar:    11px;  /* verbatim invariants · @kind font */
+}
+
+/* ---- Semantic type roles ---- */
+.ck-display, h1.ck-display {
+  font-family: var(--ck-ff-display);
+  font-weight: 400;                        /* Instrument Serif has one weight; scale carries rank */
+  font-size: var(--ck-fs-display);
+  line-height: var(--ck-lh-display);
+  letter-spacing: -0.01em;
+  color: var(--ck-fg-1);
+}
+.ck-display em, .ck-display i { font-style: italic; }
+h1, .ck-h1 { font-family: var(--ck-ff-ui); font-weight: 600; font-size: var(--ck-fs-h1); line-height: var(--ck-lh-h1); letter-spacing: var(--ck-ls-h1); color: var(--ck-fg-1); }
+h2, .ck-h2 { font-family: var(--ck-ff-ui); font-weight: 600; font-size: var(--ck-fs-h2); line-height: var(--ck-lh-h2); letter-spacing: var(--ck-ls-h2); color: var(--ck-fg-1); }
+h3, .ck-h3 { font-family: var(--ck-ff-ui); font-weight: 500; font-size: var(--ck-fs-h3); line-height: var(--ck-lh-h3); color: var(--ck-fg-1); }
+h4, .ck-h4 { font-family: var(--ck-ff-ui); font-weight: 600; font-size: var(--ck-fs-h4); line-height: var(--ck-lh-h4); color: var(--ck-fg-1); }
+p, .ck-body {
+  font-family: var(--ck-ff-ui);
+  font-weight: 400;
+  font-size: var(--ck-fs-body);
+  line-height: var(--ck-lh-body);
+  color: var(--ck-fg-2);
+  text-wrap: pretty;
+}
+.ck-body-sm { font-family: var(--ck-ff-ui); font-size: var(--ck-fs-body-sm); line-height: var(--ck-lh-body-sm); color: var(--ck-fg-2); }
+.ck-caption { font-family: var(--ck-ff-ui); font-size: var(--ck-fs-caption); line-height: 1.45; color: var(--ck-fg-3); }
+.ck-label {
+  font-family: var(--ck-ff-mono);
+  font-weight: 600;
+  font-size: var(--ck-fs-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ck-fg-mute);
+  font-variant-ligatures: none;
+}
+.ck-annot { font-family: var(--ck-ff-mono); font-weight: 500; font-size: var(--ck-fs-micro); line-height: 1.4; color: var(--ck-fg-mute); letter-spacing: 0.04em; font-variant-ligatures: none; }
+
+code, .ck-code, kbd, samp, pre {
+  font-family: var(--ck-ff-mono);
+  font-weight: 400;
+  font-size: var(--ck-fs-code);
+  line-height: var(--ck-lh-code);
+  color: var(--ck-fg-1);
+  font-variant-ligatures: none;
+}
+.ck-evidence { font-family: var(--ck-ff-mono); font-size: var(--ck-fs-evidence); line-height: 1.5; color: var(--ck-fg-3); font-variant-ligatures: none; }
+
+/* Verbatim invariant — literal, never paraphrased.
+   Flagship: `mode changes deployment, not governance semantics` */
+.ck-invariant {
+  font-family: var(--ck-ff-mono);
+  font-weight: 600;
+  font-size: var(--ck-fs-invar);
+  line-height: 1.4;
+  color: var(--ck-fg-1);
+  letter-spacing: 0.04em;
+  text-transform: none;
+  font-variant-ligatures: none;
+}
+
+a, .ck-link {
+  color: var(--ck-link);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  text-underline-offset: 3px;
+}
+a:hover, .ck-link:hover { color: var(--ck-link-hov); }
+a:focus-visible, .ck-link:focus-visible { outline: none; box-shadow: var(--ck-ring-focus); }
+
+/* ============================================================
+ * 6 · GLOBAL RESET
+ * ============================================================ */
+html { background: var(--ck-bg-0); color: var(--ck-fg-1); }
+body {
+  margin: 0;
+  background: var(--ck-bg-0);
+  color: var(--ck-fg-1);
+  font-family: var(--ck-ff-ui);
+  font-size: var(--ck-fs-body);
+  line-height: var(--ck-lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+::selection { background: color-mix(in oklab, var(--ck-rust) 24%, transparent); }
+
+/* ============================================================
+ * 7 · SURFACES — quiet is square; the chamfer means sealed
+ * ============================================================ */
+
+/* Quiet card — the default container. Square, hairline, flat. */
+.ck-quiet {
+  position: relative;
+  background: var(--ck-bg-1);
+  border: 1px solid var(--ck-hairline);
+}
+
+/* Sealed surface — the ONLY chamfered thing in DS-3. Seeing the
+   cut corner must mean an attested / sealed state exists. */
+.ck-sealed {
+  position: relative;
+  background: var(--ck-bg-1);
+  clip-path: polygon(
+    var(--ck-chamfer) 0, calc(100% - var(--ck-chamfer)) 0,
+    100% var(--ck-chamfer), 100% calc(100% - var(--ck-chamfer)),
+    calc(100% - var(--ck-chamfer)) 100%, var(--ck-chamfer) 100%,
+    0 calc(100% - var(--ck-chamfer)), 0 var(--ck-chamfer)
+  );
+}
+.ck-sealed::after {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  clip-path: inherit;
+  box-shadow: inset 0 0 0 var(--ck-stroke-seal) var(--ck-seal);
+}
+
+/* ============================================================
+ * 8 · CONTROLS
+ * ============================================================ */
+
+/* Buttons — square (chamfer is sealed-only), mono labels.
+   primary = rust = the focal action, ≤2 per view.
+   emergency = red = requires an active emergency protocol. */
+.ck-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--ck-ff-mono);
+  font-weight: 600;
+  font-size: var(--ck-fs-micro);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-variant-ligatures: none;
+  padding: 10px 16px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  background: transparent;
+  color: var(--ck-fg-1);
+  transition: border-color var(--ck-t-micro) var(--ck-ease),
+              filter var(--ck-t-micro) var(--ck-ease),
+              color var(--ck-t-micro) var(--ck-ease);
+}
+.ck-btn:focus-visible { outline: none; box-shadow: var(--ck-ring-focus); }
+.ck-btn--primary { background: var(--ck-accent); border-color: var(--ck-accent); color: var(--ck-accent-ink); }
+.ck-btn--primary:hover { filter: brightness(1.07); }
+.ck-btn--quiet { border-color: var(--ck-hairline-strong); color: var(--ck-fg-1); }
+.ck-btn--quiet:hover { border-color: var(--ck-fg-1); }
+.ck-btn--ghost { color: var(--ck-fg-3); padding: 10px 12px; }
+.ck-btn--ghost:hover { color: var(--ck-fg-1); }
+.ck-btn--emergency { border-color: var(--ck-alarm); color: var(--ck-alarm); }
+.ck-btn--emergency:hover { background: color-mix(in oklab, var(--ck-alarm) 8%, transparent); }
+.ck-btn[disabled], .ck-btn--disabled { opacity: .45; cursor: not-allowed; }
+
+/* Fields — square, hairline, evidence-grade placeholder */
+.ck-field {
+  font-family: var(--ck-ff-ui);
+  font-size: var(--ck-fs-body-sm);
+  color: var(--ck-fg-1);
+  background: var(--ck-bg-1);
+  border: 1px solid var(--ck-hairline-strong);
+  padding: 9px 12px;
+}
+.ck-field::placeholder { color: var(--ck-fg-mute); }
+.ck-field:focus-visible { outline: none; box-shadow: var(--ck-ring-focus); border-color: transparent; }
+
+/* ============================================================
+ * 9 · EVIDENCE VOCABULARY
+ * ============================================================ */
+
+/* Digest — algorithm prefix required, middle-ellipsis truncation,
+   never below a 13px hit area. Operable, never inert grey text. */
+.ck-hash {
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-evidence);
+  letter-spacing: .02em;
+  font-variant-ligatures: none;
+  color: var(--ck-fg-3);
+  background: color-mix(in oklab, var(--ck-fg-1) 5%, transparent);
+  border: 1px solid var(--ck-hairline);
+  padding: 3px 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: color var(--ck-t-micro) var(--ck-ease), border-color var(--ck-t-micro) var(--ck-ease);
+}
+.ck-hash:hover { color: var(--ck-fg-1); border-color: var(--ck-hairline-strong); }
+.ck-hash:focus-visible { outline: none; box-shadow: var(--ck-ring-focus); }
+
+/* Claim chips — six epistemic states, closed set. Glyphs from the
+   CNDL safe-set. Only attested earns violet; only quarantined earns red. */
+.ck-chip {
+  font-family: var(--ck-ff-mono);
+  font-weight: 600;
+  font-size: var(--ck-fs-micro);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-variant-ligatures: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border: 1px solid var(--ck-hairline-strong);
+  color: var(--ck-fg-3);
+  background: transparent;
+}
+.ck-chip--observed     { border-color: var(--ck-fg-1); color: var(--ck-fg-1); }
+.ck-chip--inferred     { /* tone default */ }
+.ck-chip--claimed      { /* tone default */ }
+.ck-chip--attested     { border-color: var(--ck-proof); color: var(--ck-proof); }
+.ck-chip--contradicted { border-color: var(--ck-fg-1); color: var(--ck-fg-1); background: var(--ck-bg-2); }
+.ck-chip--quarantined  { border-color: var(--ck-alarm); color: var(--ck-alarm); }
+
+/* Receipt — one entry in the Evidence Margin. Every entry is one of:
+   generated · transformed · evaluated · rejected · approved · exported · signed. */
+.ck-receipt {
+  display: grid;
+  grid-template-columns: var(--ck-rule) 1fr;
+  gap: 0 10px;
+}
+.ck-receipt > .ck-receipt__rule { background: var(--ck-hairline); }
+.ck-receipt--proof > .ck-receipt__rule { background: var(--ck-proof); }
+.ck-receipt--alarm > .ck-receipt__rule { background: var(--ck-alarm); }
+.ck-receipt__time {
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-micro);
+  color: var(--ck-fg-mute);
+  font-variant-ligatures: none;
+}
+.ck-receipt__event { font-family: var(--ck-ff-ui); font-size: var(--ck-fs-caption); font-weight: 500; color: var(--ck-fg-1); }
+.ck-receipt--proof .ck-receipt__event { color: var(--ck-proof); }
+.ck-receipt--alarm .ck-receipt__event { color: var(--ck-alarm); }
+.ck-receipt__detail {
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-evidence);
+  color: var(--ck-fg-3);
+  font-variant-ligatures: none;
+}
+
+/* Provenance stamp — the ExportGate's signature. The artifact leaves
+   with an evidence envelope, or it does not leave. */
+.ck-stamp {
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-evidence);
+  font-weight: 500;
+  font-variant-ligatures: none;
+  color: var(--ck-proof);
+  border: 1px solid var(--ck-proof);
+  padding: 5px 9px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+/* ============================================================
+ * 10 · PAGE SHELLS — composition is semantic
+ * Landmarks are required: <header> <nav> <main> <aside> <footer>.
+ * The Evidence Margin is an <aside>, always rightmost, never a tab.
+ * ============================================================ */
+
+/* Console shell — operator surface: header / nav · main · margin / footer */
+.ck-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: var(--ck-nav-w) minmax(0, 1fr) var(--ck-margin-w);
+  grid-template-areas:
+    "header header header"
+    "nav    main   margin"
+    "footer footer footer";
+  background: var(--ck-bg-0);
+}
+/* Document shell — editorial surface: no nav rail, margin stays */
+.ck-shell--document {
+  grid-template-columns: minmax(0, 1fr) var(--ck-margin-w);
+  grid-template-areas:
+    "header header"
+    "main   margin"
+    "footer footer";
+}
+/* Reading shell — single measured column, margin collapses to footer receipts */
+.ck-shell--reading {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "header"
+    "main"
+    "footer";
+}
+
+.ck-shell__header {
+  grid-area: header;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ck-sp-4);
+  padding: 0 var(--ck-sp-5);
+  min-height: 52px;
+  border-bottom: 1px solid var(--ck-hairline);
+  background: var(--ck-bg-0);
+}
+.ck-shell__nav {
+  grid-area: nav;
+  border-right: 1px solid var(--ck-hairline);
+  padding: var(--ck-sp-4) 0;
+  min-width: 0;
+}
+.ck-shell__main {
+  grid-area: main;
+  padding: var(--ck-sp-6) var(--ck-sp-6) var(--ck-sp-10);
+  min-width: 0;
+}
+.ck-shell__main > .ck-measure, .ck-measure { max-width: var(--ck-measure); }
+.ck-shell__margin {
+  grid-area: margin;
+  border-left: 1px solid var(--ck-hairline);
+  padding: var(--ck-sp-4) var(--ck-sp-4) var(--ck-sp-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ck-sp-3);
+  min-width: 0;
+}
+.ck-shell__footer {
+  grid-area: footer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ck-sp-4);
+  padding: var(--ck-sp-2) var(--ck-sp-5);
+  border-top: 1px solid var(--ck-hairline);
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-micro);
+  color: var(--ck-fg-mute);
+  font-variant-ligatures: none;
+}
+
+/* Masthead — brand · crumb · urn, left side of the header */
+.ck-masthead { display: flex; align-items: baseline; gap: var(--ck-sp-3); min-width: 0; }
+.ck-masthead__brand {
+  font-family: var(--ck-ff-mono);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  color: var(--ck-fg-1);
+}
+.ck-masthead__crumb { font-family: var(--ck-ff-ui); font-size: var(--ck-fs-body-sm); color: var(--ck-fg-2); }
+.ck-masthead__urn {
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-micro);
+  color: var(--ck-fg-mute);
+  font-variant-ligatures: none;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* Nav rail items — square, quiet; rust only on the active intent */
+.ck-nav__item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px var(--ck-sp-5);
+  font-family: var(--ck-ff-ui);
+  font-size: var(--ck-fs-body-sm);
+  color: var(--ck-fg-3);
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  text-decoration: none; border-bottom: none;
+}
+.ck-nav__item:hover { color: var(--ck-fg-1); }
+.ck-nav__item[aria-current="page"], .ck-nav__item--active {
+  color: var(--ck-fg-1);
+  border-left-color: var(--ck-fg-1);
+  background: color-mix(in oklab, var(--ck-fg-1) 4%, transparent);
+}
+
+/* ============================================================
+ * 11 · MOTION — Resolve survives as the single ceremony
+ * ============================================================ */
+@keyframes ck-resolve-outline { 0%,100%{opacity:0}   5%,25%{opacity:1} 25%,100%{opacity:1} }
+@keyframes ck-resolve-witness { 0%,25%{opacity:0}  30%,50%{opacity:1} 50%,100%{opacity:1} }
+@keyframes ck-resolve-nucleus { 0%,50%{opacity:0}  55%,75%{opacity:1} 75%,100%{opacity:1} }
+@keyframes ck-resolve-anchor  { 0%,75%{opacity:0}  80%,100%{opacity:1} }
+.ck-resolve-outline { animation: ck-resolve-outline var(--ck-resolve) var(--ck-ease) 1 both; }
+.ck-resolve-witness { animation: ck-resolve-witness var(--ck-resolve) var(--ck-ease) 1 both; }
+.ck-resolve-nucleus { animation: ck-resolve-nucleus var(--ck-resolve) var(--ck-ease) 1 both; }
+.ck-resolve-anchor  { animation: ck-resolve-anchor  var(--ck-resolve) var(--ck-ease) 1 both; }
+@media (prefers-reduced-motion: reduce) {
+  .ck-resolve-outline, .ck-resolve-witness, .ck-resolve-nucleus, .ck-resolve-anchor { animation: none; }
+  .ck-btn, .ck-hash { transition: none; }
+}
+
+/* ============================================================
+ * 12 · UTILITIES
+ * ============================================================ */
+.ck-stack-1 { display: flex; flex-direction: column; gap: var(--ck-sp-1); }
+.ck-stack-2 { display: flex; flex-direction: column; gap: var(--ck-sp-2); }
+.ck-stack-3 { display: flex; flex-direction: column; gap: var(--ck-sp-3); }
+.ck-stack-4 { display: flex; flex-direction: column; gap: var(--ck-sp-4); }
+.ck-row-2   { display: flex; align-items: center; gap: var(--ck-sp-2); }
+.ck-row-3   { display: flex; align-items: center; gap: var(--ck-sp-3); }
+.ck-row-4   { display: flex; align-items: center; gap: var(--ck-sp-4); }

@@ -1,0 +1,483 @@
+{
+  "name": "ckodex-skill-pack",
+  "version": "1.0.0-beta.2",
+  "generated_at": "2026-06-06T20:48:00Z",
+  "assets": [
+    {
+      "path": "docs/doc_build/404.html",
+      "category": "docs",
+      "sha256": "c1feaf3025a82571e2add2c4d296d84225d6e198e6cd6d210a74b5013e337f4b",
+      "size_bytes": 7714,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/doc_build/guide/architecture.html",
+      "category": "docs",
+      "sha256": "b3578f08a7988b667952f7cb8b6c85c46a77cfcd6d84f1bdc42dd61168a5b875",
+      "size_bytes": 28988,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/doc_build/guide/cli.html",
+      "category": "docs",
+      "sha256": "7f07e6455323d8b5a39921c0d6ad79582e72cb1561a4c46a792fe68c39639ee4",
+      "size_bytes": 39501,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/doc_build/guide/dimensions.html",
+      "category": "docs",
+      "sha256": "4532912df81f1d431a42f503a79f4e2efbaac7c4baaab8fc5d19856d1d5a66e4",
+      "size_bytes": 34013,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/doc_build/guide/getting-started.html",
+      "category": "docs",
+      "sha256": "d73601753702d759a15f5e7c62a03423bc2b1fa566b216b7cc8e6727a11223bc",
+      "size_bytes": 27158,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/doc_build/guide/grpc-api.html",
+      "category": "docs",
+      "sha256": "2152a5cffd3222d188d593bb1dbe40d9926e749a52c728309e658ab70c48344c",
+      "size_bytes": 78446,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/doc_build/guide/remote-sources.html",
+      "category": "docs",
+      "sha256": "73fb7a383c2b2bca7dd5a207ec6506bd9a84665e6255b5090de2928690212fda",
+      "size_bytes": 42518,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/doc_build/guide/security.html",
+      "category": "docs",
+      "sha256": "9ac90df11366d8c8e76007b4abead994b38e28fb0f6d048c2e228fd85ca4ff9a",
+      "size_bytes": 31362,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/doc_build/index.html",
+      "category": "docs",
+      "sha256": "dbc067a0eefb7a1d2f572e4fd68589a9c9249a191b9ef0e2884bc603e46dd58b",
+      "size_bytes": 11430,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/doc_build/skills/agentic-skill-template.html",
+      "category": "docs",
+      "sha256": "42942de331bf4b77e1f37bffda2614ff59028bb80250bf90463864a8de2b1904",
+      "size_bytes": 19317,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/doc_build/specs/client-spec.html",
+      "category": "docs",
+      "sha256": "a2f51d70eeacb972e91d9dda5c3f16a736b16f2932ad35a0cfb8d44d258aa384",
+      "size_bytes": 116865,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/doc_build/specs/rfc-001-lifecycle.html",
+      "category": "docs",
+      "sha256": "683293d3b842d16aff8165dc97da3d753e8d74bafbc54cf6a64b49870d1f5dc7",
+      "size_bytes": 216224,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/doc_build/specs/schema-index.html",
+      "category": "docs",
+      "sha256": "0dc9149188dd9f2847963e6e6606523faa9fec127ef1900741901c88f6e73ad6",
+      "size_bytes": 49715,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/doc_build/specs/skill-spec-v1.1.html",
+      "category": "docs",
+      "sha256": "d66a182be62eaf2714e932757685ea3cbe724c7583fef2538a9af26bcf1a8a62",
+      "size_bytes": 56672,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/doc_build/specs/skills-dossier.html",
+      "category": "docs",
+      "sha256": "8ae2efebd126c60a441da730eb5c5725a5fe37400623edbd8226e7815b48154f",
+      "size_bytes": 373702,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/doc_build/specs/stx-spec.html",
+      "category": "docs",
+      "sha256": "8b2742c349b784f499f28c2b522cffd4cf6cb9cd0665c7c5fc432b1cbc6b7e5f",
+      "size_bytes": 203367,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/doc_build/static/css/styles.56b59350.css",
+      "category": "docs",
+      "sha256": "2e222d2cc69ec827e3ea3335f20068aace32dec64fa91dc37d4d7df32216bd3b",
+      "size_bytes": 56827,
+      "media_type": "text/css"
+    },
+    {
+      "path": "docs/doc_build/static/js/134.7e81ffb2.js",
+      "category": "docs",
+      "sha256": "d81dac96b1d91214fa07fc245a8c4bd590a851534d94be05eab2bb71e49a2716",
+      "size_bytes": 262815,
+      "media_type": "application/javascript"
+    },
+    {
+      "path": "docs/doc_build/static/js/134.7e81ffb2.js.LICENSE.txt",
+      "category": "docs",
+      "sha256": "9f089e95f934c9282ced5113162bf05270047f61a0b4d38d678c5dadcfe52738",
+      "size_bytes": 577,
+      "media_type": "application/octet-stream"
+    },
+    {
+      "path": "docs/doc_build/static/js/async/272.387823ae.js",
+      "category": "docs",
+      "sha256": "c6d5a9dbd0fa3cc60ff1ac3f4ce7e90e72dacdaec24eceab89981c6282db5275",
+      "size_bytes": 21178,
+      "media_type": "application/javascript"
+    },
+    {
+      "path": "docs/doc_build/static/js/async/277.721ca709.js",
+      "category": "docs",
+      "sha256": "bd5e3d4f7373169fe10190dcd9650a3e60fd13dbb1ed55bb6f5bd7791015d6c0",
+      "size_bytes": 10985,
+      "media_type": "application/javascript"
+    },
+    {
+      "path": "docs/doc_build/static/js/async/324.f2f79aa9.js",
+      "category": "docs",
+      "sha256": "da3288636fc70bbc9d8a5163048c0a6814196600f36af3b57a5ec970ea180d1d",
+      "size_bytes": 1358,
+      "media_type": "application/javascript"
+    },
+    {
+      "path": "docs/doc_build/static/js/async/362.2ecb3f6b.js",
+      "category": "docs",
+      "sha256": "8f84be036ae8786e5d4e896e665fdf9a99eb675143631b33a0ac9176c7e1d6d8",
+      "size_bytes": 25262,
+      "media_type": "application/javascript"
+    },
+    {
+      "path": "docs/doc_build/static/js/async/395.8dc2dc37.js",
+      "category": "docs",
+      "sha256": "21e51ab6fcc7f980805972b7aac516767cd55cacdfdbdd7be98ca3be531e3db0",
+      "size_bytes": 217993,
+      "media_type": "application/javascript"
+    },
+    {
+      "path": "docs/doc_build/static/js/async/470.e15002d8.js",
+      "category": "docs",
+      "sha256": "af73927037efd0b6fd6a8387cf16fb665fc6405f1c575428d2c2fc1cc14a3d0d",
+      "size_bytes": 4750,
+      "media_type": "application/javascript"
+    },
+    {
+      "path": "docs/doc_build/static/js/async/497.9d8b6cc3.js",
+      "category": "docs",
+      "sha256": "34af1500e6668964146ebac360f046ee4427a8acbe296d8012ef4f784d2ea88e",
+      "size_bytes": 121135,
+      "media_type": "application/javascript"
+    },
+    {
+      "path": "docs/doc_build/static/js/async/499.6f3bacc7.js",
+      "category": "docs",
+      "sha256": "c541610f6965b0d3e0202b68ea5f48ed8a051a62436f75a023b0a8bcbbc5ad41",
+      "size_bytes": 8998,
+      "media_type": "application/javascript"
+    },
+    {
+      "path": "docs/doc_build/static/js/async/513.34dc2fca.js",
+      "category": "docs",
+      "sha256": "1f9f41d689cb591c59e7bda316becebaca553f1199805d5b5699abbef7035a78",
+      "size_bytes": 11090,
+      "media_type": "application/javascript"
+    },
+    {
+      "path": "docs/doc_build/static/js/async/596.d214ccc5.js",
+      "category": "docs",
+      "sha256": "5292bfc36aba246c5440f5333a5a1b66845fe1bd4692d450775fe17280019e5e",
+      "size_bytes": 90082,
+      "media_type": "application/javascript"
+    },
+    {
+      "path": "docs/doc_build/static/js/async/676.c8adcb1c.js",
+      "category": "docs",
+      "sha256": "9646f60331bc63925ffbd2386b41be66e66ad4e67a77a2bed72eceef359eba3c",
+      "size_bytes": 7512,
+      "media_type": "application/javascript"
+    },
+    {
+      "path": "docs/doc_build/static/js/async/839.3e901ebd.js",
+      "category": "docs",
+      "sha256": "1efbfe91803b517a0c9d83ab8e2e39d7e557b1dfd2867e8bb08417d44da7474d",
+      "size_bytes": 7684,
+      "media_type": "application/javascript"
+    },
+    {
+      "path": "docs/doc_build/static/js/async/937.29854e11.js",
+      "category": "docs",
+      "sha256": "35982457a9b945801893dac474935e9a4974016a37ba5d2f163a3a4ed771efc1",
+      "size_bytes": 6084,
+      "media_type": "application/javascript"
+    },
+    {
+      "path": "docs/doc_build/static/js/async/957.f2b3727f.js",
+      "category": "docs",
+      "sha256": "d4d8dcadcb01b011eb3d4867565b0e8f3a7299fdd15e526808f22c85f58dfd23",
+      "size_bytes": 7909,
+      "media_type": "application/javascript"
+    },
+    {
+      "path": "docs/doc_build/static/js/async/988.e5bb8b5a.js",
+      "category": "docs",
+      "sha256": "c812fcbb6a53afd0baffd202c4f573d48f5f8cae03628c41ac0f164f61dd1c14",
+      "size_bytes": 52083,
+      "media_type": "application/javascript"
+    },
+    {
+      "path": "docs/doc_build/static/js/index.e461a04c.js",
+      "category": "docs",
+      "sha256": "83d36da38b5a9fa862a110e43ae5fabdc1708218be7ca0b42814801d0e057bfc",
+      "size_bytes": 3824,
+      "media_type": "application/javascript"
+    },
+    {
+      "path": "docs/doc_build/static/js/lib-react.f4273e85.js",
+      "category": "docs",
+      "sha256": "e30988145962925eed39d21431ce9f89c9bf2bdf10bbd5a9e467a50a9d243443",
+      "size_bytes": 139981,
+      "media_type": "application/javascript"
+    },
+    {
+      "path": "docs/doc_build/static/js/lib-react.f4273e85.js.LICENSE.txt",
+      "category": "docs",
+      "sha256": "021140118c047a00f0097e5a416418d0f9ba78ec668e59688fe1a0fb33f2702c",
+      "size_bytes": 970,
+      "media_type": "application/octet-stream"
+    },
+    {
+      "path": "docs/doc_build/static/js/lib-router.9b962ee7.js",
+      "category": "docs",
+      "sha256": "4cf7c6a575c572b5fcf619c4a4455f68ceab37a60e1b4975c30714fdf1583bcd",
+      "size_bytes": 14727,
+      "media_type": "application/javascript"
+    },
+    {
+      "path": "docs/doc_build/static/js/lib-router.9b962ee7.js.LICENSE.txt",
+      "category": "docs",
+      "sha256": "36dcf933a525cb72146aebfa2d85ad9e0e2ea453eb22eb37db88b6d237d192f8",
+      "size_bytes": 679,
+      "media_type": "application/octet-stream"
+    },
+    {
+      "path": "docs/doc_build/static/js/styles.d0438cd6.js",
+      "category": "docs",
+      "sha256": "4b98d4eaf3ff53569c7bc14315ebf398863626197d6c47cfd9a28b425d15c98c",
+      "size_bytes": 173,
+      "media_type": "application/javascript"
+    },
+    {
+      "path": "docs/doc_build/static/search_index.82ff51d5.json",
+      "category": "docs",
+      "sha256": "82ff51d5e683d532d960d23c2fae4e6ba78ee2d3e4f47480da4bd37427f94df7",
+      "size_bytes": 234786,
+      "media_type": "application/json"
+    },
+    {
+      "path": "skills/agentic-skill-template.tar.gz",
+      "category": "skill",
+      "sha256": "9d67f9932b216b5a213b3cbb7a52f494f7e43ce90fb09d31149f8f9114a1eb89",
+      "size_bytes": 14546,
+      "media_type": "application/octet-stream"
+    },
+    {
+      "path": "skills/agentic-skill-template/.claude-plugin/plugin.json",
+      "category": "skill",
+      "sha256": "08731fa701ac516913f9d45d74b6ee353b6fbcd4f0c45e38d8c2e1f9b1d79011",
+      "size_bytes": 725,
+      "media_type": "application/json"
+    },
+    {
+      "path": "skills/agentic-skill-template/README.md",
+      "category": "skill",
+      "sha256": "33bd675d2250b9b589278f326721e60a392bacfbacb2069fe3d438706bc79d94",
+      "size_bytes": 7607,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "skills/agentic-skill-template/agents/agentic-engineer.md",
+      "category": "skill",
+      "sha256": "bb02c28e78d680023cc99831c95a1f46a148ff3259a52cb329664ce1d10a8567",
+      "size_bytes": 6233,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "skills/agentic-skill-template/catalog.json",
+      "category": "skill",
+      "sha256": "f1c92903ede9119325f4e3ebae4962dc672b948ea65989dd47616f53eff46095",
+      "size_bytes": 1008,
+      "media_type": "application/json"
+    },
+    {
+      "path": "skills/agentic-skill-template/skills/agentic-skill-template/SKILL.md",
+      "category": "skill",
+      "sha256": "300e425d2797ecfb35e904f066d2567965308de2f43576965a04e68cdf4cfd18",
+      "size_bytes": 5003,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "skills/agentic-skill-template/skills/agentic-skill-template/references/EXAMPLE.md",
+      "category": "skill",
+      "sha256": "5e89e5e50069e17047884076473b61fb328d398dad281e66b99a46809f69746d",
+      "size_bytes": 6963,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "skills/agentic-skill-template/skills/agentic-skill-template/scripts/hello.sh",
+      "category": "skill",
+      "sha256": "afa095b8f062d4a36b0fbba53d286497f93795c3594443d508e288ef73768dc5",
+      "size_bytes": 2404,
+      "media_type": "text/x-shellscript"
+    },
+    {
+      "path": "skills/agentic-skill-template/skills/agentic-skill-template/scripts/lib/common.sh",
+      "category": "skill",
+      "sha256": "469520a1cfed4b58f6cecf99fba3cfcd1c32336e7d5cf431fefa49589b89fd8c",
+      "size_bytes": 3217,
+      "media_type": "text/x-shellscript"
+    },
+    {
+      "path": "skills/agentic-skill-template/skills/agentic-skill-template/tests/agent.test.sh",
+      "category": "skill",
+      "sha256": "cd61e31b17a52a6f154ad3307754bd30fb70881503a6b17903c338bee95d49f9",
+      "size_bytes": 3690,
+      "media_type": "text/x-shellscript"
+    },
+    {
+      "path": "skills/agentic-skill-template/skills/agentic-skill-template/tests/scripts.test.sh",
+      "category": "skill",
+      "sha256": "a5fd603ae7b5bbad6747209af6a7b9c1fd796ad767fadb4e6d6ef9914b20ea13",
+      "size_bytes": 4147,
+      "media_type": "text/x-shellscript"
+    },
+    {
+      "path": "skills/agentic-skill-template/skills/agentic-skill-template/tests/structure.test.sh",
+      "category": "skill",
+      "sha256": "83e93e6e188ad95bab74135c19867dedc5faf5388e898f35483ba529f6b7cc18",
+      "size_bytes": 3027,
+      "media_type": "text/x-shellscript"
+    },
+    {
+      "path": "specs/markdown/CLIENT-SPEC.md",
+      "category": "spec",
+      "sha256": "e900654ccbb17e91ff7b05aa8e1b53296f60b8b743ec2a419ec4ca27cbf182ed",
+      "size_bytes": 15436,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "specs/markdown/INDEX.md",
+      "category": "spec",
+      "sha256": "0f44fcf138ea891b9e8ad85cd730d7bf2399eb4017e1eaec2b18029fee070f1e",
+      "size_bytes": 9193,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "specs/markdown/RFC-001-skill-lifecycle-v0.2.0.md",
+      "category": "spec",
+      "sha256": "1514151f8706800324bdc9eeedc975747ce61f568019cd6820bc70dbbf4943b2",
+      "size_bytes": 48177,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "specs/markdown/SKILLS-DOSSIER.md",
+      "category": "spec",
+      "sha256": "624d58a74448a834d726e3e757c40738c672ba3adf986d9bbccc796b17dedfa7",
+      "size_bytes": 113290,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "specs/markdown/ckodex-skill-spec-v1.1.md",
+      "category": "spec",
+      "sha256": "459d01cb39140e33bddc0305763f37bfc8b405cd66cf631c5a366740a8a9e548",
+      "size_bytes": 12790,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "specs/markdown/ckodex-stx-spec.md",
+      "category": "spec",
+      "sha256": "5739ba2d8d7434a830c265981bf50fc73e40334b768dd1a1dffeb46baea626c3",
+      "size_bytes": 58432,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "specs/protos/ckodex/stx/v1/stx.proto",
+      "category": "proto",
+      "sha256": "2723a9c8e7d9a419febe95851200056e80a22247e08ccd050bf526a6d5176d65",
+      "size_bytes": 10929,
+      "media_type": "text/x-protobuf"
+    },
+    {
+      "path": "specs/protos/macos/v1/skills.proto",
+      "category": "proto",
+      "sha256": "6678a25cdbcdc81fc46dcd5a731a2f9540e094a8b2833e5cd40e0581e8a5c3df",
+      "size_bytes": 909,
+      "media_type": "text/x-protobuf"
+    },
+    {
+      "path": "specs/protos/skillpack/v1/canonical.proto",
+      "category": "proto",
+      "sha256": "b2fb6671e5c0a46efbd73a3872bc56cb5d14cc7af6e54ebbbedb8a26918d5c57",
+      "size_bytes": 7615,
+      "media_type": "text/x-protobuf"
+    },
+    {
+      "path": "specs/protos/skillpack/v1/skillpack.proto",
+      "category": "proto",
+      "sha256": "c8411f34117a4e0da6e133d2c0eb4767abf9171b6049d9dcadd205a578e13218",
+      "size_bytes": 11995,
+      "media_type": "text/x-protobuf"
+    },
+    {
+      "path": "specs/schemas/cnaab/v1/cnaab.schema.json",
+      "category": "schema",
+      "sha256": "4b4a48a41d523a6ba89a809c98273d58a98f8125e80ac2dc70e29f669c873696",
+      "size_bytes": 6699,
+      "media_type": "application/schema+json"
+    },
+    {
+      "path": "specs/schemas/cnsb/v1/cnsb.schema.json",
+      "category": "schema",
+      "sha256": "520c9357e4969c7c7b0069bae0e309d7ab3ad96c8a3e9fba177037dfa8137a8a",
+      "size_bytes": 7931,
+      "media_type": "application/schema+json"
+    },
+    {
+      "path": "specs/schemas/common/types.schema.json",
+      "category": "schema",
+      "sha256": "c817b4edbf85bcb208ad86e3bb4755f3f78a238cb94207f1da5417ec5416327e",
+      "size_bytes": 5360,
+      "media_type": "application/schema+json"
+    },
+    {
+      "path": "specs/schemas/evidence/v1/envelope.schema.json",
+      "category": "schema",
+      "sha256": "7956412b9ec916a5225e3d7b90929e190817ee09a4a06c7bf5eef11c1b209345",
+      "size_bytes": 3620,
+      "media_type": "application/schema+json"
+    },
+    {
+      "path": "specs/schemas/prove/v1/policy.schema.json",
+      "category": "schema",
+      "sha256": "2634cf790363ce9477752cce9699caa5ee02c2ab2d9a018a08ccd67c19708ffb",
+      "size_bytes": 7032,
+      "media_type": "application/schema+json"
+    }
+  ]
+}

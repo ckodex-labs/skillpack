@@ -1,0 +1,19 @@
+{
+  "lockVersion": 1,
+  "dependencies": {
+    "skill.cnsb.json": {
+      "version": "1.0.0",
+      "resolved": "skill.cnsb.json",
+      "integrity": "sha256-uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek="
+    },
+    "SKILL.md": {
+      "version": "1.0.0",
+      "resolved": "SKILL.md",
+      "integrity": "sha256-uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek="
+    }
+  },
+  "metadata": {
+    "generated": "2026-05-10T00:00:00Z",
+    "generator": "skillpack@1.0.0"
+  }
+}

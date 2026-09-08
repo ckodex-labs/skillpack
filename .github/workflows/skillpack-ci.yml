@@ -1,0 +1,117 @@
+name: SkillPack CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  check:
+    name: Gate (fmt, clippy, test, smoke) via xtask
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@1.95.0
+
+      - name: Cache dependencies
+        uses: Swatinem/rust-cache@v2
+
+      - name: Run unified release gate
+        run: cargo run -p xtask -- ci
+
+  audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Install cargo-audit
+        run: cargo install cargo-audit
+      - name: Run audit
+        run: cargo audit
+
+  validate-schemas:
+    name: Validate Schemas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Build CLI
+        run: cargo build --release --bin skillpack
+      - name: Validate bundle schemas
+        run: |
+          find . -name "*.cnsb.json" -exec ./target/release/skillpack validate --schema cnsb {} \;
+
+  schema-sync:
+    name: Check Generated Types Sync
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install json-schema-to-typescript
+        run: npm install -g json-schema-to-typescript
+      - name: Regenerate TypeScript and Rust types
+        run: |
+          make generate-types
+        env:
+          SKIP_SWIFT: "1"
+      - name: Check for drift (TS + Rust only)
+        run: |
+          make check-schema-sync
+        env:
+          SKIP_SWIFT: "1"
+
+  swift-schema-sync:
+    name: Check Swift Types Sync
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Regenerate Swift types
+        run: |
+          cd macos/skills-ecosystem && make generate-types
+      - name: Check for drift (Swift)
+        run: |
+          cd macos/skills-ecosystem && make check-schema-sync
+
+  artifacts:
+    name: Build Release Artifacts (Dagger)
+    runs-on: ubuntu-latest
+    needs: [check]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Run Dagger pipeline
+        run: cd .dagger && cargo run --release
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: skillpack-release
+          path: |
+            target/release/skillpack
+            target/release/skillpack-server
+            target/release/skillpack-server.sig
+            target/release/sbom.cdx.json
+            target/release/provenance.json
+            target/release/cargo-audit.json

@@ -1,0 +1,250 @@
+{
+  "schemaVersion": "ckodex.org/conformance-vectors/v1",
+  "rfc": "RFC-001",
+  "version": "v0.2.0",
+  "description": "Twelve canonical test vectors for an RFC-001-conformant harness. A v1.1 implementation MUST pass all twelve. Each vector specifies setup, the turn(s) under test, and expected observable behavior. Vectors are declarative; runners may translate to any test framework.",
+  "vectors": [
+    {
+      "id": "A",
+      "name": "cold-start-oscal-query",
+      "purpose": "L1 → L2 → L3 promotion on combined signal",
+      "setup": {
+        "registry": ["ckodex-oscal", "cortaix-csr", "ckodex-diagrams", "ckodex-foundationdb", "ckodex-announcements"],
+        "gal": 2,
+        "all_skills_start_at": "L1"
+      },
+      "input": {
+        "turn": "Can you validate this SSP against NIST 800-53 rev 5?"
+      },
+      "expected": {
+        "decisions": [
+          { "skill_name": "ckodex-oscal",     "from_tier": "L1", "to_tier": "L2", "trigger": "score_threshold" },
+          { "skill_name": "ckodex-oscal",     "from_tier": "L2", "to_tier": "L3", "trigger": "intent_to_invoke" },
+          { "skill_name": "cortaix-csr",      "from_tier": "L1", "to_tier": "L2", "trigger": "score_threshold" }
+        ],
+        "no_change": ["ckodex-diagrams", "ckodex-foundationdb", "ckodex-announcements"],
+        "score_floor_violation": "none"
+      }
+    },
+    {
+      "id": "B",
+      "name": "topic-drift-after-6-turns",
+      "purpose": "Topic drift overrides recency and demotes a previously-promoted skill",
+      "setup": {
+        "state_at_turn_7": {
+          "ckodex-oscal":         { "tier": "L3", "score_at_load": 0.71, "loaded_at_turn": 1 },
+          "ckodex-announcements": { "tier": "L1" }
+        },
+        "gal": 2
+      },
+      "input": {
+        "turn": "Actually let's switch — can you draft a release announcement for v16.0?"
+      },
+      "expected": {
+        "drift_computed": { "ckodex-oscal": 0.42 },
+        "theta_drift": 0.35,
+        "decisions": [
+          { "skill_name": "ckodex-oscal",         "from_tier": "L3", "to_tier": "L2", "trigger": "topic_drift" },
+          { "skill_name": "ckodex-announcements", "from_tier": "L1", "to_tier": "L2", "trigger": "score_threshold" },
+          { "skill_name": "ckodex-announcements", "from_tier": "L2", "to_tier": "L3", "trigger": "intent_to_invoke" }
+        ]
+      }
+    },
+    {
+      "id": "C",
+      "name": "budget-pressure",
+      "purpose": "Eviction order is argmin score, lowest tier first",
+      "setup": {
+        "loaded": [
+          { "skill_name": "S1", "tier": "L3", "score": 0.45, "tokens": 3500 },
+          { "skill_name": "S2", "tier": "L3", "score": 0.50, "tokens": 3500 },
+          { "skill_name": "S3", "tier": "L3", "score": 0.60, "tokens": 3500 },
+          { "skill_name": "S4", "tier": "L3", "score": 0.55, "tokens": 3500 },
+          { "skill_name": "S5", "tier": "L3", "score": 0.70, "tokens": 3500 }
+        ],
+        "b_pool_tokens": 8192,
+        "total_before": 17500
+      },
+      "input": { "turn": "(any turn; budget enforcement triggers post-promotion)" },
+      "expected": {
+        "decisions": [
+          { "skill_name": "S1", "from_tier": "L3", "to_tier": "L2", "trigger": "budget_pressure" },
+          { "skill_name": "S2", "from_tier": "L3", "to_tier": "L2", "trigger": "budget_pressure" },
+          { "skill_name": "S4", "from_tier": "L3", "to_tier": "L2", "trigger": "budget_pressure" }
+        ],
+        "post_budget_total_at_or_below": 8192
+      }
+    },
+    {
+      "id": "D",
+      "name": "mutex",
+      "purpose": "exclusiveOf triggers atomic eviction",
+      "setup": {
+        "loaded": [{ "skill_name": "ckodex-foundationdb", "tier": "L2" }],
+        "registry": [
+          {
+            "skill_name": "ckodex-redis-hypothetical",
+            "ontology": { "exclusiveOf": ["ckodex-foundationdb"] }
+          }
+        ]
+      },
+      "input": {
+        "turn": "$ckodex-redis-hypothetical please configure a 3-node cluster"
+      },
+      "expected": {
+        "decisions": [
+          { "skill_name": "ckodex-redis-hypothetical", "from_tier": "L1", "to_tier": "L2", "trigger": "score_threshold" },
+          { "skill_name": "ckodex-redis-hypothetical", "from_tier": "L2", "to_tier": "L3", "trigger": "intent_to_invoke" },
+          { "skill_name": "ckodex-foundationdb",       "from_tier": "L2", "to_tier": "L1", "trigger": "mutex" }
+        ]
+      }
+    },
+    {
+      "id": "E",
+      "name": "explicit-invocation-bypass",
+      "purpose": "$skill mention promotes despite low non-user signals; policy gate still applies",
+      "setup": {
+        "registry": [{ "skill_name": "ckodex-diagrams", "ontology": { "galMinimum": 1 } }],
+        "gal": 2,
+        "individual_signal_scores_below_threshold": true
+      },
+      "input": {
+        "turn": "Use ckodex-diagrams to render a proof-chain diagram."
+      },
+      "expected": {
+        "S_usr": 1.0,
+        "decisions": [
+          { "skill_name": "ckodex-diagrams", "from_tier": "L1", "to_tier": "L2", "trigger": "score_threshold" },
+          { "skill_name": "ckodex-diagrams", "from_tier": "L2", "to_tier": "L3", "trigger": "intent_to_invoke" }
+        ],
+        "if_gal_below_minimum": "policy_pre_filter denies; skill remains at L1; no silent promotion"
+      }
+    },
+    {
+      "id": "F",
+      "name": "implicit-invocation-disabled",
+      "purpose": "runtime.implicitInvocation:false blocks auto-promotion",
+      "setup": {
+        "registry": [{ "skill_name": "guarded-skill", "runtime": { "implicitInvocation": false } }],
+        "gal": 5
+      },
+      "input": {
+        "turn": "(generic query containing the skill's trigger words but no explicit mention)"
+      },
+      "expected": {
+        "decisions": [],
+        "skill_remains_at": "L1",
+        "only_explicit_mention_promotes": true
+      }
+    },
+    {
+      "id": "G",
+      "name": "malicious-ontology",
+      "purpose": "Invalid @context or forbidden predicate fails validation",
+      "setup": {
+        "candidate_manifest": {
+          "ontology": {
+            "@context": "https://attacker.example/ctx",
+            "proofTypes": ["XYZ_NOT_IN_ENUM"]
+          }
+        }
+      },
+      "input": { "action": "validate" },
+      "expected": {
+        "validation": "FAIL",
+        "failing_sections": ["§10.2 @context", "§10.6 proofTypes enum"],
+        "bundle_installable": false
+      }
+    },
+    {
+      "id": "H",
+      "name": "privacy-mode",
+      "purpose": "public-anchor PCA contains no prompt-derived subjects",
+      "setup": { "privacy_mode": "public-anchor" },
+      "input": { "turn": "(any turn that produces a lifecycle decision)" },
+      "expected": {
+        "pca_bundle_contains": [
+          "bundle_hash",
+          "policy_version",
+          "transition_counts",
+          "skill_id (digest only)"
+        ],
+        "pca_bundle_excludes": [
+          "skill human-readable name (unless on public allowlist)",
+          "score components",
+          "weights",
+          "prompt-derived subjects",
+          "context embedding"
+        ]
+      }
+    },
+    {
+      "id": "I",
+      "name": "script-execution-gate",
+      "purpose": "L4X denied when tool capability missing",
+      "setup": {
+        "loaded": [{ "skill_name": "script-skill", "tier": "L3", "runtime": { "l4xAllowed": true } }],
+        "harness_capabilities": { "supports_l4x_sandbox": false }
+      },
+      "input": { "turn": "(invoke a tool in script-skill)" },
+      "expected": {
+        "decisions": [
+          { "skill_name": "script-skill", "from_tier": "L3", "to_tier": "L3", "trigger": "capability_denied", "capability": "l4x_sandbox" }
+        ],
+        "user_response": "L3 content only"
+      }
+    },
+    {
+      "id": "J",
+      "name": "version-skew",
+      "purpose": "Incompatible harness/skill versions evict before scoring",
+      "setup": {
+        "manifest": { "metadata": { "version": "0.9.0" } },
+        "harness_framework_version": "v16.0"
+      },
+      "input": { "action": "session_start" },
+      "expected": {
+        "skill_evicted_to": "L0",
+        "before_any_scoring": true,
+        "ep_triggered": "EP-013",
+        "pca_trigger": "framework_break"
+      }
+    },
+    {
+      "id": "K",
+      "name": "duplicate-skill-names",
+      "purpose": "Canonical digest-based ID prevents collision",
+      "setup": {
+        "registry_entries": [
+          { "metadata": { "name": "pdf-processing" }, "authors": ["author-A"] },
+          { "metadata": { "name": "pdf-processing" }, "authors": ["author-B"] }
+        ]
+      },
+      "input": { "action": "registry_scan" },
+      "expected": {
+        "canonical_id_formula": "sha256(name ⊕ namespace ⊕ issuer)",
+        "both_loaded_under_distinct_ids": true,
+        "display_disambiguation": "<name>@<short-digest>"
+      }
+    },
+    {
+      "id": "L",
+      "name": "synopsis-mismatch",
+      "purpose": "Synopsis-body cosine < 0.55 triggers validator warning",
+      "setup": {
+        "skill_root": {
+          "SKILL.md_body": "Detailed instructions for handling X with many specific procedures...",
+          "skill.json_metadata_synopsis": "This skill handles unrelated topic Y."
+        }
+      },
+      "input": { "action": "validate" },
+      "expected": {
+        "cosine_below_threshold": true,
+        "threshold": 0.55,
+        "validator_result_third_party": "WARNING",
+        "validator_result_ckodex_shipped": "FAILURE",
+        "remediation": "re-run scripts/gen_synopsis.py"
+      }
+    }
+  ]
+}

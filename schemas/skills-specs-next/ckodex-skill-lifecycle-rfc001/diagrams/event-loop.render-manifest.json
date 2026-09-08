@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "ckodex.org/diagram/render-manifest/v1",
+  "ckodex": {
+    "framework": "v16.0",
+    "designSystem": "mcdesign-v1.3.0"
+  },
+  "diagram": {
+    "type": "T4-swimlane-activity",
+    "tenant": "ckodex-labs",
+    "slug": "t4-ckodex-labs-rfc001-event-loop",
+    "title": "RFC-001 Agent Event Loop \u2014 Per-Turn Skill Lifecycle"
+  },
+  "source": {
+    "file": "t4-ckodex-labs-rfc001-event-loop.mmd",
+    "sha256": "sha256:6360dd420bb0560f88a269f03cc1d4149fa84041bef8be3e84bad282eddb39a3",
+    "bytes": 3384,
+    "format": "mermaid+yaml-frontmatter"
+  },
+  "render": {
+    "file": "t4-ckodex-labs-rfc001-event-loop.html",
+    "sha256": "sha256:243e1915169a0f9401ac606c8416fcefa333c5cceafab6d0603e356929cf36c2",
+    "bytes": 20749,
+    "format": "html+inline-svg",
+    "renderer": "ckodex-handcraft",
+    "layout": "horizontal-swimlanes",
+    "layoutStatus": "exact"
+  },
+  "semantics": {
+    "nodeCount": 8,
+    "edgeCount": 9,
+    "decisionDiamonds": 1,
+    "proofNodes": 1,
+    "focalAccentCount": 2,
+    "lanes": [
+      "Adapter",
+      "Router",
+      "Kernel FSM",
+      "Evidence"
+    ],
+    "claims": {
+      "everyNodeCarriesClaim": true,
+      "everyEdgeLabeled": true,
+      "colorIsNotOnlySemanticCarrier": true
+    }
+  },
+  "tokens": {
+    "palette": "CKODEX-DS-1",
+    "accent": "#38a3a5",
+    "deep": "#00152b",
+    "lavender": "#bc96e6",
+    "yellow": "#fcca46",
+    "proofViolet": "#7c3aed"
+  },
+  "accessibility": {
+    "themesSupported": [
+      "light",
+      "dark",
+      "high-contrast",
+      "forced-colors"
+    ],
+    "themesTested": [
+      "light",
+      "dark"
+    ],
+    "wcagTarget": "AA",
+    "minimumContrast": "4.5:1 normal text \u00b7 3:1 large text",
+    "respectsPrefersReducedMotion": true,
+    "respectsForcedColors": true,
+    "dottedPatternHiddenInForcedColors": true,
+    "noColorOnlySignal": true,
+    "svgRoleImg": true,
+    "svgTitle": true,
+    "svgDesc": true
+  },
+  "redaction": {
+    "secretsDetected": false,
+    "policy": "public-safe",
+    "placeholders": [
+      "sha256:<12-char-prefix>..."
+    ]
+  },
+  "conformance": {
+    "CV-DIAGRAM-001": "PASS",
+    "CV-DIAGRAM-002": "PASS",
+    "CV-DIAGRAM-003": "PASS",
+    "CV-DIAGRAM-004": "PASS",
+    "CV-DIAGRAM-005": "PASS \u00b7 proof node has sha256:<prefix> placeholder + predicate + mode",
+    "CV-DIAGRAM-006": "N/A \u00b7 this diagram has no FSM-state boxes (it shows the loop, not the state)",
+    "CV-DIAGRAM-007": "PASS",
+    "CV-DIAGRAM-008": "PASS",
+    "CV-DIAGRAM-009": "PASS",
+    "CV-DIAGRAM-010": "PASS",
+    "CV-DIAGRAM-011": "PASS \u00b7 RFC-001 v0.2.0 \u00a7\u00a73,4,8,9 cited in colophon",
+    "CV-DIAGRAM-012": "PASS \u00b7 8 nodes, within 9-node budget",
+    "CV-DIAGRAM-013": "PASS",
+    "CV-DIAGRAM-014": "PASS",
+    "CV-DIAGRAM-015": "PASS",
+    "CV-DIAGRAM-016": "PASS",
+    "CV-DIAGRAM-017": "PASS",
+    "CV-DIAGRAM-018": "PASS",
+    "CV-DIAGRAM-019": "PASS \u00b7 9 connection paths, all orthogonal",
+    "CV-DIAGRAM-020": "PASS \u00b7 no crossings in this layout"
+  },
+  "references": [
+    "RFC-001 v0.2.0 \u00a73 (six-tier FSM)",
+    "RFC-001 v0.2.0 \u00a74 (multi-signal scoring)",
+    "RFC-001 v0.2.0 \u00a75 (hysteresis bands)",
+    "RFC-001 v0.2.0 \u00a76 (eviction policy)",
+    "RFC-001 v0.2.0 \u00a78 (reference algorithm)",
+    "RFC-001 v0.2.0 \u00a79 (PCA privacy modes)"
+  ],
+  "governance": {
+    "galMinimum": 1,
+    "proofTypes": [
+      "DCA",
+      "WCAG",
+      "CLP"
+    ],
+    "enforcementPoints": [
+      "pre_exec",
+      "post_exec"
+    ],
+    "emergencyProtocols": [
+      "EP-009"
+    ],
+    "brandStatus": "tenant-applied",
+    "status": "draft-non-attested"
+  }
+}

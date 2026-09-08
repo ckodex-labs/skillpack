@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ckodex.org/schema/skillpack-config.json",
+  "title": "SkillPack Configuration",
+  "description": "Configuration for SkillPack CLI and IDE integration",
+  "type": "object",
+  "properties": {
+    "minimumGrade": {
+      "type": "string",
+      "enum": ["A", "B", "C", "D", "F"],
+      "default": "C",
+      "description": "Minimum acceptable grade for CI/CD gates"
+    },
+    "dimensions": {
+      "type": "object",
+      "description": "Dimension-specific configuration",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "default": true
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          }
+        }
+      }
+    },
+    "exclude": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Glob patterns for files to exclude from assessment"
+    },
+    "registry": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "SkillPack registry URL"
+        },
+        "token": {
+          "type": "string",
+          "description": "Authentication token (use env var reference)"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "type": "string",
+          "enum": ["json", "sarif", "markdown", "html"],
+          "default": "json"
+        },
+        "file": {
+          "type": "string",
+          "description": "Output file path"
+        }
+      }
+    }
+  }
+}

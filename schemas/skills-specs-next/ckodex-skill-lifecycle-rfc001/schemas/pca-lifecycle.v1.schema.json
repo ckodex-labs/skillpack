@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ckodex.org/pca-lifecycle.v1.schema.json",
+  "title": "CKODEX PCA Lifecycle Bundle v1",
+  "description": "Proof-Carrying Action bundle schema for skill lifecycle decisions emitted by an RFC-001 harness. Bundles are emitted per turn when GAL >= 3 and the harness pca_privacy_mode is set.",
+  "type": "object",
+  "required": ["predicate", "subject", "timestamp", "privacy_mode", "decisions", "policy_version"],
+  "additionalProperties": false,
+  "properties": {
+    "predicate": {
+      "type": "string",
+      "const": "ckodex/skill-lifecycle@v1"
+    },
+    "subject": {
+      "type": "string",
+      "pattern": "^urn:ckodex:harness:[^:]+:turn:[A-Za-z0-9-]+$",
+      "description": "URN identifying the harness and turn UUID."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 with nanosecond precision."
+    },
+    "privacy_mode": {
+      "type": "string",
+      "enum": ["debug-local", "audit-private", "public-anchor", "regulated-export"],
+      "description": "Selects what fields the bundle includes. See RFC-001 §9 for redaction rules per mode."
+    },
+    "decisions": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/LifecycleDecision" }
+    },
+    "context_pool_tokens_before": { "type": "integer", "minimum": 0 },
+    "context_pool_tokens_after":  { "type": "integer", "minimum": 0 },
+    "budget_max":                 { "type": "integer", "minimum": 0 },
+    "policy_version": {
+      "type": "string",
+      "pattern": "^ckodex-skill-lifecycle/v\\d+\\.\\d+$"
+    },
+    "weights": { "$ref": "#/$defs/SignalWeights" },
+    "harness_capability_descriptor_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  },
+  "$defs": {
+    "Tier": {
+      "type": "string",
+      "enum": ["L0", "L1", "L2", "L3", "L4R", "L4X"]
+    },
+    "Trigger": {
+      "type": "string",
+      "enum": [
+        "score_threshold",
+        "policy_pre_filter",
+        "intent_to_invoke",
+        "topic_drift",
+        "idle_timeout",
+        "score_decay",
+        "budget_pressure",
+        "task_complete",
+        "mutex",
+        "framework_break",
+        "capability_denied",
+        "emergency_evict",
+        "explicit_user_signal",
+        "resource_load",
+        "execution_complete",
+        "policy_revoked"
+      ]
+    },
+    "SignalWeights": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "lex": { "type": "number", "minimum": 0, "maximum": 1 },
+        "sem": { "type": "number", "minimum": 0, "maximum": 1 },
+        "ont": { "type": "number", "minimum": 0, "maximum": 1 },
+        "co":  { "type": "number", "minimum": 0, "maximum": 1 },
+        "rec": { "type": "number", "minimum": 0, "maximum": 1 },
+        "usr": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "SignalComponents": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "lex": { "type": "number", "minimum": 0, "maximum": 1 },
+        "sem": { "type": "number", "minimum": 0, "maximum": 1 },
+        "ont": { "type": "number", "minimum": 0, "maximum": 1 },
+        "co":  { "type": "number", "minimum": 0, "maximum": 1 },
+        "rec": { "type": "number", "minimum": 0, "maximum": 1 },
+        "usr": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "LifecycleDecision": {
+      "type": "object",
+      "required": ["skill_id", "from_tier", "to_tier", "trigger"],
+      "additionalProperties": false,
+      "properties": {
+        "skill_id": {
+          "type": "string",
+          "description": "Canonical sha256:<hex> digest of the skill. In modes other than debug-local, this is the only skill identifier permitted."
+        },
+        "skill_name": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "Human-readable skill name. Permitted in debug-local; permitted in public-anchor only if the skill is on the public-skills allowlist."
+        },
+        "from_tier": { "$ref": "#/$defs/Tier" },
+        "to_tier":   { "$ref": "#/$defs/Tier" },
+        "trigger":   { "$ref": "#/$defs/Trigger" },
+        "score":     { "type": "number", "minimum": 0, "maximum": 1 },
+        "components": { "$ref": "#/$defs/SignalComponents" },
+        "weights":    { "$ref": "#/$defs/SignalWeights"   },
+        "drift":      { "type": "number", "minimum": 0, "maximum": 1 },
+        "theta":      { "type": "number", "minimum": 0, "maximum": 1 },
+        "idle_turns": { "type": "integer", "minimum": 0 },
+        "capability": { "type": "string", "maxLength": 128, "description": "For trigger=capability_denied: the missing capability." }
+      }
+    }
+  }
+}

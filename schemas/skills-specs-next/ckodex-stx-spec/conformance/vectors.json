@@ -1,0 +1,194 @@
+{
+  "schemaVersion": "ckodex.org/conformance-vectors/v1",
+  "spec": "ckodex-stx-spec",
+  "version": "v0.1.0",
+  "description": "Ten canonical vectors for STX v1 conformance. P1..P5 exercise the publisher (harness MUST satisfy). C1..C5 exercise the consumer (client MUST satisfy). A conformant implementation passes its applicable role; a symmetric implementation passes both.",
+  "vectors": [
+    {
+      "id": "P1",
+      "role": "publisher",
+      "name": "capability-handshake-defaults",
+      "purpose": "GetCapability MUST return audit-private as defaultPrivacyMode and advertise at least one transport.",
+      "setup": { "harness_id": "urn:ckodex:harness:demo", "framework": "v16.0" },
+      "input": { "rpc": "GetCapability" },
+      "expected": {
+        "stxVersion": "v1",
+        "defaultPrivacyMode": "audit-private",
+        "transports_includes_at_least_one_of": ["rest", "grpc", "graphql"],
+        "audit-private_in_privacyModesSupported": true
+      }
+    },
+    {
+      "id": "P2",
+      "role": "publisher",
+      "name": "session-lifecycle-skill-promotion",
+      "purpose": "Open session, register skill, promote L1→L2→L3; verify in-pool state and emitted events.",
+      "setup": {
+        "session_id": "urn:ckodex:session:p2",
+        "gal": 3,
+        "privacy_mode": "audit-private",
+        "skills_registered": [
+          { "name": "ckodex-oscal", "skill_id_seed": "ckodex-oscal" }
+        ]
+      },
+      "input": {
+        "actions": [
+          { "transition": { "to_tier": "L2", "trigger": "score_threshold" } },
+          { "transition": { "to_tier": "L3", "trigger": "intent_to_invoke" } }
+        ]
+      },
+      "expected": {
+        "final_tier": "L3",
+        "event_count_at_least": 6,
+        "events_in_order": ["session_open", "skill_registered", "evidence_emitted", "tier_transition", "evidence_emitted", "tier_transition"],
+        "monotonic_sequence": true,
+        "_note": "evidence_emitted precedes tier_transition so the transition's evidenceBundleId never dangles. This ordering is normative for GAL >= 3."
+      }
+    },
+    {
+      "id": "P3",
+      "role": "publisher",
+      "name": "gal-evidence-invariant",
+      "purpose": "At GAL >= 3, every TierTransition MUST carry an evidenceBundleId; debug-local may skip below GAL 3.",
+      "setup": { "session_id": "urn:ckodex:session:p3", "gal": 3, "privacy_mode": "audit-private" },
+      "input": { "transitions": [{"to_tier": "L2", "trigger": "score_threshold"}] },
+      "expected": {
+        "all_transitions_have_evidenceBundleId": true,
+        "predicate_equals": "ckodex/skill-lifecycle@v1",
+        "digest_pattern": "^sha256:[0-9a-f]{64}$"
+      }
+    },
+    {
+      "id": "P4",
+      "role": "publisher",
+      "name": "public-anchor-name-redaction",
+      "purpose": "Under public-anchor, queries MUST NOT return skillName unless on the public allowlist.",
+      "setup": {
+        "session_id": "urn:ckodex:session:p4",
+        "gal": 2,
+        "privacy_mode": "public-anchor",
+        "skills_registered": [{ "name": "secret-skill", "skill_id_seed": "secret-skill" }]
+      },
+      "input": { "rpc": "GetSession" },
+      "expected": {
+        "skillName_absent": true,
+        "redacted_contains": ["skillName"],
+        "score_absent": true,
+        "tokenCost_absent": true
+      }
+    },
+    {
+      "id": "P5",
+      "role": "publisher",
+      "name": "monotonic-event-sequence",
+      "purpose": "Per-session sequence numbers MUST be monotonically increasing and unique.",
+      "setup": { "session_id": "urn:ckodex:session:p5", "gal": 2, "privacy_mode": "audit-private" },
+      "input": {
+        "n_skill_registrations": 5,
+        "transitions_each": [
+          { "to_tier": "L2", "trigger": "score_threshold" }
+        ]
+      },
+      "expected": {
+        "sequence_strictly_increasing": true,
+        "no_duplicate_sequences": true
+      }
+    },
+
+    {
+      "id": "C1",
+      "role": "consumer",
+      "name": "envelope-validation",
+      "purpose": "Consumer validator accepts a well-formed response and rejects missing apiVersion/kind/queryId.",
+      "input": {
+        "valid_envelope": {
+          "apiVersion": "ckodex.org/stx/v1", "kind": "StxQueryResponse",
+          "queryId": "q-c1", "respondedAt": "2026-05-25T00:00:00Z",
+          "result": { "nodes": [] }
+        },
+        "invalid_envelope": {
+          "apiVersion": "ckodex.org/stx/v1", "kind": "StxQueryResponse",
+          "result": { "nodes": [] }
+        }
+      },
+      "expected": {
+        "valid_envelope_passes": true,
+        "invalid_envelope_fails": true,
+        "invalid_envelope_error_substring": "queryId"
+      }
+    },
+    {
+      "id": "C2",
+      "role": "consumer",
+      "name": "node-type-discriminator",
+      "purpose": "Consumer rejects nodes whose @type is not in the closed set.",
+      "input": {
+        "node": { "@type": "MalformedTypeXYZ", "node": {} }
+      },
+      "expected": {
+        "rejected": true,
+        "error_substring": "@type"
+      }
+    },
+    {
+      "id": "C3",
+      "role": "consumer",
+      "name": "privacy-mode-invariant",
+      "purpose": "public-anchor responses MUST NOT carry skillName; consumer validator flags violation.",
+      "input": {
+        "privacy_mode": "public-anchor",
+        "node": {
+          "@type": "SkillState",
+          "node": {
+            "id": "urn:ckodex:state:c3", "sessionId": "urn:ckodex:session:c3",
+            "skillId": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "skillName": "leaked-name", "tier": "L2", "score": 0.5
+          }
+        }
+      },
+      "expected": {
+        "rejected": true,
+        "error_substring": "privacy violation"
+      }
+    },
+    {
+      "id": "C4",
+      "role": "consumer",
+      "name": "canonical-skill-id",
+      "purpose": "skillId MUST be sha256:<64-hex>; non-canonical IDs are rejected.",
+      "input": {
+        "node": {
+          "@type": "SkillState",
+          "node": {
+            "id": "urn:ckodex:state:c4", "sessionId": "urn:ckodex:session:c4",
+            "skillId": "not-a-digest", "tier": "L1", "score": 0.0
+          }
+        }
+      },
+      "expected": {
+        "rejected": true,
+        "error_substring": "skillId"
+      }
+    },
+    {
+      "id": "C5",
+      "role": "consumer",
+      "name": "score-range",
+      "purpose": "score MUST be in [0,1]; values outside the range are rejected.",
+      "input": {
+        "node": {
+          "@type": "SkillState",
+          "node": {
+            "id": "urn:ckodex:state:c5", "sessionId": "urn:ckodex:session:c5",
+            "skillId": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "tier": "L1", "score": 1.5
+          }
+        }
+      },
+      "expected": {
+        "rejected": true,
+        "error_substring": "score"
+      }
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "_comment": "REST: GET /stx/v1/capability with no auth. gRPC: GetCapability(GetCapabilityRequest{}). GraphQL: { capability { ... } }",
+  "transport": "rest",
+  "method": "GET",
+  "path": "/stx/v1/capability",
+  "headers": {
+    "Accept": "application/json"
+  }
+}

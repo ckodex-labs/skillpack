@@ -1,0 +1,23 @@
+{
+  "apiVersion": "cnsb.ckodex.org/v1",
+  "kind": "SkillBundle",
+  "metadata": {
+    "name": "dual-format",
+    "urn": "urn:cnsb:dual-format:1.0.0",
+    "version": "1.0.0"
+  },
+  "spec": {
+    "skills": [{
+      "name": "dual-format",
+      "description": "Both formats present.",
+      "asc": ["OIS-ASC-001"],
+      "galMin": 2,
+      "galMax": 4,
+      "lifecycle": {
+        "install":     {"command": "echo installing"},
+        "uninstall":   {"command": "echo uninstalling"},
+        "verify":      {"command": "test -f SKILL.md"}
+      }
+    }]
+  }
+}

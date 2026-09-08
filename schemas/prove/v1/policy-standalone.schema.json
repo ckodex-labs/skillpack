@@ -1,0 +1,130 @@
+{
+    "$id": "https://schemas.ckodex.org/prove/v1/policy-standalone.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Prove Policy Bundle v1 - Standalone",
+    "description": "Self-contained policy schema with embedded common types for offline validation",
+    "type": "object",
+    "required": ["apiVersion", "kind", "metadata", "spec"],
+    "properties": {
+        "apiVersion": { "type": "string", "const": "prove.ckodex.org/v1" },
+        "kind": { "type": "string", "const": "PolicyBundle" },
+        "metadata": { "$ref": "#/$defs/ResourceMetadata" },
+        "spec": {
+            "type": "object",
+            "required": ["targets", "enforcements"],
+            "properties": {
+                "description": { "type": "string" },
+                "targets": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": { "$ref": "#/$defs/Target" }
+                },
+                "enforcements": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": { "$ref": "#/$defs/Enforcement" }
+                },
+                "engines": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/EngineBinding" }
+                }
+            },
+            "additionalProperties": false
+        },
+        "lifecycle": {
+            "$ref": "#/$defs/Lifecycle",
+            "description": "Lifecycle operations for policy bundle deployment."
+        }
+    },
+    "$defs": {
+        "Urn": { "type": "string", "pattern": "^urn:", "minLength": 4 },
+        "LabelMap": { "type": "object", "additionalProperties": { "type": "string" } },
+        "GAL": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "ASC": { "type": "string" },
+        "LifecycleHook": {
+            "type": "object",
+            "properties": {
+                "command": { "type": "string", "description": "Command to execute." },
+                "script": { "type": "string", "description": "Inline script." },
+                "timeout": { "type": "string", "pattern": "^[0-9]+(s|m|h)$", "default": "5m" },
+                "retries": { "type": "integer", "minimum": 0, "maximum": 5, "default": 0 },
+                "env": { "$ref": "#/$defs/LabelMap" }
+            },
+            "additionalProperties": false
+        },
+        "Lifecycle": {
+            "type": "object",
+            "properties": {
+                "pack": { "$ref": "#/$defs/LifecycleHook" },
+                "unpack": { "$ref": "#/$defs/LifecycleHook" },
+                "install": { "$ref": "#/$defs/LifecycleHook" },
+                "upgrade": { "$ref": "#/$defs/LifecycleHook" },
+                "uninstall": { "$ref": "#/$defs/LifecycleHook" },
+                "verify": { "$ref": "#/$defs/LifecycleHook" },
+                "preInstall": { "$ref": "#/$defs/LifecycleHook" },
+                "postInstall": { "$ref": "#/$defs/LifecycleHook" }
+            },
+            "additionalProperties": false
+        },
+        "ResourceMetadata": {
+            "type": "object",
+            "required": ["name", "version"],
+            "properties": {
+                "name": { "type": "string" },
+                "urn": { "$ref": "#/$defs/Urn" },
+                "version": { "type": "string" },
+                "description": { "type": "string" },
+                "labels": { "$ref": "#/$defs/LabelMap" },
+                "annotations": { "$ref": "#/$defs/LabelMap" }
+            },
+            "additionalProperties": false
+        },
+        "Target": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+                "name": { "type": "string" },
+                "kinds": { "type": "array", "items": { "type": "string" } },
+                "urnPatterns": { "type": "array", "items": { "type": "string" } },
+                "operations": { "type": "array", "items": { "type": "string" } },
+                "labels": { "$ref": "#/$defs/LabelMap" }
+            },
+            "additionalProperties": false
+        },
+        "Requirements": {
+            "type": "object",
+            "properties": {
+                "minGal": { "$ref": "#/$defs/GAL" },
+                "maxGal": { "$ref": "#/$defs/GAL" },
+                "requiredAsc": { "type": "array", "items": { "$ref": "#/$defs/ASC" } },
+                "requiredEvidenceTypes": { "type": "array", "items": { "type": "string" } },
+                "requireHumanApproval": { "type": "boolean", "default": false },
+                "approverRoles": { "type": "array", "items": { "type": "string" } }
+            },
+            "additionalProperties": false
+        },
+        "Enforcement": {
+            "type": "object",
+            "required": ["id", "targetRefs", "effect"],
+            "properties": {
+                "id": { "type": "string" },
+                "description": { "type": "string" },
+                "targetRefs": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+                "effect": { "type": "string", "enum": ["allow", "deny", "review"] },
+                "requirements": { "$ref": "#/$defs/Requirements" }
+            },
+            "additionalProperties": false
+        },
+        "EngineBinding": {
+            "type": "object",
+            "required": ["type"],
+            "properties": {
+                "type": { "type": "string" },
+                "bundleUrn": { "$ref": "#/$defs/Urn" },
+                "entrypoints": { "type": "array", "items": { "type": "string" } }
+            },
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false
+}

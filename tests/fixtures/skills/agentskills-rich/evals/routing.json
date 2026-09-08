@@ -1,0 +1,8 @@
+{
+  "top_k": 3,
+  "positive": [
+    "convert a CSV export into JSON records",
+    "infer column types from a spreadsheet and emit structured data",
+    "validate tabular rows against a target schema"
+  ]
+}

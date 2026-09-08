@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/ckodex-design-system-042c8d57-3097-4419-816e-b2ecd922d7db/styles.css">
+  <script src="_ds/ckodex-design-system-042c8d57-3097-4419-816e-b2ecd922d7db/_ds_bundle.js"></script>
+  <script src="_ds/ckodex-design-system-042c8d57-3097-4419-816e-b2ecd922d7db/dotbg.js"></script>
+  <style>
+    *{box-sizing:border-box}
+    .scp-scroll::-webkit-scrollbar{width:9px;height:9px}
+    .scp-scroll::-webkit-scrollbar-thumb{background:var(--ck-hairline-strong);border-radius:0}
+    .scp-scroll::-webkit-scrollbar-track{background:transparent}
+    a{color:var(--ck-accent)}a:hover{color:var(--ck-fg-1)}
+    @keyframes ckResolve{0%{width:0}25%{width:38%}50%{width:62%}75%{width:84%}100%{width:100%}}
+    @keyframes ckFadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+    main>section{animation:ckFadeUp .28s cubic-bezier(.4,0,.2,1) both}
+  </style>
+</helmet>
+<div data-theme="{{ theme }}" style="min-height:100vh;background:var(--ck-bg-2);font-family:var(--ck-ff-ui);color:var(--ck-fg-1);display:flex;flex-direction:column">
+
+  <sc-if value="{{ showChrome }}" hint-placeholder-val="{{ true }}">
+  <header style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:12px 22px;background:var(--ck-bg-0);border-bottom:1px solid var(--ck-hairline)">
+    <div style="display:flex;align-items:baseline;gap:9px;min-width:0">
+      <span style="font:700 15px/1 var(--ck-ff-mono);letter-spacing:.14em;color:var(--ck-fg-1)">CKODEX</span>
+      <span style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-3);text-transform:uppercase">skill control plane</span>
+    </div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-mute);text-transform:uppercase">surface</span>
+        <div style="display:flex;border:1px solid var(--ck-hairline-strong)">
+          <sc-for list="{{ deviceItems }}" as="d" hint-placeholder-count="4">
+            <button onClick="{{ d.onClick }}" style="{{ d.style }}">{{ d.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-mute);text-transform:uppercase">theme</span>
+        <div style="display:flex;border:1px solid var(--ck-hairline-strong)">
+          <sc-for list="{{ themeItems }}" as="t" hint-placeholder-count="3">
+            <button onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </header>
+  </sc-if>
+
+  <!-- STAGE -->
+  <div style="flex:1;display:flex;justify-content:center;align-items:flex-start;padding:{{ stagePad }};overflow:auto" class="scp-scroll">
+    <div style="{{ frameStyle }}">
+
+      <!-- ============ TUI TERMINAL ============ -->
+      <sc-if value="{{ isTui }}">
+        <div style="background:#0c0d10;border:1px solid #23262e;box-shadow:0 20px 60px rgba(0,0,0,.35);overflow:hidden">
+          <div style="display:flex;align-items:center;gap:8px;padding:9px 12px;background:#16181d;border-bottom:1px solid #23262e">
+            <span style="width:11px;height:11px;border-radius:50%;background:#e0563f;display:inline-block"></span>
+            <span style="width:11px;height:11px;border-radius:50%;background:#dfae3a;display:inline-block"></span>
+            <span style="width:11px;height:11px;border-radius:50%;background:#4c9a5b;display:inline-block"></span>
+            <span style="margin-left:8px;font:500 11px/1 var(--ck-ff-mono);color:#8a8f9a">ckodex@governance — skill ls — 96×34</span>
+          </div>
+          <pre style="margin:0;padding:20px 22px;font:13px/1.55 var(--ck-ff-mono);color:#c8ccd4;white-space:pre;overflow:auto;min-height:520px">{{ tuiText }}</pre>
+        </div>
+      </sc-if>
+
+      <!-- ============ CONSOLE APP ============ -->
+      <sc-if value="{{ isApp }}" hint-placeholder-val="{{ true }}">
+      <div style="background:var(--ck-bg-0);border:1px solid var(--ck-hairline);display:flex;flex-direction:column;min-height:640px;overflow:hidden;position:relative">
+
+        <!-- MASTHEAD -->
+        <sc-if value="{{ showMasthead }}">
+          <div style="display:flex;align-items:center;gap:14px;padding:11px 18px;border-bottom:1px solid var(--ck-hairline);background:var(--ck-bg-0)">
+            <span style="font:700 13px/1 var(--ck-ff-mono);letter-spacing:.14em;color:var(--ck-fg-1)">CKODEX</span>
+            <span style="font:500 12px/1 var(--ck-ff-ui);color:var(--ck-fg-3)">/ {{ viewTitle }}</span>
+            <span style="font:400 10.5px/1 var(--ck-ff-mono);color:var(--ck-fg-mute)">urn:ckodex:console:skills</span>
+            <div style="flex:1"></div>
+            <button onClick="{{ openPalette }}" style="display:flex;align-items:center;gap:10px;padding:7px 12px;border:1px solid var(--ck-hairline-strong);background:transparent;cursor:pointer;color:var(--ck-fg-3);font:400 12px/1 var(--ck-ff-ui)" style-hover="color:var(--ck-fg-1);border-color:var(--ck-fg-1)">
+              <span>Search skills, views…</span>
+              <span style="font:600 9.5px/1 var(--ck-ff-mono);padding:3px 6px;border:1px solid var(--ck-hairline-strong);color:var(--ck-fg-mute)">⌘K</span>
+            </button>
+            <span style="font:600 9.5px/1 var(--ck-ff-mono);letter-spacing:.08em;text-transform:uppercase;padding:6px 10px;border:1px solid var(--ck-hairline-strong);color:var(--ck-fg-2)">production · enforce</span>
+            <button onClick="{{ goProfile }}" title="Operator profile" style="width:30px;height:30px;border:1px solid var(--ck-hairline-strong);background:var(--ck-bg-2);cursor:pointer;font:600 10.5px/1 var(--ck-ff-mono);color:var(--ck-fg-1);display:flex;align-items:center;justify-content:center" style-hover="border-color:var(--ck-fg-1)">RM</button>
+          </div>
+        </sc-if>
+
+        <!-- COMMAND PALETTE -->
+        <sc-if value="{{ paletteOpen }}">
+          <div onClick="{{ closePalette }}" style="position:absolute;inset:0;z-index:40;background:rgba(20,16,10,.35);display:flex;justify-content:center;align-items:flex-start;padding-top:9vh">
+            <div onClick="{{ stopClick }}" style="width:min(560px,92%);background:var(--ck-bg-0);border:1px solid var(--ck-hairline-strong)">
+              <div style="display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--ck-hairline)">
+                <span style="font:600 12px/1 var(--ck-ff-mono);color:var(--ck-fg-mute)">⌕</span>
+                <input value="{{ paletteQ }}" onChange="{{ onPaletteInput }}" autoFocus="{{ true }}" placeholder="skill, view, urn…" style="flex:1;border:none;outline:none;background:transparent;font:500 14px/1.3 var(--ck-ff-mono);color:var(--ck-fg-1)">
+                <span style="font:600 9px/1 var(--ck-ff-mono);padding:3px 6px;border:1px solid var(--ck-hairline);color:var(--ck-fg-mute)">ESC</span>
+              </div>
+              <div style="max-height:340px;overflow:auto" class="scp-scroll">
+                <sc-if value="{{ palEmpty }}">
+                  <div style="padding:22px 16px;font:400 12.5px/1.4 var(--ck-ff-mono);color:var(--ck-fg-mute)">Nothing in the ledger matches.</div>
+                </sc-if>
+                <sc-for list="{{ palResults }}" as="pr" hint-placeholder-count="6">
+                  <div onClick="{{ pr.onGo }}" style="display:flex;align-items:center;gap:12px;padding:11px 16px;cursor:pointer;border-bottom:1px solid var(--ck-hairline)" style-hover="background:var(--ck-bg-2)">
+                    <span style="font:600 13px/1 var(--ck-ff-mono);color:var(--ck-fg-3);width:16px;text-align:center">{{ pr.glyph }}</span>
+                    <span style="font:600 13px/1 var(--ck-ff-mono);color:var(--ck-fg-1)">{{ pr.label }}</span>
+                    <span style="flex:1;font:400 11.5px/1 var(--ck-ff-mono);color:var(--ck-fg-mute);text-align:right">{{ pr.sub }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="padding:9px 16px;font:400 10.5px/1 var(--ck-ff-mono);color:var(--ck-fg-mute);border-top:1px solid var(--ck-hairline)">every result resolves to a governed artifact</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <div style="{{ appGridStyle }}">
+
+          <!-- NAV RAIL -->
+          <sc-if value="{{ showNavRail }}">
+          <nav style="border-right:1px solid var(--ck-hairline);padding:16px 0;display:flex;flex-direction:column;gap:2px;background:var(--ck-bg-0)">
+            <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="5">
+              <button onClick="{{ n.onClick }}" title="{{ n.label }}" style="{{ n.style }}">
+                <x-import component-from-global-scope="CkodexDesignSystem_042c8d.CkIcon" name="{{ n.icon }}" size="18" hint-size="18px,18px"></x-import>
+                <sc-if value="{{ navShowLabel }}"><span>{{ n.label }}</span></sc-if>
+              </button>
+            </sc-for>
+            <div style="flex:1"></div>
+            <sc-if value="{{ navShowLabel }}">
+              <button onClick="{{ goProfile }}" style="padding:12px 14px;border:none;border-top:1px solid var(--ck-hairline);margin-top:8px;background:transparent;cursor:pointer;text-align:left;width:100%" style-hover="background:var(--ck-bg-1)">
+                <div style="font:600 9px/1.4 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-fg-mute);text-transform:uppercase">operator</div>
+                <div style="font:500 12px/1.4 var(--ck-ff-ui);color:var(--ck-fg-2);margin-top:3px">r.mensah · gov</div>
+              </button>
+            </sc-if>
+          </nav>
+          </sc-if>
+
+          <!-- MAIN -->
+          <main class="scp-scroll" style="min-width:0;overflow-y:auto;overflow-x:hidden;max-height:{{ mainMaxH }}">
+
+            <!-- MOBILE TOP BAR -->
+            <sc-if value="{{ showBottomTabs }}">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--ck-hairline);position:sticky;top:0;background:var(--ck-bg-0);z-index:5">
+                <span style="font:600 12px/1 var(--ck-ff-mono);letter-spacing:.06em;color:var(--ck-fg-1)">{{ viewTitle }}</span>
+                <span style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-fg-mute);text-transform:uppercase">prod · enforce</span>
+              </div>
+            </sc-if>
+
+            <!-- ===== REGISTRY ===== -->
+            <sc-if value="{{ isRegistry }}" hint-placeholder-val="{{ true }}">
+            <section style="padding:{{ pad }}">
+              <div style="{{ heroBgStyle }}">
+                <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+                  <div>
+                    <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.12em;color:var(--ck-fg-3);text-transform:uppercase;margin-bottom:8px">skill registry</div>
+                    <h1 style="margin:0;font-family:var(--ck-ff-display);font-weight:400;font-size:clamp(30px,4vw,46px);line-height:1.02;color:var(--ck-fg-1)">Every skill carries its proof</h1>
+                    <div style="max-width:52ch;margin-top:10px;font-size:14px;line-height:1.5;color:var(--ck-fg-2)">Personal, professional, leaseable, shared, OCI-distributed, editor-side — one gate, one ledger, one budget.</div>
+                  </div>
+                  <div style="font:500 12px/1.5 var(--ck-ff-mono);color:var(--ck-fg-3);text-align:right">{{ attestedCount }} attested · {{ totalCount }} total</div>
+                </div>
+              </div>
+
+              <div class="ck-bento" style="{{ bentoStyle }}">
+                <sc-for list="{{ regStats }}" as="rs" hint-placeholder-count="4">
+                  <div class="ck-bento__tile" style="min-width:0">
+                    <span class="ck-label" style="white-space:normal;overflow-wrap:break-word">{{ rs.label }}</span>
+                    <span class="ck-bento__figure" style="{{ rs.figStyle }}">{{ rs.value }}</span>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-3);text-transform:uppercase;margin-bottom:12px">featured · sealed this week</div>
+              <x-import component-from-global-scope="CkodexDesignSystem_042c8d.QuietCard" sealed="{{ true }}" hint-size="100%,150px">
+                <div onClick="{{ featured.onSelect }}" style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;cursor:pointer;padding:6px 4px">
+                  <div style="flex:1;min-width:220px">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                      <span style="font-family:var(--ck-ff-display);font-size:30px;line-height:1;color:var(--ck-fg-1)">{{ featured.name }}</span>
+                      <x-import component-from-global-scope="CkodexDesignSystem_042c8d.StateChip" state="attested" hint-size="auto,20px"></x-import>
+                    </div>
+                    <div style="font:400 13.5px/1.5 var(--ck-ff-ui);color:var(--ck-fg-2);max-width:56ch">{{ featured.desc }}</div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+                    <x-import component-from-global-scope="CkodexDesignSystem_042c8d.Sparkline" data="{{ featured.spark }}" width="150" height="38" area="{{ true }}" hint-size="150px,38px"></x-import>
+                    <span style="font:500 11px/1 var(--ck-ff-mono);color:var(--ck-fg-3)">{{ featured.installs }} installs · tier {{ featured.tier }}</span>
+                  </div>
+                </div>
+              </x-import>
+
+              <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:22px 0 20px">
+                <sc-for list="{{ filterChips }}" as="c" hint-placeholder-count="6">
+                  <button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button>
+                </sc-for>
+                <div style="flex:1"></div>
+                <div style="display:flex;border:1px solid var(--ck-hairline-strong)">
+                  <sc-for list="{{ regToggle }}" as="rt" hint-placeholder-count="2">
+                    <button onClick="{{ rt.onClick }}" style="{{ rt.style }}">{{ rt.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+
+              <sc-if value="{{ filterEmpty }}">
+                <div style="padding:34px;border:1px solid var(--ck-hairline);font:500 13px/1.5 var(--ck-ff-mono);color:var(--ck-fg-3)">No skills of this kind in the registry.</div>
+              </sc-if>
+              <sc-if value="{{ regGrid }}" hint-placeholder-val="{{ true }}">
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px">
+                <sc-for list="{{ skillsFiltered }}" as="sk" hint-placeholder-count="8">
+                  <div onClick="{{ sk.onSelect }}" style="cursor:pointer" style-hover="outline:1px solid var(--ck-hairline-strong);outline-offset:2px" title="Open {{ sk.name }}">
+                    <x-import component-from-global-scope="CkodexDesignSystem_042c8d.EntityCard"
+                      kind="skill" name="{{ sk.name }}" urn="{{ sk.urn }}" version="{{ sk.ver }}"
+                      owner="{{ sk.owner }}" tier="{{ sk.tier }}" digest="{{ sk.digest }}"
+                      hint-size="100%,190px">
+                      <span style="font:500 11.5px/1.5 var(--ck-ff-ui);color:var(--ck-fg-3)">{{ sk.typeLabel }} · {{ sk.installs }} installs</span>
+                    </x-import>
+                  </div>
+                </sc-for>
+              </div>
+              </sc-if>
+              <sc-if value="{{ regLedger }}">
+              <div style="border:1px solid var(--ck-hairline);overflow-x:auto" class="scp-scroll">
+              <div style="min-width:640px">
+                <div style="display:grid;grid-template-columns:minmax(110px,1.3fr) minmax(100px,1fr) minmax(90px,1fr) 52px minmax(110px,1fr) minmax(130px,1.2fr);gap:12px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--ck-hairline)">
+                  <span style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-fg-mute);text-transform:uppercase">skill</span>
+                  <span style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-fg-mute);text-transform:uppercase">type</span>
+                  <span style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-fg-mute);text-transform:uppercase">owner</span>
+                  <span style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-fg-mute);text-transform:uppercase">tier</span>
+                  <span style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-fg-mute);text-transform:uppercase">state</span>
+                  <span style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-fg-mute);text-transform:uppercase">proof</span>
+                </div>
+                <sc-for list="{{ skillsFiltered }}" as="sk" hint-placeholder-count="8">
+                  <div onClick="{{ sk.onSelect }}" style="display:grid;grid-template-columns:minmax(110px,1.3fr) minmax(100px,1fr) minmax(90px,1fr) 52px minmax(110px,1fr) minmax(130px,1.2fr);gap:12px;align-items:center;padding:11px 14px;border-bottom:1px solid var(--ck-hairline);cursor:pointer" style-hover="background:var(--ck-bg-1)">
+                    <span style="font:600 12.5px/1 var(--ck-ff-mono);color:var(--ck-fg-1)">{{ sk.name }}</span>
+                    <span style="font:400 11.5px/1.3 var(--ck-ff-ui);color:var(--ck-fg-2)">{{ sk.typeLabel }}</span>
+                    <span style="font:400 11.5px/1 var(--ck-ff-mono);color:var(--ck-fg-3)">{{ sk.owner }}</span>
+                    <span style="font:600 11.5px/1 var(--ck-ff-mono);color:var(--ck-fg-2)">{{ sk.tier }}</span>
+                    <x-import component-from-global-scope="CkodexDesignSystem_042c8d.StateChip" state="{{ sk.state }}" hint-size="auto,20px"></x-import>
+                    <span style="font:500 11px/1 var(--ck-ff-mono);color:var(--ck-fg-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ sk.digShort }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              </div>
+              </sc-if>
+            </section>
+            </sc-if>
+
+            <!-- ===== SKILL HERO + STORY ===== -->
+            <sc-if value="{{ isDetail }}">
+            <section>
+              <!-- HERO -->
+              <div style="padding:{{ pad }};border-bottom:1px solid var(--ck-hairline)">
+                <button onClick="{{ goRegistry }}" style="border:none;background:transparent;cursor:pointer;font:600 10px/1 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-fg-3);text-transform:uppercase;padding:0;margin-bottom:16px">← registry</button>
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
+                  <span style="{{ skill.typeChipStyle }}">{{ skill.typeLabel }}</span>
+                  <x-import component-from-global-scope="CkodexDesignSystem_042c8d.StateChip" state="{{ skill.state }}" hint-size="auto,22px"></x-import>
+                  <span style="font:500 12px/1 var(--ck-ff-mono);color:var(--ck-fg-3)">tier {{ skill.tier }}</span>
+                  <span style="display:flex;align-items:center;gap:7px;padding:4px 9px;border:1px solid var(--ck-hairline-strong)">
+                    <span style="{{ skillClsSwatch }}"></span>
+                    <span style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ck-fg-2)">{{ skillCls }}</span>
+                  </span>
+                  <span style="flex:1"></span>
+                  <span style="display:flex;align-items:center;gap:9px">
+                    <span style="font:600 9.5px/1 var(--ck-ff-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ck-fg-3)">enabled · prod</span>
+                    <button onClick="{{ skill.sw.onClick }}" style="{{ skill.sw.track }}" title="Enable or disable in production"><span style="{{ skill.sw.knob }}"></span></button>
+                  </span>
+                </div>
+                <h1 style="margin:0 0 6px;font-family:var(--ck-ff-display);font-weight:400;font-size:clamp(34px,5vw,58px);line-height:1;color:var(--ck-fg-1)">{{ skill.name }}</h1>
+                <div style="margin-bottom:16px">
+                  <x-import component-from-global-scope="CkodexDesignSystem_042c8d.EvidenceHash" digest="{{ skill.digestOrPending }}" label="{{ skill.digestLabel }}" hint-size="auto,20px"></x-import>
+                </div>
+                <p style="max-width:64ch;margin:0 0 22px;font-size:16px;line-height:1.55;color:var(--ck-fg-2)">{{ skill.desc }}</p>
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                  <x-import component-from-global-scope="CkodexDesignSystem_042c8d.Button" variant="primary" hint-size="auto,40px">Install skill</x-import>
+                  <x-import component-from-global-scope="CkodexDesignSystem_042c8d.Button" variant="quiet" hint-size="auto,40px">Lease</x-import>
+                  <x-import component-from-global-scope="CkodexDesignSystem_042c8d.Button" variant="ghost" hint-size="auto,40px">Add to VS Code</x-import>
+                </div>
+                <sc-if value="{{ skill.isAttested }}">
+                  <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:22px;padding-top:20px;border-top:1px solid var(--ck-hairline)">
+                    <x-import component-from-global-scope="CkodexDesignSystem_042c8d.CkCiqr" payload="{{ skill.ciqrPayload }}" size="104" attested="{{ true }}" label="CIQR" caption="scan to resolve canonical evidence" hint-size="104px,150px"></x-import>
+                    <div style="display:flex;flex-direction:column;gap:10px;flex:1;min-width:200px">
+                      <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-3);text-transform:uppercase">export gate</div>
+                      <x-import component-from-global-scope="CkodexDesignSystem_042c8d.ProvenanceStamp" digest="{{ stampDigest }}" verb="sealed" hint-size="auto,24px"></x-import>
+                      <div style="font:400 12px/1.5 var(--ck-ff-mono);color:var(--ck-fg-3);max-width:44ch">The artifact leaves with an evidence envelope, or it does not leave.</div>
+                    </div>
+                  </div>
+                </sc-if>
+              </div>
+
+              <!-- STATS STRIP -->
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border-bottom:1px solid var(--ck-hairline)">
+                <div style="padding:18px 20px;border-right:1px solid var(--ck-hairline)">
+                  <div style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-mute);text-transform:uppercase;margin-bottom:8px">installs</div>
+                  <div style="font:600 26px/1 var(--ck-ff-ui);color:var(--ck-fg-1);font-variant-numeric:tabular-nums">{{ skill.installs }}</div>
+                </div>
+                <div style="padding:18px 20px;border-right:1px solid var(--ck-hairline)">
+                  <div style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-mute);text-transform:uppercase;margin-bottom:8px">invocations · 30d</div>
+                  <x-import component-from-global-scope="CkodexDesignSystem_042c8d.Sparkline" data="{{ skill.spark }}" width="140" height="34" area="{{ true }}" label="invocations" hint-size="140px,34px"></x-import>
+                </div>
+                <div style="padding:18px 20px;border-right:1px solid var(--ck-hairline)">
+                  <div style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-mute);text-transform:uppercase;margin-bottom:8px">version</div>
+                  <div style="font:600 26px/1 var(--ck-ff-mono);color:var(--ck-fg-1)">{{ skill.ver }}</div>
+                </div>
+                <div style="padding:18px 20px;border-right:1px solid var(--ck-hairline)">
+                  <div style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-mute);text-transform:uppercase;margin-bottom:8px">standing</div>
+                  <div style="font:600 26px/1 var(--ck-ff-ui);color:var(--ck-fg-1);font-variant-numeric:tabular-nums">{{ skill.rep }}<span style="font:500 13px/1 var(--ck-ff-mono);color:var(--ck-fg-mute)"> / 100</span></div>
+                </div>
+                <div style="padding:18px 20px;border-right:1px solid var(--ck-hairline)">
+                  <div style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-mute);text-transform:uppercase;margin-bottom:8px">energy · 1k calls</div>
+                  <div style="font:600 20px/1.2 var(--ck-ff-mono);color:var(--ck-fg-1)">{{ skill.env.wh }} Wh<div style="font:400 11px/1.4 var(--ck-ff-mono);color:var(--ck-fg-mute)">{{ skill.env.co2 }} g CO₂e</div></div>
+                </div>
+                <div style="padding:18px 20px">
+                  <div style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-mute);text-transform:uppercase;margin-bottom:8px">distribution</div>
+                  <div style="font:500 13px/1.4 var(--ck-ff-mono);color:var(--ck-fg-2)">{{ skill.dist }}</div>
+                </div>
+              </div>
+
+              <!-- FULL STORY -->
+              <div style="padding:{{ pad }};display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:26px">
+                <div>
+                  <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-3);text-transform:uppercase;margin-bottom:14px">provenance chain</div>
+                  <div style="display:flex;flex-direction:column;gap:0">
+                    <sc-for list="{{ chainSteps }}" as="p" hint-placeholder-count="4">
+                      <div style="display:flex;gap:12px">
+                        <div style="display:flex;flex-direction:column;align-items:center">
+                          <span style="{{ p.dot }}"></span>
+                          <span style="{{ p.line }}"></span>
+                        </div>
+                        <div style="padding-bottom:16px;min-width:0">
+                          <div style="font:600 13px/1.2 var(--ck-ff-ui);color:var(--ck-fg-1)">{{ p.stage }}</div>
+                          <div style="font:400 12px/1.4 var(--ck-ff-mono);color:var(--ck-fg-3);margin-top:3px">{{ p.detail }}</div>
+                        </div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+                <div>
+                  <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-3);text-transform:uppercase;margin-bottom:14px">decision provenance</div>
+                  <x-import component-from-global-scope="CkodexDesignSystem_042c8d.AuditTrail" entries="{{ skill.audit }}" hint-size="100%,220px"></x-import>
+                </div>
+              </div>
+
+              <div style="padding:0 {{ padX }} {{ padX }};display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:26px">
+                <div>
+                  <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-3);text-transform:uppercase;margin-bottom:14px">capability manifest</div>
+                  <div style="border:1px solid var(--ck-hairline)">
+                    <sc-for list="{{ skill.caps }}" as="cp" hint-placeholder-count="4">
+                      <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--ck-hairline)">
+                        <span style="font:600 12px/1 var(--ck-ff-mono);color:var(--ck-fg-1);min-width:11ch">{{ cp.cap }}</span>
+                        <span style="flex:1;font:400 12px/1.4 var(--ck-ff-mono);color:var(--ck-fg-3);min-width:0">{{ cp.scope }}</span>
+                        <x-import component-from-global-scope="CkodexDesignSystem_042c8d.StateChip" state="{{ cp.state }}" hint-size="auto,20px"></x-import>
+                      </div>
+                    </sc-for>
+                    <div style="padding:10px 14px;font:400 11px/1.5 var(--ck-ff-mono);color:var(--ck-fg-mute)">Anything not listed is denied. The kernel refuses the call.</div>
+                  </div>
+                </div>
+                <div>
+                  <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-3);text-transform:uppercase;margin-bottom:14px">version ledger</div>
+                  <div style="border:1px solid var(--ck-hairline)">
+                    <sc-for list="{{ skill.versions }}" as="vr" hint-placeholder-count="3">
+                      <div style="display:flex;align-items:baseline;gap:14px;padding:12px 14px;border-bottom:1px solid var(--ck-hairline);flex-wrap:wrap">
+                        <span style="font:600 13px/1 var(--ck-ff-mono);color:var(--ck-fg-1);min-width:6ch">{{ vr.v }}</span>
+                        <span style="font:400 11.5px/1 var(--ck-ff-mono);color:var(--ck-fg-mute)">{{ vr.date }}</span>
+                        <span style="flex:1;font:400 12px/1.4 var(--ck-ff-ui);color:var(--ck-fg-2);min-width:0">{{ vr.note }}</span>
+                        <span style="{{ vr.digStyle }}">{{ vr.digest }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+
+              <div style="padding:0 {{ padX }} {{ padX }}">
+                <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-3);text-transform:uppercase;margin-bottom:14px">policy conformance</div>
+                <x-import component-from-global-scope="CkodexDesignSystem_042c8d.ComplianceMatrix" controls="{{ matrixControls }}" policies="{{ skill.matrix }}" corner="skill / control" hint-size="100%,180px"></x-import>
+                <div style="margin-top:18px;padding:16px 18px;border:1px solid var(--ck-hairline);background:var(--ck-bg-1)">
+                  <span class="ck-invariant" style="color:var(--ck-fg-1)">mode changes deployment, not governance semantics</span>
+                </div>
+                <div style="margin-top:26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:26px">
+                  <div>
+                    <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-3);text-transform:uppercase;margin-bottom:14px">atomic assessment</div>
+                    <div style="border:1px solid var(--ck-hairline)">
+                      <sc-for list="{{ assess }}" as="as" hint-placeholder-count="4">
+                        <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--ck-hairline)">
+                          <span style="font:600 12px/1 var(--ck-ff-mono);color:var(--ck-fg-1);min-width:15ch">{{ as.check }}</span>
+                          <span style="flex:1;font:400 11.5px/1.4 var(--ck-ff-mono);color:var(--ck-fg-3);min-width:0">{{ as.result }}</span>
+                          <x-import component-from-global-scope="CkodexDesignSystem_042c8d.StateChip" state="{{ as.state }}" hint-size="auto,20px"></x-import>
+                        </div>
+                      </sc-for>
+                      <div style="padding:10px 14px;font:400 11px/1.5 var(--ck-ff-mono);color:var(--ck-fg-mute)">Each check discharges, or it does not. There is no partial credit.</div>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-3);text-transform:uppercase;margin-bottom:14px">improvement queue</div>
+                    <div style="border:1px solid var(--ck-hairline)">
+                      <sc-for list="{{ improve }}" as="im" hint-placeholder-count="3">
+                        <div style="display:flex;align-items:center;gap:14px;padding:12px 14px;border-bottom:1px solid var(--ck-hairline);transition:background .16s" style-hover="background:var(--ck-bg-1)">
+                          <div style="flex:1;min-width:0">
+                            <div style="font:500 13px/1.35 var(--ck-ff-ui);color:var(--ck-fg-1)">{{ im.t }}</div>
+                            <div style="font:400 11px/1.4 var(--ck-ff-mono);color:var(--ck-fg-mute);margin-top:3px">{{ im.d }}</div>
+                          </div>
+                          <x-import component-from-global-scope="CkodexDesignSystem_042c8d.Button" variant="ghost" hint-size="auto,30px">Queue</x-import>
+                        </div>
+                      </sc-for>
+                    </div>
+
+                    <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-3);text-transform:uppercase;margin:22px 0 14px">swappable equivalents</div>
+                    <div style="border:1px solid var(--ck-hairline)">
+                      <sc-for list="{{ equivalents }}" as="eq" hint-placeholder-count="2">
+                        <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--ck-hairline);transition:background .16s" style-hover="background:var(--ck-bg-1)">
+                          <span onClick="{{ eq.onGo }}" style="font:600 12.5px/1 var(--ck-ff-mono);color:var(--ck-fg-1);cursor:pointer">{{ eq.name }}</span>
+                          <span style="flex:1;font:400 11px/1 var(--ck-ff-mono);color:var(--ck-fg-mute)">{{ eq.compat }} · tier {{ eq.tier }}</span>
+                          <x-import component-from-global-scope="CkodexDesignSystem_042c8d.Button" variant="ghost" hint-size="auto,30px">Swap in</x-import>
+                        </div>
+                      </sc-for>
+                      <div style="padding:10px 14px;font:400 11px/1.5 var(--ck-ff-mono);color:var(--ck-fg-mute)">A swap re-enters the gate. Equivalence is a claim, not a proof.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="margin-top:26px">
+                  <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-3);text-transform:uppercase;margin-bottom:14px">public transparency record</div>
+                  <x-import component-from-global-scope="CkodexDesignSystem_042c8d.DisclosureRecord"
+                    title="{{ skill.name }} · attestation disclosure" period="2026-Q2" authority="platform-gov"
+                    status="{{ skill.discStatus }}" evidence="{{ skill.digestOrPending }}" attested="{{ skill.isAttested }}"
+                    basis="disclosed under PS-7" hint-size="100%,auto">
+                    <span style="font-size:14px;line-height:1.6;color:var(--ck-fg-2)">Invocation counts and egress endpoints are published. The signing key holder is withheld — <x-import component-from-global-scope="CkodexDesignSystem_042c8d.Redaction" width="9ch" reason="§6(b)" hint-size="9ch,1em"></x-import> — while the proof object itself resolves openly for any reader.</span>
+                  </x-import>
+                </div>
+              </div>
+            </section>
+            </sc-if>
+
+            <!-- ===== OPERATOR PROFILE ===== -->
+            <sc-if value="{{ isProfile }}">
+            <section style="padding:{{ pad }}">
+              <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid var(--ck-hairline);margin-bottom:26px">
+                <div style="width:64px;height:64px;border:1px solid var(--ck-hairline-strong);background:var(--ck-bg-2);display:flex;align-items:center;justify-content:center;font:600 20px/1 var(--ck-ff-mono);color:var(--ck-fg-1)">RM</div>
+                <div style="flex:1;min-width:200px">
+                  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                    <h1 style="margin:0;font-family:var(--ck-ff-display);font-weight:400;font-size:34px;line-height:1;color:var(--ck-fg-1)">r.mensah</h1>
+                    <x-import component-from-global-scope="CkodexDesignSystem_042c8d.StateChip" state="attested" hint-size="auto,20px">governance operator</x-import>
+                  </div>
+                  <div style="font:400 12px/1.6 var(--ck-ff-mono);color:var(--ck-fg-3);margin-top:6px">urn:ckodex:principal:r.mensah · platform-gov · clearance: restricted</div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-mute);text-transform:uppercase;margin-bottom:6px">decisions · 90d</div>
+                  <div style="font:600 30px/1 var(--ck-ff-ui);color:var(--ck-fg-1);font-variant-numeric:tabular-nums">47</div>
+                </div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:26px">
+                <div>
+                  <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-3);text-transform:uppercase;margin-bottom:14px">signing keys</div>
+                  <div style="border:1px solid var(--ck-hairline)">
+                    <sc-for list="{{ profileKeys }}" as="pk" hint-placeholder-count="2">
+                      <div style="padding:13px 14px;border-bottom:1px solid var(--ck-hairline)">
+                        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                          <span style="font:600 12.5px/1 var(--ck-ff-mono);color:var(--ck-fg-1)">{{ pk.id }}</span>
+                          <x-import component-from-global-scope="CkodexDesignSystem_042c8d.StateChip" state="{{ pk.state }}" hint-size="auto,20px"></x-import>
+                        </div>
+                        <div style="font:400 11.5px/1.5 var(--ck-ff-mono);color:var(--ck-fg-3);margin-top:5px">{{ pk.digest }}</div>
+                        <div style="font:400 11px/1.4 var(--ck-ff-mono);color:var(--ck-fg-mute);margin-top:2px">{{ pk.note }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+
+                  <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-3);text-transform:uppercase;margin:24px 0 14px">leases &amp; entitlements</div>
+                  <div style="border:1px solid var(--ck-hairline)">
+                    <sc-for list="{{ profileLeases }}" as="pl" hint-placeholder-count="2">
+                      <div style="padding:13px 14px;border-bottom:1px solid var(--ck-hairline)">
+                        <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+                          <span style="font:600 12.5px/1 var(--ck-ff-mono);color:var(--ck-fg-1)">{{ pl.name }}</span>
+                          <span style="flex:1;font:400 11.5px/1 var(--ck-ff-mono);color:var(--ck-fg-3)">{{ pl.terms }}</span>
+                        </div>
+                        <div style="height:3px;background:var(--ck-hairline);margin-top:10px"><div style="{{ pl.barStyle }}"></div></div>
+                        <div style="font:400 11px/1.4 var(--ck-ff-mono);color:var(--ck-fg-mute);margin-top:5px">{{ pl.used }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+
+                  <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-3);text-transform:uppercase;margin:24px 0 14px">personal skills</div>
+                  <sc-for list="{{ personalSkills }}" as="ps" hint-placeholder-count="1">
+                    <div onClick="{{ ps.onSelect }}" style="cursor:pointer" style-hover="outline:1px solid var(--ck-hairline-strong);outline-offset:2px">
+                      <x-import component-from-global-scope="CkodexDesignSystem_042c8d.EntityCard" kind="skill" name="{{ ps.name }}" urn="{{ ps.urn }}" version="{{ ps.ver }}" owner="{{ ps.owner }}" tier="{{ ps.tier }}" digest="{{ ps.digest }}" hint-size="100%,170px">
+                        <span style="font:500 11.5px/1.5 var(--ck-ff-ui);color:var(--ck-fg-3)">{{ ps.typeLabel }} · never submitted to the gate</span>
+                      </x-import>
+                    </div>
+                  </sc-for>
+                </div>
+                <div>
+                  <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-3);text-transform:uppercase;margin-bottom:14px">decision ledger · r.mensah</div>
+                  <x-import component-from-global-scope="CkodexDesignSystem_042c8d.AuditTrail" entries="{{ profileAudit }}" hint-size="100%,300px"></x-import>
+                  <div style="margin-top:18px;padding:14px 16px;border:1px solid var(--ck-hairline);background:var(--ck-bg-1);font:400 12px/1.6 var(--ck-ff-mono);color:var(--ck-fg-3)">Every decision above is a receipt in the ledger. The operator does not outrank the invariant.</div>
+                </div>
+              </div>
+            </section>
+            </sc-if>
+
+            <!-- ===== HIVE ===== -->
+            <sc-if value="{{ isHive }}">
+            <section style="padding:{{ pad }}">
+              <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.12em;color:var(--ck-fg-3);text-transform:uppercase;margin-bottom:8px">hive · composable skills</div>
+              <h1 style="margin:0 0 8px;font-family:var(--ck-ff-display);font-weight:400;font-size:clamp(28px,4vw,42px);line-height:1.02;color:var(--ck-fg-1)">Compositions</h1>
+              <p style="max-width:60ch;margin:0 0 22px;font-size:14px;line-height:1.55;color:var(--ck-fg-2)">Skills chain into governed pipelines. A composite is itself a governed artifact — it inherits the weakest claim among its members.</p>
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <sc-for list="{{ hivePipes }}" as="hp" hint-placeholder-count="3">
+                  <div style="border:1px solid var(--ck-hairline);padding:16px 18px;background:var(--ck-bg-0)">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+                      <span style="font:600 14px/1 var(--ck-ff-mono);color:var(--ck-fg-1)">{{ hp.name }}</span>
+                      <span style="font:400 11px/1 var(--ck-ff-mono);color:var(--ck-fg-mute)">composite</span>
+                      <span style="flex:1"></span>
+                      <span style="{{ hp.badgeStyle }}">{{ hp.badgeGlyph }} {{ hp.state }}</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:0;flex-wrap:wrap;row-gap:12px">
+                      <sc-for list="{{ hp.members }}" as="mb" hint-placeholder-count="3">
+                        <div style="display:flex;align-items:center">
+                          <div style="{{ mb.nodeStyle }}">
+                            <span style="{{ mb.glyphStyle }}">{{ mb.glyph }}</span>
+                            <span style="font:600 12px/1 var(--ck-ff-mono);color:var(--ck-fg-1)">{{ mb.n }}</span>
+                          </div>
+                          <span style="width:26px;height:1px;background:var(--ck-hairline-strong);display:inline-block"></span>
+                          <span style="width:0;height:0;border-top:3.5px solid transparent;border-bottom:3.5px solid transparent;border-left:6px solid var(--ck-hairline-strong);display:inline-block;margin-right:6px"></span>
+                        </div>
+                      </sc-for>
+                      <div style="border:1px dashed var(--ck-hairline-strong);padding:10px 14px;font:600 12px/1 var(--ck-ff-mono);color:var(--ck-fg-3)">sink · governed output</div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="margin-top:18px;padding:14px 16px;border:1px solid var(--ck-hairline);background:var(--ck-bg-1)">
+                <span class="ck-invariant" style="color:var(--ck-fg-1)">a composite inherits the weakest claim of its members</span>
+              </div>
+            </section>
+            </sc-if>
+
+            <!-- ===== SOURCES ===== -->
+            <sc-if value="{{ isSources }}">
+            <section style="padding:{{ pad }}">
+              <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px">
+                <div>
+                  <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.12em;color:var(--ck-fg-3);text-transform:uppercase;margin-bottom:8px">registry setup · ingestion</div>
+                  <h1 style="margin:0;font-family:var(--ck-ff-display);font-weight:400;font-size:clamp(28px,4vw,42px);line-height:1.02;color:var(--ck-fg-1)">Sources</h1>
+                </div>
+                <x-import component-from-global-scope="CkodexDesignSystem_042c8d.Button" variant="primary" hint-size="auto,38px">Connect source</x-import>
+              </div>
+              <div style="border:1px solid var(--ck-hairline)">
+                <sc-for list="{{ srcRows }}" as="sr" hint-placeholder-count="5">
+                  <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid var(--ck-hairline);flex-wrap:wrap;transition:background .16s" style-hover="background:var(--ck-bg-1)">
+                    <x-import component-from-global-scope="CkodexDesignSystem_042c8d.CkIcon" name="{{ sr.icon }}" size="18" hint-size="18px,18px"></x-import>
+                    <span style="font:600 9.5px/1 var(--ck-ff-mono);letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border:1px solid var(--ck-hairline-strong);color:var(--ck-fg-2);min-width:5.5ch;text-align:center">{{ sr.kind }}</span>
+                    <div style="flex:1;min-width:200px">
+                      <div style="font:600 12.5px/1.3 var(--ck-ff-mono);color:var(--ck-fg-1)">{{ sr.ep }}</div>
+                      <div style="font:400 11px/1.4 var(--ck-ff-mono);color:var(--ck-fg-mute);margin-top:3px">{{ sr.note }}</div>
+                    </div>
+                    <x-import component-from-global-scope="CkodexDesignSystem_042c8d.StateChip" state="{{ sr.state }}" hint-size="auto,20px"></x-import>
+                    <button onClick="{{ sr.sw.onClick }}" style="{{ sr.sw.track }}" title="Enable or disable ingestion"><span style="{{ sr.sw.knob }}"></span></button>
+                  </div>
+                </sc-for>
+                <div style="padding:11px 16px;font:400 11px/1.5 var(--ck-ff-mono);color:var(--ck-fg-mute)">A source feeds the gate; it never bypasses it. Ingestion is deny-by-default.</div>
+              </div>
+            </section>
+            </sc-if>
+
+            <!-- ===== GATE ===== -->
+            <sc-if value="{{ isGate }}">
+            <section style="padding:{{ pad }}">
+              <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.12em;color:var(--ck-fg-3);text-transform:uppercase;margin-bottom:8px">governance gate</div>
+              <h1 style="margin:0 0 20px;font-family:var(--ck-ff-display);font-weight:400;font-size:clamp(28px,4vw,42px);line-height:1.02;color:var(--ck-fg-1)">Review queue</h1>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <sc-for list="{{ gateQueue }}" as="g" hint-placeholder-count="3">
+                  <div style="border:1px solid var(--ck-hairline);background:var(--ck-bg-1);padding:18px 20px;display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+                    <div style="flex:1;min-width:180px">
+                      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+                        <span style="font:600 15px/1 var(--ck-ff-mono);color:var(--ck-fg-1)">{{ g.name }}</span>
+                        <x-import component-from-global-scope="CkodexDesignSystem_042c8d.StateChip" state="{{ g.state }}" hint-size="auto,20px"></x-import>
+                      </div>
+                      <div style="font:400 12px/1.4 var(--ck-ff-mono);color:var(--ck-fg-3)">{{ g.note }}</div>
+                      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px;max-width:340px">
+                        <sc-for list="{{ g.stages }}" as="st" hint-placeholder-count="4">
+                          <div>
+                            <div style="{{ st.barStyle }}"></div>
+                            <div style="{{ st.txtStyle }}">{{ st.label }}</div>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+                      <x-import component-from-global-scope="CkodexDesignSystem_042c8d.Button" variant="{{ g.btn }}" onClick="{{ g.onAction }}" hint-size="auto,36px">{{ g.action }}</x-import>
+                      <sc-if value="{{ g.sealingNow }}">
+                        <div style="width:130px;height:3px;background:var(--ck-hairline)">
+                          <div style="height:3px;background:var(--ck-proof);animation:ckResolve 1.8s cubic-bezier(.4,0,.2,1) forwards"></div>
+                        </div>
+                      </sc-if>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </section>
+            </sc-if>
+
+            <!-- ===== MONITOR ===== -->
+            <sc-if value="{{ isMonitor }}">
+            <section style="padding:{{ pad }}">
+              <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.12em;color:var(--ck-fg-3);text-transform:uppercase;margin-bottom:8px">deployment posture</div>
+              <h1 style="margin:0 0 20px;font-family:var(--ck-ff-display);font-weight:400;font-size:clamp(28px,4vw,42px);line-height:1.02;color:var(--ck-fg-1)">Fleet health</h1>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:var(--ck-hairline);border:1px solid var(--ck-hairline);margin-bottom:20px">
+                <sc-for list="{{ posture }}" as="m" hint-placeholder-count="4">
+                  <div style="background:var(--ck-bg-0);padding:18px 18px;display:flex;flex-direction:column;justify-content:space-between;min-height:120px">
+                    <div style="font:600 9px/1.3 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-fg-mute);text-transform:uppercase">{{ m.label }}</div>
+                    <div style="font:600 30px/1 var(--ck-ff-ui);color:{{ m.color }};font-variant-numeric:tabular-nums;margin-top:12px">{{ m.value }}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px">
+                <div style="border:1px solid var(--ck-hairline);padding:18px 20px">
+                  <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-fg-3);text-transform:uppercase;margin-bottom:12px">invocations · all skills</div>
+                  <x-import component-from-global-scope="CkodexDesignSystem_042c8d.Sparkline" data="{{ fleetSpark }}" width="300" height="60" area="{{ true }}" label="fleet invocations" hint-size="100%,60px"></x-import>
+                </div>
+                <div style="border:1px solid var(--ck-alarm);padding:18px 20px;background:var(--ck-bg-1)">
+                  <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-alarm);text-transform:uppercase;margin-bottom:10px">active emergency protocol</div>
+                  <div style="font:600 15px/1.3 var(--ck-ff-mono);color:var(--ck-fg-1)">shell-exec quarantined</div>
+                  <div style="font:400 12px/1.5 var(--ck-ff-mono);color:var(--ck-fg-3);margin-top:6px">EP-2291 · egress invariant breached · calls refused at the kernel</div>
+                </div>
+              </div>
+
+              <div style="margin-top:22px">
+                <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-3);text-transform:uppercase;margin-bottom:12px">fleet · per skill</div>
+                <div style="border:1px solid var(--ck-hairline)">
+                  <div style="display:grid;grid-template-columns:minmax(110px,1.2fr) minmax(120px,1fr) 90px minmax(90px,1fr) 44px;gap:12px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--ck-hairline)">
+                    <span style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-fg-mute);text-transform:uppercase">skill</span>
+                    <span style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-fg-mute);text-transform:uppercase">state</span>
+                    <span style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-fg-mute);text-transform:uppercase;text-align:right">inv · 30d</span>
+                    <span style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-fg-mute);text-transform:uppercase">trend</span>
+                    <span style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-fg-mute);text-transform:uppercase">on</span>
+                  </div>
+                  <sc-for list="{{ fleetRows }}" as="fr" hint-placeholder-count="8">
+                    <div style="display:grid;grid-template-columns:minmax(110px,1.2fr) minmax(120px,1fr) 90px minmax(90px,1fr) 44px;gap:12px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--ck-hairline);transition:background .16s" style-hover="background:var(--ck-bg-1)">
+                      <span onClick="{{ fr.onSelect }}" style="{{ fr.nameStyle }}">{{ fr.name }}</span>
+                      <x-import component-from-global-scope="CkodexDesignSystem_042c8d.StateChip" state="{{ fr.state }}" hint-size="auto,20px"></x-import>
+                      <span style="font:500 12px/1 var(--ck-ff-mono);color:var(--ck-fg-2);text-align:right;font-variant-numeric:tabular-nums">{{ fr.inv }}</span>
+                      <x-import component-from-global-scope="CkodexDesignSystem_042c8d.Sparkline" data="{{ fr.spark }}" width="90" height="22" hint-size="90px,22px"></x-import>
+                      <button onClick="{{ fr.sw.onClick }}" style="{{ fr.sw.track }}"><span style="{{ fr.sw.knob }}"></span></button>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </section>
+            </sc-if>
+
+            <!-- ===== POLICY ===== -->
+            <sc-if value="{{ isPolicy }}">
+            <section style="padding:{{ pad }}">
+              <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.12em;color:var(--ck-fg-3);text-transform:uppercase;margin-bottom:8px">policy · control plane</div>
+              <h1 style="margin:0 0 20px;font-family:var(--ck-ff-display);font-weight:400;font-size:clamp(28px,4vw,42px);line-height:1.02;color:var(--ck-fg-1)">Skills × controls</h1>
+              <x-import component-from-global-scope="CkodexDesignSystem_042c8d.ComplianceMatrix" controls="{{ matrixControls }}" policies="{{ policyMatrix }}" corner="skill / control" hint-size="100%,260px"></x-import>
+
+              <div style="font:600 10px/1 var(--ck-ff-mono);letter-spacing:.1em;color:var(--ck-fg-3);text-transform:uppercase;margin:26px 0 12px">entitlements · allowed skills per role × environment</div>
+              <div style="border:1px solid var(--ck-hairline);overflow-x:auto" class="scp-scroll">
+                <div style="min-width:560px">
+                  <div style="display:grid;grid-template-columns:minmax(150px,1.3fr) 1fr 1fr 1fr;gap:12px;padding:9px 14px;border-bottom:1px solid var(--ck-hairline)">
+                    <span style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-fg-mute);text-transform:uppercase">role / environment</span>
+                    <span style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-fg-mute);text-transform:uppercase">dev</span>
+                    <span style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-fg-mute);text-transform:uppercase">staging</span>
+                    <span style="font:600 9px/1 var(--ck-ff-mono);letter-spacing:.08em;color:var(--ck-fg-mute);text-transform:uppercase">prod</span>
+                  </div>
+                  <sc-for list="{{ entRows }}" as="er" hint-placeholder-count="4">
+                    <div style="display:grid;grid-template-columns:minmax(150px,1.3fr) 1fr 1fr 1fr;gap:12px;padding:11px 14px;border-bottom:1px solid var(--ck-hairline);transition:background .16s" style-hover="background:var(--ck-bg-1)">
+                      <span style="font:600 12px/1.3 var(--ck-ff-mono);color:var(--ck-fg-1)">{{ er.role }}</span>
+                      <span style="font:400 11.5px/1.4 var(--ck-ff-mono);color:var(--ck-fg-2)">{{ er.dev }}</span>
+                      <span style="font:400 11.5px/1.4 var(--ck-ff-mono);color:var(--ck-fg-2)">{{ er.staging }}</span>
+                      <span style="font:400 11.5px/1.4 var(--ck-ff-mono);color:var(--ck-fg-2)">{{ er.prod }}</span>
+                    </div>
+                  </sc-for>
+                  <div style="padding:10px 14px;font:400 11px/1.5 var(--ck-ff-mono);color:var(--ck-fg-mute)">Anything not granted is denied. mode changes deployment, not governance semantics.</div>
+                </div>
+              </div>
+            </section>
+            </sc-if>
+
+          </main>
+
+          <!-- EVIDENCE MARGIN (aside) -->
+          <sc-if value="{{ marginAside }}">
+            <div style="min-width:0">
+              <x-import component-from-global-scope="CkodexDesignSystem_042c8d.EvidenceMargin" title="Evidence margin" entries="{{ receipts }}" stamp="{{ stampDigest }}" collapsible="{{ true }}" hint-size="auto,100%"></x-import>
+            </div>
+          </sc-if>
+        </div>
+
+        <!-- MARGIN as section (tablet/mobile) -->
+        <sc-if value="{{ marginSection }}">
+          <div style="border-top:1px solid var(--ck-hairline);overflow-x:hidden;background:var(--ck-bg-0)">
+            <x-import component-from-global-scope="CkodexDesignSystem_042c8d.EvidenceMargin" title="Evidence margin" entries="{{ receipts }}" stamp="{{ stampDigest }}" hint-size="100%,auto"></x-import>
+          </div>
+        </sc-if>
+
+        <!-- BOTTOM TABS (mobile) -->
+        <sc-if value="{{ showBottomTabs }}">
+          <nav style="display:flex;border-top:1px solid var(--ck-hairline);background:var(--ck-bg-0)">
+            <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="5">
+              <button onClick="{{ n.onClick }}" style="{{ n.tabStyle }}">
+                <x-import component-from-global-scope="CkodexDesignSystem_042c8d.CkIcon" name="{{ n.icon }}" size="18" hint-size="18px,18px"></x-import>
+                <span style="font:600 8.5px/1 var(--ck-ff-mono);letter-spacing:.04em;text-transform:uppercase">{{ n.label }}</span>
+              </button>
+            </sc-for>
+          </nav>
+        </sc-if>
+
+        <!-- AUTHORITY FOOTER -->
+        <sc-if value="{{ marginAside }}">
+          <x-import component-from-global-scope="CkodexDesignSystem_042c8d.AuthorityFooter" level="sealed" digest="{{ stampDigest }}" authority="platform-gov" policy-set="policy-set-7" environment="production" mode="enforce" classification="{{ afCls }}" tier="{{ afTier }}" name="{{ afName }}" proof="{{ afProof }}" hint-size="100%,44px"></x-import>
+        </sc-if>
+
+      </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1220,&quot;height&quot;:860},&quot;startView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;registry&quot;,&quot;detail&quot;,&quot;gate&quot;,&quot;monitor&quot;,&quot;policy&quot;],&quot;default&quot;:&quot;registry&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Prototype&quot;},&quot;device&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;desktop&quot;,&quot;tablet&quot;,&quot;mobile&quot;,&quot;tui&quot;],&quot;default&quot;:&quot;desktop&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Prototype&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ledger&quot;,&quot;vault&quot;,&quot;hc&quot;],&quot;default&quot;:&quot;ledger&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Prototype&quot;},&quot;showChrome&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Prototype&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = {
+      view: props.startView || 'registry',
+      device: props.device || 'desktop',
+      theme: props.theme || 'ledger',
+      sel: 0,
+      filter: 'all',
+      marginCollapsed: false,
+      paletteOpen: false,
+      paletteQ: '',
+      regView: 'grid',
+      sealing: null,
+      sealedMap: {},
+      enabledMap: {},
+      srcEnabled: {}
+    };
+  }
+  componentDidMount(){
+    this._onDoc = (e)=>{ const el = e.target.closest && e.target.closest('[aria-label*="evidence margin" i]'); if(el) this.setState(s=>({ marginCollapsed: !s.marginCollapsed })); };
+    document.addEventListener('click', this._onDoc, true);
+    if (!window.CkDotBg) { this._bgPoll = setInterval(()=>{ if (window.CkDotBg){ clearInterval(this._bgPoll); this.forceUpdate(); } }, 200); }
+    this._onKey = (e)=>{
+      if ((e.metaKey||e.ctrlKey) && (e.key==='k'||e.key==='K')) { e.preventDefault(); this.setState(s=>({ paletteOpen: !s.paletteOpen, paletteQ:'' })); }
+      else if (e.key==='Escape' && this.state.paletteOpen) this.setState({ paletteOpen:false });
+    };
+    document.addEventListener('keydown', this._onKey);
+    this._ro = new ResizeObserver(()=>{ const w = document.body.clientWidth; if (Math.abs((this.state.frameW||0)-w) > 2) this.setState({ frameW: w }); });
+    this._ro.observe(document.body);
+  }
+  componentWillUnmount(){ if(this._onDoc) document.removeEventListener('click', this._onDoc, true); if(this._bgPoll) clearInterval(this._bgPoll); if(this._onKey) document.removeEventListener('keydown', this._onKey); if(this._ro) this._ro.disconnect(); }
+  componentDidUpdate(prev){
+    const p = this.props || {}, pp = prev || {};
+    if (p.theme !== pp.theme && p.theme) this.setState({ theme: p.theme });
+    if (p.device !== pp.device && p.device) this.setState({ device: p.device });
+    if (p.startView !== pp.startView && p.startView) this.setState({ view: p.startView });
+  }
+
+  renderVals(){
+    const S = this.state;
+    const glyphs = { attested:'◆', claimed:'○', observed:'⊢', inferred:'⇝', contradicted:'⊭', quarantined:'⊘' };
+
+    const RAW = [
+      { name:'web-fetch',    typeLabel:'OCI · Professional', type:'oci',          ver:'2.4.1', owner:'platform-gov', tier:'E5', state:'attested',
+        digest:'sha256:9f3c7a1b4e2d88c0f1a6b3e7d9c2140a5b6e8f4c3d2a1b0e9f217', dist:'OCI · registry.ckodex.com', installs:'12.4k',
+        desc:'Fetches and normalizes remote documents behind the egress gate. Every response leaves with a provenance envelope so downstream callers can verify origin.',
+        spark:[4,6,5,8,7,9,11,10,13,12,15,17] },
+      { name:'pii-redactor', typeLabel:'Shareable',          type:'shareable',    ver:'1.8.0', owner:'trust-safety', tier:'E3', state:'attested',
+        digest:'sha256:41a0c8f27d3e91b6a4c05e8f217b3d9c8f4e6a2b1c0d9e8f7a6b5c4d3e2f10', dist:'Shared · trust-safety org', installs:'6.1k',
+        desc:'Detects and redacts personal data before it crosses a trust boundary. Redactions are honest bars — presence without content, each with a citation.',
+        spark:[9,8,10,11,9,12,10,13,14,12,15,16] },
+      { name:'sql-runner',   typeLabel:'Leaseable',          type:'leaseable',    ver:'3.0.2', owner:'data-plane',   tier:'E3', state:'attested',
+        digest:'sha256:7b2e9d1c4a6f83e05c1b9d7a2f4e6c8a0b3d5f7e9c1a2b4d6e8f0a2c4b6d8', dist:'Lease · metered · $0.004/call', installs:'3.9k',
+        desc:'Runs parameterized queries against governed warehouses under a leased entitlement. The lease meters invocations and revokes on policy change.',
+        spark:[2,3,3,5,4,6,7,6,8,9,8,10] },
+      { name:'k8s-operator', typeLabel:'OCI · Professional', type:'oci',          ver:'4.1.0', owner:'infra-gov',    tier:'E5', state:'attested',
+        digest:'sha256:c4d6e8f0a2b4c6d8e0f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4', dist:'OCI · registry.ckodex.com', installs:'8.7k',
+        desc:'Reconciles cluster state against a signed desired-state manifest. Kernel-checked: a drift outside the invariant set is refused, not repaired.',
+        spark:[5,6,6,7,8,7,9,10,9,11,12,13] },
+      { name:'figma-export', typeLabel:'Shareable',          type:'shareable',    ver:'0.9.4', owner:'design-sys',   tier:'E1', state:'inferred',
+        digest:null, dist:'Shared · design-sys org', installs:'1.2k',
+        desc:'Exports design frames to attested asset bundles. Automated checks pass; no discharging proof object resolves yet, so it stays inferred.',
+        spark:[1,2,2,3,2,4,3,5,4,5,6,6] },
+      { name:'notes-sync',   typeLabel:'Personal',           type:'personal',     ver:'0.3.1', owner:'r.mensah',     tier:'E1', state:'claimed',
+        digest:null, dist:'Personal · not distributed', installs:'—',
+        desc:'A personal skill that syncs annotated notes across the operator workspace. Claimed only — it has never been submitted to the governance gate.',
+        spark:[0,1,1,0,2,1,2,1,3,2,2,3] },
+      { name:'code-review',  typeLabel:'VS Code',            type:'vscode',       ver:'1.2.7', owner:'dx-tools',     tier:'E1', state:'observed',
+        digest:null, dist:'VS Code · marketplace preview', installs:'4.4k',
+        desc:'An editor-side skill that annotates diffs with policy findings. Observed behaviour is logged; attestation is pending a sealed build.',
+        spark:[3,4,4,5,6,5,7,6,8,7,9,8] },
+      { name:'shell-exec',   typeLabel:'Professional',       type:'professional', ver:'2.0.0', owner:'infra-gov',    tier:'E0', state:'quarantined',
+        digest:null, dist:'Quarantined · EP-2291', installs:'2.0k',
+        desc:'Executes shell commands inside a sealed kernel crate. Currently quarantined: an egress invariant was breached and all calls are refused at the kernel.',
+        spark:[7,8,6,9,7,10,4,2,1,0,0,0] }
+    ];
+
+    const chainFor = (sk) => ([
+      { stage:'PCA · provenance claim', detail:'build#'+sk.ver+' · sbom resolved' },
+      { stage:'UCA · usage claim',       detail:'policy-set-7 evaluated' },
+      { stage:'Attestation',             detail: sk.digest ? sk.digest.slice(0,26)+'…' : 'no proof object — unattested' },
+      { stage:'Rekor · transparency',    detail: sk.digest ? 'entry logged · verifiable' : 'not logged' }
+    ]);
+    const chainDot = (on) => ({ width:'11px', height:'11px', border:'2px solid '+(on?'var(--ck-proof)':'var(--ck-hairline-strong)'), background:on?'var(--ck-proof)':'transparent', flex:'none', marginTop:'3px' });
+    const chainLine = 'width:2px;flex:1;background:var(--ck-hairline);min-height:14px';
+
+    const auditFor = (sk) => {
+      const base = [
+        { action:'Submitted to gate', actor:sk.owner, time:'06-14 09:12', evidence:'sha256:'+sk.ver.replace(/\./g,'')+'aa…' },
+        { action:'SBOM scanned · 0 criticals', actor:'ci-runner', time:'06-14 09:14' }
+      ];
+      if (sk.state==='attested') base.push({ action:'Attested & sealed', actor:'kernel', time:'06-14 09:18', evidence:sk.digest.slice(0,22)+'…', kind:'proof' });
+      else if (sk.state==='quarantined') base.push({ action:'Quarantined · EP-2291', actor:'gov-sentinel', time:'07-02 22:41', evidence:'ep:2291', kind:'alarm' });
+      else base.push({ action:'Awaiting proof object', actor:'—', time:'—' });
+      return base;
+    };
+
+    const matrixFor = (sk) => {
+      const a = sk.state==='attested' ? 'attested' : sk.state==='quarantined' ? 'quarantined' : sk.state;
+      return [
+        { label:'egress',  cells:[ sk.state==='quarantined'?'quarantined':'attested' ] },
+        { label:'sbom',    cells:[ sk.tier==='E0'?'claimed':'attested' ] },
+        { label:'sign',    cells:[ sk.digest?'attested':'claimed' ] },
+        { label:'runtime', cells:[ a ] }
+      ];
+    };
+
+    // capability manifests — what the skill MAY do; each row a claim
+    const CAPS = {
+      'web-fetch':    [['net.egress','allow · *.gov · *.edu · allowlist','attested'],['fs.read','workspace only','attested'],['secrets.read','denied','attested'],['proc.exec','denied','attested']],
+      'pii-redactor': [['net.egress','denied · fully local','attested'],['fs.read','pipeline buffers only','attested'],['secrets.read','denied','attested'],['proc.exec','denied','attested']],
+      'sql-runner':   [['net.egress','warehouse endpoints only','attested'],['fs.read','denied','attested'],['secrets.read','leased credential · scoped','attested'],['proc.exec','denied','attested']],
+      'k8s-operator': [['net.egress','cluster api only','attested'],['fs.read','manifest cache','attested'],['secrets.read','service account · scoped','attested'],['proc.exec','denied','attested']],
+      'figma-export': [['net.egress','api.figma.com','inferred'],['fs.read','export dir','inferred'],['secrets.read','user token','claimed'],['proc.exec','denied','inferred']],
+      'notes-sync':   [['net.egress','workspace sync','claimed'],['fs.read','notes dir','claimed'],['secrets.read','denied','claimed'],['proc.exec','denied','claimed']],
+      'code-review':  [['net.egress','denied · editor local','observed'],['fs.read','open workspace','observed'],['secrets.read','denied','observed'],['proc.exec','denied','observed']],
+      'shell-exec':   [['net.egress','BREACHED · EP-2291','quarantined'],['fs.read','sandbox root','quarantined'],['secrets.read','denied','quarantined'],['proc.exec','sealed crate only','quarantined']]
+    };
+    const capsFor = (sk) => (CAPS[sk.name]||[]).map(c=>({ cap:c[0], scope:c[1], state:c[2] }));
+
+    const versionsFor = (sk) => {
+      const parts = sk.ver.split('.').map(Number);
+      const mk = (v,d,note,sealed)=>{ const ok = !!(sealed&&sk.digest); return { v, date:d, note, digest: ok ? sk.digest.slice(0,15)+'…'+sk.digest.slice(-4) : '— unattested', digStyle:{ font:'500 11.5px/1 var(--ck-ff-mono)', color: ok?'var(--ck-proof)':'var(--ck-fg-mute)' } }; };
+      return [
+        mk(sk.ver, '2026-06-14', 'current · '+(sk.digest?'sealed':'unsealed'), true),
+        mk(parts[0]+'.'+parts[1]+'.'+Math.max(0,parts[2]-1), '2026-05-02', 'invariant set tightened', true),
+        mk(parts[0]+'.'+Math.max(0,parts[1]-1)+'.0', '2026-03-18', 'initial gate submission', false)
+      ];
+    };
+
+    // standing (reputation), environmental impact, on/off switch
+    const repFor = (sk)=> sk.state==='quarantined' ? 12 : sk.state==='attested' ? (sk.tier==='E5'?97:88) : sk.state==='inferred' ? 61 : sk.state==='observed' ? 55 : 42;
+    const envFor = (sk)=> sk.tier==='E5' ? { wh:'0.6', co2:'0.2' } : sk.state==='quarantined' ? { wh:'—', co2:'—' } : { wh:'1.4', co2:'0.5' };
+    const mkSwitch = (on, fn)=>({ on, onClick:fn,
+      track:{ width:'34px', height:'18px', border:'1px solid var(--ck-hairline-strong)', background:on?'var(--ck-fg-1)':'transparent', cursor:'pointer', position:'relative', transition:'background .16s', flex:'none', padding:0 },
+      knob:{ position:'absolute', top:'2px', left:on?'17px':'2px', width:'12px', height:'12px', background:on?'var(--ck-bg-0)':'var(--ck-fg-3)', transition:'left .16s' } });
+
+    const skills = RAW.map((sk,i)=>({
+      ...sk,
+      urn: 'urn:ckodex:skill:'+sk.name,
+      onSelect: ()=> this.setState({ view:'detail', sel:i }),
+      typeChipStyle: { font:'600 10px/1 var(--ck-ff-mono)', letterSpacing:'.06em', textTransform:'uppercase', padding:'5px 9px', border:'1px solid var(--ck-hairline-strong)', color:'var(--ck-fg-2)' },
+      digestOrPending: sk.digest || 'sha256:pending',
+      digestLabel: sk.digest ? 'attested' : 'unattested',
+      digShort: sk.digest ? sk.digest.slice(0,15)+'…'+sk.digest.slice(-4) : '—',
+      isAttested: sk.state==='attested',
+      ciqrPayload: 'urn:ckodex:skill:'+sk.name+'@'+(sk.digest ? sk.digest.slice(0,23) : 'unattested'),
+      discStatus: sk.state==='attested' ? 'disclosed' : (sk.digest ? 'partial' : 'withheld'),
+      spark: sk.spark,
+      chain: chainFor(sk),
+      audit: auditFor(sk),
+      matrix: matrixFor(sk),
+      caps: capsFor(sk),
+      versions: versionsFor(sk),
+      rep: repFor(sk),
+      env: envFor(sk),
+      enabled: (S.enabledMap[sk.name] !== undefined) ? S.enabledMap[sk.name] : sk.state==='attested',
+      sw: mkSwitch(
+        (S.enabledMap[sk.name] !== undefined) ? S.enabledMap[sk.name] : sk.state==='attested',
+        ()=> this.setState(s=>{ const cur = (s.enabledMap[sk.name] !== undefined) ? s.enabledMap[sk.name] : sk.state==='attested'; return { enabledMap: Object.assign({}, s.enabledMap, { [sk.name]: !cur }) }; })
+      )
+    }));
+    const skill = skills[S.sel] || skills[0];
+
+    // provenance chain rows with styling for the selected skill
+    const rawChain = skill.chain;
+    const chainSteps = rawChain.map((c,i)=>({
+      stage:c.stage, detail:c.detail,
+      dot: chainDot( i<2 || (skill.digest && i>=2) ),
+      line: (i===rawChain.length-1) ? 'width:2px;background:transparent' : chainLine
+    }));
+
+    // ---- device / layout ----
+    const dev = S.device;
+    const isTui = dev==='tui';
+    const isApp = !isTui;
+    // layout tier derives from MEASURED width, not the chosen surface alone
+    const bodyW = S.frameW || (typeof document!=='undefined' && document.body ? document.body.clientWidth : 1280) || 1280;
+    const avail = dev==='desktop' ? Math.min(bodyW-52, 1220) : dev==='tablet' ? Math.min(bodyW-68, 876) : 380;
+    const wide   = dev==='desktop' && avail>=1000;
+    const narrow = dev==='mobile' || ((dev==='desktop'||dev==='tablet') && avail<720);
+    const medium = !wide && !narrow && isApp;
+
+    const frames = {
+      desktop:{ width:'100%', maxWidth:'1220px' },
+      tablet: { width:'900px', maxWidth:'100%' },
+      mobile: { width:'404px', maxWidth:'100%' },
+      tui:    { width:'100%', maxWidth:'1060px' }
+    };
+    const frameBezel = dev==='mobile' ? { padding:'12px', background:'#1c1e22', borderRadius:'34px', boxShadow:'0 24px 60px rgba(0,0,0,.30)' }
+      : dev==='tablet' ? { padding:'12px', background:'#22252b', borderRadius:'18px', boxShadow:'0 24px 60px rgba(0,0,0,.28)' }
+      : {};
+    const frameStyle = Object.assign({ margin:'0 auto' }, frames[dev], frameBezel);
+
+    const mcw = S.marginCollapsed ? '48px' : '304px';
+    const appGridStyle = wide ? { display:'grid', gridTemplateColumns:'232px minmax(0,1fr) '+mcw, flex:'1' }
+      : medium ? { display:'grid', gridTemplateColumns:'60px minmax(0,1fr) '+(S.marginCollapsed?'48px':'272px'), flex:'1' }
+      : { display:'block', flex:'1' };
+
+    const showNavRail = wide || medium;
+    const navShowLabel = wide;
+    const marginAside = wide || medium;
+    const marginSection = narrow;
+    const showBottomTabs = narrow;
+    const mainMaxH = wide ? '78vh' : medium ? '70vh' : '640px';
+    const stagePad = isApp && wide ? '26px' : '22px';
+    const pad = narrow ? '20px' : '30px 34px';
+    const padX = narrow ? '20px' : '34px';
+
+    // nav items
+    const navRaw = [
+      { key:'registry', label:'Registry', icon:'matrix' },
+      { key:'detail',   label:'Skill',    icon:'kernel' },
+      { key:'hive',     label:'Hive',     icon:'chain' },
+      { key:'gate',     label:'Gate',     icon:'gate' },
+      { key:'monitor',  label:'Monitor',  icon:'gauge' },
+      { key:'policy',   label:'Policy',   icon:'policy' },
+      { key:'sources',  label:'Sources',  icon:'export' }
+    ];
+    const navItems = navRaw.map(it=>{
+      const active = it.key===S.view;
+      return {
+        key:it.key, label:it.label, icon:it.icon,
+        onClick: ()=> this.setState({ view: it.key }),
+        style: { display:'flex', alignItems:'center', gap:navShowLabel?'11px':'0', justifyContent:navShowLabel?'flex-start':'center', padding:navShowLabel?'10px 15px':'12px 0', cursor:'pointer', border:'none', borderLeft:'2px solid '+(active?'var(--ck-accent)':'transparent'), background:active?'var(--ck-bg-2)':'transparent', color:active?'var(--ck-fg-1)':'var(--ck-fg-3)', font:'500 13px/1 var(--ck-ff-ui)', width:'100%', textAlign:'left' },
+        tabStyle: { flex:'1', display:'flex', flexDirection:'column', alignItems:'center', gap:'4px', padding:'9px 0', cursor:'pointer', border:'none', borderTop:'2px solid '+(active?'var(--ck-accent)':'transparent'), background:'transparent', color:active?'var(--ck-fg-1)':'var(--ck-fg-3)' }
+      };
+    });
+
+    // segmented controls
+    const seg = (items, activeKey) => items.map(it=>{
+      const active = it.key===activeKey;
+      return { key:it.key, label:it.label, onClick:it.onClick,
+        style: { font:'600 10px/1 var(--ck-ff-mono)', letterSpacing:'.07em', textTransform:'uppercase', padding:'7px 11px', border:'none', cursor:'pointer', background:active?'var(--ck-fg-1)':'transparent', color:active?'var(--ck-bg-0)':'var(--ck-fg-3)' } };
+    });
+    const deviceItems = seg([
+      {key:'desktop',label:'Desktop',onClick:()=>this.setState({device:'desktop'})},
+      {key:'tablet', label:'Tablet', onClick:()=>this.setState({device:'tablet'})},
+      {key:'mobile', label:'Mobile', onClick:()=>this.setState({device:'mobile'})},
+      {key:'tui',    label:'TUI',    onClick:()=>this.setState({device:'tui'})}
+    ], dev);
+    const themeItems = seg([
+      {key:'ledger',label:'Ledger',onClick:()=>this.setState({theme:'ledger'})},
+      {key:'vault', label:'Vault', onClick:()=>this.setState({theme:'vault'})},
+      {key:'hc',    label:'HC',    onClick:()=>this.setState({theme:'hc'})}
+    ], S.theme);
+
+    // filter chips — live
+    const filterChips = ['all','personal','professional','leaseable','shareable','oci','vscode'].map((f)=>{
+      const active = S.filter===f;
+      return { label:f, onClick:()=>this.setState({filter:f}),
+        style:{ font:'600 10px/1 var(--ck-ff-mono)', letterSpacing:'.05em', textTransform:'uppercase', padding:'6px 11px', border:'1px solid '+(active?'var(--ck-fg-1)':'var(--ck-hairline-strong)'), color:active?'var(--ck-fg-1)':'var(--ck-fg-3)', background:active?'var(--ck-bg-2)':'transparent', cursor:'pointer' } };
+    });
+    const skillsFiltered = S.filter==='all' ? skills : skills.filter(sk=>sk.type===S.filter);
+    const filterEmpty = skillsFiltered.length===0;
+
+    // registry hero — DotBg drafting surface
+    let heroBgStyle = { padding: narrow ? '20px' : '34px', border:'1px solid var(--ck-hairline)', marginBottom:'22px' };
+    if (window.CkDotBg) {
+      const svg = window.CkDotBg({ w: 1200, h: 320, theme: S.theme });
+      heroBgStyle.backgroundImage = 'url("data:image/svg+xml;utf8,'+encodeURIComponent(svg)+'")';
+      heroBgStyle.backgroundSize = 'cover';
+      heroBgStyle.backgroundPosition = 'center';
+    }
+
+    // view flags
+    const V = S.view;
+    const viewTitleMap = { registry:'Registry', detail:skill.name, gate:'Governance Gate', monitor:'Monitor', policy:'Policy', profile:'Operator', hive:'Hive', sources:'Sources' };
+
+    // data classification — closed set of four; hue scoped to the swatch only
+    const CLS = { 'web-fetch':'internal', 'pii-redactor':'confidential', 'sql-runner':'confidential', 'k8s-operator':'restricted', 'figma-export':'internal', 'notes-sync':'internal', 'code-review':'public', 'shell-exec':'restricted' };
+    const clsOf = (name)=> CLS[name] || 'internal';
+    const clsSwatch = (c)=>({ width:'10px', height:'10px', flex:'none', background: c==='restricted' ? 'repeating-linear-gradient(45deg, var(--ck-cls-restricted, var(--ck-alarm)) 0 2px, transparent 2px 4px)' : 'var(--ck-cls-'+c+', var(--ck-fg-3))', border:'1px solid var(--ck-hairline-strong)' });
+    const skillCls = clsOf(skill.name);
+    const skillClsSwatch = clsSwatch(skillCls);
+
+    // atomic assessment — each check discharges or it does not
+    const assess = [
+      { check:'static analysis',     result:'0 critical · 3 informational', state:'observed' },
+      { check:'fuzzing harness',     result:'10,000 runs · 0 crashes',      state:'observed' },
+      { check:'conformance vectors', result: skill.digest ? '47 / 47 pass' : '12 / 47 attempted', state: skill.digest ? 'attested' : 'claimed' },
+      { check:'kernel proof check',  result: skill.digest ? 'proof object discharged' : 'not attempted', state: skill.digest ? 'attested' : 'claimed' }
+    ];
+
+    // skill improver — projected deltas, never promises
+    const improve = [];
+    if (skill.state==='quarantined') improve.push({ t:'Resolve EP-2291 · rotate egress invariant', d:'projected · exits containment, returns to E0 review' });
+    if (!skill.digest) improve.push({ t:'Submit a sealed build to the gate', d:'projected · '+skill.tier+' → E3 · discharges 2 claimed cells' });
+    if (skill.digest && skill.tier!=='E5') improve.push({ t:'Add kernel-checked proof object', d:'projected · E3 → E5 · standing +6' });
+    improve.push({ t:'Tighten net.egress to an explicit allowlist', d:'projected · removes broadest capability scope' });
+    if (improve.length<3) improve.push({ t:'Publish conformance vectors to the transparency log', d:'projected · standing +2 · verifiable by any reader' });
+
+    // swappable equivalents
+    const equivalents = skills.filter(x=>x.name!==skill.name && x.state!=='quarantined').slice(0,2).map(eq=>({
+      name: eq.name, tier: eq.tier, state: eq.state, compat: eq.digest ? '94% interface compat' : '81% interface compat',
+      onGo: eq.onSelect
+    }));
+
+    // hive — composable pipelines; a composite inherits the weakest claim
+    const hivePipes = [
+      { name:'governed-intake', state:'attested', members:[
+        { n:'pii-redactor', s:'attested' }, { n:'web-fetch', s:'attested' }, { n:'sql-runner', s:'attested' } ] },
+      { name:'design-publish', state:'inferred', members:[
+        { n:'figma-export', s:'inferred' }, { n:'web-fetch', s:'attested' } ] },
+      { name:'cluster-ops', state:'quarantined', members:[
+        { n:'k8s-operator', s:'attested' }, { n:'shell-exec', s:'quarantined' } ] }
+    ].map(p=>({ ...p,
+      badgeGlyph: glyphs[p.state],
+      badgeStyle:{ font:'600 11px/1 var(--ck-ff-mono)', color: p.state==='attested'?'var(--ck-proof)': p.state==='quarantined'?'var(--ck-alarm)':'var(--ck-fg-3)' },
+      members: p.members.map(mm=>({ ...mm, glyph: glyphs[mm.s],
+        nodeStyle:{ border: mm.s==='quarantined' ? '1px solid var(--ck-alarm)' : '1px solid var(--ck-hairline-strong)', background:'var(--ck-bg-1)', padding:'10px 14px', display:'flex', alignItems:'center', gap:'8px', flex:'none' },
+        glyphStyle:{ font:'600 12px/1 var(--ck-ff-mono)', color: mm.s==='attested'?'var(--ck-proof)': mm.s==='quarantined'?'var(--ck-alarm)':'var(--ck-fg-3)' } })),
+    }));
+
+    // registry sources — where skills come from
+    const srcRows = [
+      { key:'oci', kind:'oci',    ep:'registry.ckodex.com/skills',      state:'attested', note:'sync 4 min ago · 6 skills · signatures verified', icon:'digest' },
+      { key:'git', kind:'git',    ep:'github.com/ckodex/skill-bundles', state:'observed', note:'syncing · 2 bundles pending gate review',          icon:'chain' },
+      { key:'s3',  kind:'s3',     ep:'s3://ckodex-skill-crates',        state:'observed', note:'sync 1 h ago · 3 crates · checksums match',        icon:'export' },
+      { key:'fs',  kind:'fs',     ep:'/mnt/governed/skills',            state:'claimed',  note:'local mount · never leaves the host',              icon:'margin' },
+      { key:'vsx', kind:'vscode', ep:'marketplace · preview channel',   state:'observed', note:'editor side-load · every install still gated',     icon:'policy' }
+    ].map(sr=>{
+      const on = (S.srcEnabled[sr.key] !== undefined) ? S.srcEnabled[sr.key] : sr.state!=='claimed';
+      return { ...sr, sw: mkSwitch(on, ()=> this.setState(s=>{ const cur = (s.srcEnabled[sr.key] !== undefined) ? s.srcEnabled[sr.key] : sr.state!=='claimed'; return { srcEnabled: Object.assign({}, s.srcEnabled, { [sr.key]: !cur }) }; })) };
+    });
+
+    // entitlements — allowed skills per principal role × environment; deny by default
+    const entRows = [
+      { role:'governance operator', dev:'8 · all',            staging:'8 · all',            prod:'6 · attested only' },
+      { role:'developer',           dev:'8 · all',            staging:'5 · no restricted',  prod:'3 · sealed only' },
+      { role:'ci-runner',           dev:'6 · no personal',    staging:'4 · attested only',  prod:'2 · sealed + signed' },
+      { role:'agent runtime',       dev:'4 · allowlisted',    staging:'2 · sealed only',    prod:'1 · web-fetch only' }
+    ];
+
+    // authority footer — provenance band on the skill view
+    const afCls = V==='detail' ? skillCls : undefined;
+    const afTier = V==='detail' ? skill.tier : undefined;
+    const afName = V==='detail' ? ('skill / '+skill.name) : undefined;
+    const afProof = (V==='detail' && skill.digest) ? { urn: skill.urn+'@'+skill.ver, digest: skill.digest.slice(0,15)+'…'+skill.digest.slice(-6), evbRef:'urn:ckodex:evb:'+skill.name+'@1', sealedAt:'2026-06-14T09:18:12Z' } : undefined;
+
+    // operator profile
+    const profileKeys = [
+      { id:'ML-DSA-65 · signing', digest:'sha256:2b8e4f1a9c3d7e…a4f1', state:'attested', note:'active · rotates 2026-09-01' },
+      { id:'Ed25519 · session',   digest:'sha256:7c1d9a3e5b2f80…c8e2', state:'observed', note:'expires in 6h' }
+    ];
+    const profileLeases = [
+      { name:'sql-runner', terms:'metered · $0.004/call', used:'8,214 / 20,000 calls', pct:41, state:'attested' },
+      { name:'web-fetch',  terms:'org entitlement · unmetered', used:'12,441 calls · 30d', pct:100, state:'attested' }
+    ].map(l=>({ ...l, barStyle:{ height:'3px', width:l.pct+'%', background:'var(--ck-fg-1)' } }));
+    const profileAudit = [
+      { action:'Approved sql-runner lease renewal', actor:'r.mensah', time:'07-09 14:22', evidence:'sha256:41a0…9c2f', kind:'proof' },
+      { action:'Contained shell-exec · EP-2291', actor:'r.mensah', time:'07-02 22:41', evidence:'ep:2291', kind:'alarm' },
+      { action:'Requested proof for figma-export', actor:'r.mensah', time:'06-28 10:05' },
+      { action:'Installed k8s-operator@4.1.0', actor:'r.mensah', time:'06-14 09:31', evidence:'sha256:c4d6…b2c4', kind:'proof' }
+    ];
+    const personalSkills = skills.filter(sk=>sk.type==='personal');
+
+    // evidence margin receipts (per view / skill)
+    let receipts;
+    if (V==='detail'){
+      receipts = [
+        { time:'09:12:04', event:'Generated', details:['build#'+skill.ver], kind:'routine' },
+        { time:'09:14:11', event:'Scanned',   details:['sbom ok · 0 crit'], kind:'routine' },
+        { time:'09:16:58', event:'Evaluated', details:['policy-set-7'], kind:'routine' }
+      ];
+      if (skill.state==='attested') receipts.push(
+        { time:'09:18:12', event:'Attested', details:[skill.digest.slice(0,20)+'…'], kind:'proof' },
+        { time:'09:18:30', event:'Signed',   details:['ML-DSA-65'], kind:'proof' });
+      else if (skill.state==='quarantined') receipts.push(
+        { time:'22:41:03', event:'Rejected',  details:['egress breach'], kind:'alarm' });
+      else receipts.push({ time:'09:17:40', event:'Evaluated', details:['awaiting proof'], kind:'routine' });
+    } else {
+      receipts = [
+        { time:'08:00:01', event:'Generated', details:['fleet snapshot'], kind:'routine' },
+        { time:'08:00:04', event:'Evaluated', details:['6 attested / 8'], kind:'routine' },
+        { time:'22:41:03', event:'Rejected',  details:['shell-exec · EP-2291'], kind:'alarm' },
+        { time:'09:18:12', event:'Attested',  details:['k8s-operator@4.1.0'], kind:'proof' }
+      ];
+    }
+    const midEllipsis = (d)=> (d && d.length>26) ? d.slice(0,15)+'…'+d.slice(-6) : d;
+    const stampDigest = midEllipsis(skill.digest || 'sha256:9f3c7a1b4e2d88c0f1a6b3e7d9c2140a5b6e8f4c3d2a1b0e9f217');
+
+    // command palette
+    const q = (S.paletteQ||'').toLowerCase();
+    const palViews = navRaw.map(v=>({ kind:'view', glyph:'→', label:v.label, sub:'go to '+v.label.toLowerCase(),
+      onGo: ()=> this.setState({ view:v.key, paletteOpen:false }) }));
+    const palSkills = skills.map(sk=>({ kind:'skill', glyph:glyphs[sk.state], label:sk.name, sub:sk.typeLabel.toLowerCase()+' · '+sk.tier+' · '+sk.owner,
+      onGo: ()=>{ sk.onSelect(); this.setState({ paletteOpen:false }); } }));
+    const palProfile = { kind:'view', glyph:'→', label:'Operator profile', sub:'r.mensah · keys · leases · decisions', onGo: ()=> this.setState({ view:'profile', paletteOpen:false }) };
+    const palResults = [...palSkills, ...palViews, palProfile].filter(it=> !q || it.label.toLowerCase().includes(q) || it.sub.includes(q));
+    const palEmpty = palResults.length===0;
+
+    // registry — editorial layer
+    const featured = skills[0];
+    const regStats = [
+      { label:'skills in registry', value:'8', figStyle:{ color:'var(--ck-fg-1)' } },
+      { label:'attested · proved',  value:'4', figStyle:{ color:'var(--ck-proof)' } },
+      { label:'awaiting proof',     value:'3', figStyle:{ color:'var(--ck-fg-1)' } },
+      { label:'quarantined',        value:'1', figStyle:{ color:'var(--ck-alarm)' } }
+    ];
+    const regToggle = ['grid','ledger'].map(v=>{
+      const active = S.regView===v;
+      return { label:v, onClick:()=>this.setState({regView:v}),
+        style:{ font:'600 10px/1 var(--ck-ff-mono)', letterSpacing:'.07em', textTransform:'uppercase', padding:'7px 12px', border:'none', cursor:'pointer', background:active?'var(--ck-fg-1)':'transparent', color:active?'var(--ck-bg-0)':'var(--ck-fg-3)' } };
+    });
+
+    // gate queue — with pipeline stages: scan → evaluate → attest → promote
+    const stageNames = ['scan','evaluate','attest','promote'];
+    const mkStages = (done, current, alarm) => stageNames.map((s,i)=>({
+      label:s,
+      barStyle:{ height:'3px', width:'100%', background: i<done ? 'var(--ck-fg-1)' : (i===current ? (alarm?'var(--ck-alarm)':'var(--ck-accent)') : 'var(--ck-hairline-strong)') },
+      txtStyle:{ font:'600 8.5px/1 var(--ck-ff-mono)', letterSpacing:'.06em', textTransform:'uppercase', marginTop:'5px', color: i<done ? 'var(--ck-fg-2)' : (i===current ? (alarm?'var(--ck-alarm)':'var(--ck-fg-1)') : 'var(--ck-fg-mute)') }
+    }));
+    const sealable = { 'figma-export@0.9.4':1, 'code-review@1.2.7':1, 'sql-runner@3.0.2':1 };
+    const gateQueue = [
+      { name:'figma-export@0.9.4', state:'inferred',    note:'automated checks pass · no proof object · needs sealed build', action:'Request proof', btn:'primary',  stages: mkStages(2,2,false) },
+      { name:'code-review@1.2.7',  state:'observed',    note:'vscode preview · behaviour logged · attestation pending',      action:'Attest', btn:'primary',        stages: mkStages(2,2,false) },
+      { name:'shell-exec@2.0.0',   state:'quarantined', note:'EP-2291 · egress invariant breached · calls refused',          action:'Contain', btn:'emergency',     stages: mkStages(1,1,true) },
+      { name:'sql-runner@3.0.2',   state:'attested',    note:'lease renewal · proof object valid · re-approve entitlement',  action:'Approve', btn:'quiet',         stages: mkStages(4,-1,false) }
+    ].map(g=>{
+      const isSealed = !!S.sealedMap[g.name];
+      const isSealing = S.sealing===g.name;
+      return { ...g,
+        state: isSealed ? 'attested' : g.state,
+        note: isSealed ? 'proof object discharged · sealed at the gate' : g.note,
+        action: isSealed ? 'Promoted' : (isSealing ? 'Sealing…' : g.action),
+        btn: isSealed ? 'ghost' : g.btn,
+        stages: isSealed ? mkStages(4,-1,false) : g.stages,
+        sealingNow: isSealing,
+        onAction: (!isSealed && !isSealing && sealable[g.name]) ? ()=>{
+          if (this.state.sealing) return;
+          this.setState({ sealing: g.name });
+          setTimeout(()=>{ this.setState(s=>({ sealing:null, sealedMap: Object.assign({}, s.sealedMap, { [g.name]: true }) })); }, 1800);
+        } : undefined
+      };
+    });
+
+    // monitor fleet table
+    const fleetRows = skills.map(sk=>({
+      name: sk.name, state: sk.state, tier: sk.tier, spark: sk.spark,
+      inv: (sk.spark.reduce((a,b)=>a+b,0)*137).toLocaleString('en-US'),
+      onSelect: sk.onSelect, sw: sk.sw,
+      nameStyle:{ font:'600 12.5px/1 var(--ck-ff-mono)', color:'var(--ck-fg-1)', cursor:'pointer' }
+    }));
+
+    // monitor posture
+    const posture = [
+      { label:'skills deployed', value:'6', color:'var(--ck-fg-1)' },
+      { label:'attested', value:'4', color:'var(--ck-proof)' },
+      { label:'awaiting proof', value:'3', color:'var(--ck-fg-1)' },
+      { label:'quarantined', value:'1', color:'var(--ck-alarm)' },
+      { label:'energy · 30d', value:'41 kWh', color:'var(--ck-fg-1)' },
+      { label:'carbon · 30d', value:'17 kg CO₂e', color:'var(--ck-fg-1)' }
+    ];
+    const fleetSpark = [42,48,45,51,49,55,58,54,60,57,62,66,63,59,64];
+
+    // matrices
+    const matrixControls = ['egress','sbom','sign','runtime'];
+    const policyMatrix = skills.slice(0,7).map(sk=>({
+      label: sk.name,
+      cells: [
+        sk.state==='quarantined'?'quarantined':(sk.digest?'attested':'inferred'),
+        sk.tier==='E0'?'claimed':'attested',
+        sk.digest?'attested':'claimed',
+        sk.state==='quarantined'?'quarantined':(sk.state==='attested'?'attested':sk.state)
+      ]
+    }));
+
+    // TUI text
+    const padR = (s,n)=>{ s=String(s); return s.length>=n ? s.slice(0,n) : s + ' '.repeat(n-s.length); };
+    let tui = '';
+    tui += '$ ckodex skill ls\n\n';
+    tui += '  ' + padR('NAME',15) + padR('TYPE',15) + padR('TIER',6) + padR('STATE',16) + 'PROOF\n';
+    tui += '  ' + '─'.repeat(72) + '\n';
+    skills.forEach(sk=>{
+      tui += '  ' + padR(sk.name,15) + padR(sk.type,15) + padR(sk.tier,6)
+           + padR(glyphs[sk.state]+' '+sk.state,16)
+           + (sk.digest ? sk.digest.slice(0,18)+'…' : '— unattested') + '\n';
+    });
+    tui += '\n$ ckodex skill show ' + skill.name + '\n\n';
+    tui += '  urn      ' + skill.urn + '\n';
+    tui += '  version  ' + skill.ver + '\n';
+    tui += '  owner    ' + skill.owner + '\n';
+    tui += '  tier     ' + skill.tier + '  (' + glyphs[skill.state] + ' ' + skill.state + ')\n';
+    tui += '  dist     ' + skill.dist + '\n';
+    tui += '  proof    ' + (skill.digest || 'none — not attested') + '\n\n';
+    tui += '  ' + skill.desc.replace(/(.{60}\S*)\s/g,'$1\n  ') + '\n\n';
+    tui += '  invariant: mode changes deployment, not governance semantics\n\n';
+    tui += '$ \u2588\n';
+
+    return {
+      theme:S.theme, showChrome: this.props.showChrome !== false,
+      deviceItems, themeItems, navItems, filterChips,
+      isTui, isApp, appGridStyle, frameStyle, stagePad, pad, padX, mainMaxH,
+      showNavRail, navShowLabel, marginAside, marginSection, showBottomTabs,
+      isRegistry: V==='registry', isDetail: V==='detail', isGate: V==='gate', isMonitor: V==='monitor', isPolicy: V==='policy', isProfile: V==='profile', isHive: V==='hive', isSources: V==='sources',
+      assess, improve, equivalents, hivePipes, srcRows, entRows,
+      skillCls, skillClsSwatch,
+      afCls, afTier, afName, afProof,
+      goProfile: ()=> this.setState({ view:'profile' }),
+      profileKeys, profileLeases, profileAudit, personalSkills,
+      viewTitle: viewTitleMap[V],
+      skills, skillsFiltered, filterEmpty, heroBgStyle, skill, chainSteps, fleetRows,
+      bentoStyle: { '--ck-bento-cols': wide ? '4' : '2', '--ck-bento-cell':'96px', marginBottom:'22px' },
+      featured, regStats, regToggle, regGrid: S.regView==='grid', regLedger: S.regView==='ledger',
+      paletteOpen: S.paletteOpen, paletteQ: S.paletteQ, palResults, palEmpty,
+      openPalette: ()=> this.setState({ paletteOpen:true, paletteQ:'' }),
+      closePalette: ()=> this.setState({ paletteOpen:false }),
+      stopClick: (e)=> e.stopPropagation(),
+      onPaletteInput: (e)=> this.setState({ paletteQ: e.target.value }),
+      showMasthead: !narrow,
+      goRegistry: ()=> this.setState({ view:'registry' }),
+      attestedCount:4, totalCount:skills.length,
+      receipts, stampDigest,
+      marginCollapsed: S.marginCollapsed,
+      onMarginClick: (e)=>{ if(e.target.closest('[aria-label*="evidence margin" i]')) this.setState(s=>({ marginCollapsed: !s.marginCollapsed })); },
+      gateQueue, posture, fleetSpark,
+      matrixControls, policyMatrix,
+      tuiText: tui
+    };
+  }
+}
+</script>
+</body>
+</html>

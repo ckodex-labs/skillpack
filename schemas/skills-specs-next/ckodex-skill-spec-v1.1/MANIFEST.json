@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "ckodex.org/pack-manifest/v1",
+  "pack": "ckodex-skill-spec-v1.1",
+  "version": "1.1.0",
+  "framework": "CKODEX v16.0",
+  "files": [
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "sha256:6d57ca3ccffec7b10378d8cdb56e4b7ce649bce0da8dd1e3893ad89b759a9112",
+      "bytes": 3334
+    },
+    {
+      "path": "README.md",
+      "sha256": "sha256:cd26465401d6da8640cf2d1a04bf98e68d912699ed51e98f47ca64261930352a",
+      "bytes": 4026
+    },
+    {
+      "path": "SPEC.md",
+      "sha256": "sha256:459d01cb39140e33bddc0305763f37bfc8b405cd66cf631c5a366740a8a9e548",
+      "bytes": 12790
+    },
+    {
+      "path": "examples/ckodex-oscal-v1.1.skill.json",
+      "sha256": "sha256:44bb0ed3a2f1c202fd316eecb5db462cce8c206eaa7b7b85c1aa05ed3aa3220e",
+      "bytes": 2790
+    },
+    {
+      "path": "examples/minimal-v1.1.skill.json",
+      "sha256": "sha256:c7b4af4bfc3317f870411fe24a2bae10a91586fb436f47551cdaf97ba1abaaec",
+      "bytes": 427
+    },
+    {
+      "path": "examples/third-party-v1-compat.skill.json",
+      "sha256": "sha256:61f685095edc34f3cfc3cdb0bd9a959f8b29b256358e4e3e2432ebdbb5cf5c1f",
+      "bytes": 550
+    },
+    {
+      "path": "schemas/skill-context-v1.jsonld",
+      "sha256": "sha256:a91c5ef5327d293bb8e00094452ee2229ccfaa17e66e7c93a1a3378cfe09a04c",
+      "bytes": 1695
+    },
+    {
+      "path": "schemas/skill.v1.1.schema.json",
+      "sha256": "sha256:64ac2ff41d00839c2f758f98d6509aaad0ed4dc153a35f69741a158f7419ab32",
+      "bytes": 10159
+    },
+    {
+      "path": "schemas/skill.v1.schema.json",
+      "sha256": "sha256:850c65896e6c9d299094741c87cbf9ff9a7a39aa0bf0db6f0e369f32b3132df0",
+      "bytes": 6358
+    },
+    {
+      "path": "schemas/skillsbundle.v1.schema.json",
+      "sha256": "sha256:595160af19fd4591cad5b11eb48ac062a9a629ceba9d38d93f7f30dd30c12a80",
+      "bytes": 4750
+    },
+    {
+      "path": "scripts/gen_synopsis.py",
+      "sha256": "sha256:4c4be71b7f2eb59a7e4f6a3bb9cf410734bcf727b0290f425c1adc9fa095144d",
+      "bytes": 2995
+    },
+    {
+      "path": "scripts/validate.py",
+      "sha256": "sha256:d013a4181effa028443d9240740de5b0a0fae86b7e9dbe29a00586f265400fab",
+      "bytes": 2982
+    },
+    {
+      "path": "scripts/validate.sh",
+      "sha256": "sha256:1957c0ee81b66794699bc834f3df9f591834fe23f98850563d9fe46af8c13bb5",
+      "bytes": 4010
+    }
+  ],
+  "fileCount": 13
+}

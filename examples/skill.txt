@@ -1,0 +1,30 @@
+# skill.txt - Skill Discovery and Access Policy
+# See: https://docs.ckodex.org/skills/discovery
+
+# Registry where skills are published
+Skill-Registry: ghcr.io/ckodex/skills
+
+# Skills index endpoint
+Skill-Index: https://api.ckodex.org/v1/skills/index.json
+
+# Discovery configuration
+Well-Known: /.well-known/skills.json
+
+# Access policies
+Allow: /public/*
+Allow: /community/*
+Disallow: /internal/*
+Disallow: /experimental/*
+
+# Security contact
+Contact: security@ckodex.org
+
+# Policy bundle for governance
+Policy: https://policies.ckodex.org/skills/default.yaml
+
+# Minimum required skill grade for listing
+Min-Grade: B
+
+# Signature requirements
+Require-Signature: true
+Trusted-Keys: https://keys.ckodex.org/.well-known/jwks.json

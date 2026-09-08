@@ -1,0 +1,517 @@
+{
+  "name": "skillpack",
+  "displayName": "SkillPack - AI Agent Skill Authoring",
+  "description": "Create, assess, and publish AI agent skills with built-in quality checks and AI assistance",
+  "version": "1.0.0",
+  "publisher": "ckodex",
+  "icon": "icon.png",
+  "engines": {
+    "vscode": "^1.96.0"
+  },
+  "categories": [
+    "Linters",
+    "Snippets",
+    "Machine Learning",
+    "Other"
+  ],
+  "keywords": [
+    "ai",
+    "agent",
+    "skill",
+    "mcp",
+    "quality",
+    "assessment"
+  ],
+  "activationEvents": [
+    "workspaceContains:**/SKILL.md",
+    "workspaceContains:**/skill.cnsb.json",
+    "workspaceContains:**/eval.yml",
+    "onCommand:skillpack.newSkill"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "skillpack.newSkill",
+        "title": "SkillPack: New Skill (Wizard)",
+        "icon": "$(sparkle)",
+        "category": "SkillPack"
+      },
+      {
+        "command": "skillpack.askAI",
+        "title": "SkillPack: Ask AI Assistant",
+        "icon": "$(hubot)",
+        "category": "SkillPack"
+      },
+      {
+        "command": "skillpack.improveSkill",
+        "title": "SkillPack: Improve Skill Quality",
+        "icon": "$(lightbulb)",
+        "category": "SkillPack"
+      },
+      {
+        "command": "skillpack.generateCapacity",
+        "title": "SkillPack: Add Capacity",
+        "icon": "$(plug)",
+        "category": "SkillPack"
+      },
+      {
+        "command": "skillpack.addExample",
+        "title": "SkillPack: Add Example",
+        "icon": "$(file-code)",
+        "category": "SkillPack"
+      },
+      {
+        "command": "skillpack.generateTests",
+        "title": "SkillPack: Generate Tests",
+        "icon": "$(beaker)",
+        "category": "SkillPack"
+      },
+      {
+        "command": "skillpack.assess",
+        "title": "SkillPack: Assess Skill",
+        "icon": "$(checklist)",
+        "category": "SkillPack"
+      },
+      {
+        "command": "skillpack.validate",
+        "title": "SkillPack: Validate Schema",
+        "icon": "$(check)",
+        "category": "SkillPack"
+      },
+      {
+        "command": "skillpack.showReport",
+        "title": "SkillPack: Show Report",
+        "icon": "$(graph)",
+        "category": "SkillPack"
+      },
+      {
+        "command": "skillpack.package",
+        "title": "SkillPack: Package Skill",
+        "icon": "$(package)",
+        "category": "SkillPack"
+      },
+      {
+        "command": "skillpack.publish",
+        "title": "SkillPack: Publish to Registry",
+        "icon": "$(cloud-upload)",
+        "category": "SkillPack"
+      },
+      {
+        "command": "skillpack.eval",
+        "title": "SkillPack: Run Evaluation",
+        "icon": "$(checklist)",
+        "category": "SkillPack"
+      },
+      {
+        "command": "skillpack.init",
+        "title": "SkillPack: Initialize (CLI)",
+        "icon": "$(terminal)",
+        "category": "SkillPack"
+      },
+      {
+        "command": "skillpack.migrateSkills",
+        "title": "SkillPack: Migrate Skills",
+        "icon": "$(migrate)",
+        "category": "SkillPack Migration"
+      },
+      {
+        "command": "skillpack.migrateAgents",
+        "title": "SkillPack: Migrate Agent Skills",
+        "icon": "$(migrate)",
+        "category": "SkillPack Migration"
+      },
+      {
+        "command": "skillpack.migrateClaudeAgents",
+        "title": "SkillPack: Migrate Claude Agents",
+        "icon": "$(migrate)",
+        "category": "SkillPack Migration"
+      },
+      {
+        "command": "skillpack.migrateHarnesses",
+        "title": "SkillPack: Migrate Harnesses",
+        "icon": "$(migrate)",
+        "category": "SkillPack Migration"
+      },
+      {
+        "command": "skillpack.refreshView",
+        "title": "SkillPack: Refresh",
+        "icon": "$(refresh)",
+        "category": "SkillPack"
+      },
+      {
+        "command": "skillpack.openDocs",
+        "title": "SkillPack: Open Documentation",
+        "icon": "$(book)",
+        "category": "SkillPack"
+      },
+      {
+        "command": "skillpack.discoverSkills",
+        "title": "SkillPack: Discover Skills from Registry",
+        "icon": "$(search)",
+        "category": "SkillPack Registry"
+      },
+      {
+        "command": "skillpack.searchRegistry",
+        "title": "SkillPack: Search Registry",
+        "icon": "$(search-fuzzy)",
+        "category": "SkillPack Registry"
+      },
+      {
+        "command": "skillpack.installSkill",
+        "title": "SkillPack: Install Skill",
+        "icon": "$(cloud-download)",
+        "category": "SkillPack Registry"
+      },
+      {
+        "command": "skillpack.investigateSkill",
+        "title": "SkillPack: Deep Investigation",
+        "icon": "$(microscope)",
+        "category": "SkillPack Registry"
+      },
+      {
+        "command": "skillpack.refreshRegistry",
+        "title": "SkillPack: Refresh Registry",
+        "icon": "$(refresh)",
+        "category": "SkillPack Registry"
+      },
+      {
+        "command": "skillpack.ociLogin",
+        "title": "SkillPack: OCI Login",
+        "icon": "$(sign-in)",
+        "category": "SkillPack OCI"
+      },
+      {
+        "command": "skillpack.ociLogout",
+        "title": "SkillPack: OCI Logout",
+        "icon": "$(sign-out)",
+        "category": "SkillPack OCI"
+      },
+      {
+        "command": "skillpack.ociListRegistries",
+        "title": "SkillPack: List OCI Registries",
+        "icon": "$(database)",
+        "category": "SkillPack OCI"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "skillpack.newSkill",
+        "key": "ctrl+shift+n",
+        "mac": "cmd+shift+n",
+        "when": "!editorTextFocus"
+      },
+      {
+        "command": "skillpack.askAI",
+        "key": "ctrl+shift+a",
+        "mac": "cmd+shift+a"
+      },
+      {
+        "command": "skillpack.assess",
+        "key": "ctrl+shift+q",
+        "mac": "cmd+shift+q",
+        "when": "workspaceHasSkill"
+      },
+      {
+        "command": "skillpack.package",
+        "key": "ctrl+shift+p",
+        "mac": "cmd+shift+p",
+        "when": "workspaceHasSkill"
+      },
+      {
+        "command": "skillpack.eval",
+        "key": "ctrl+shift+e",
+        "mac": "cmd+shift+e",
+        "when": "workspaceHasSkill"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "skillpack.refreshView",
+          "when": "view == skillpackView",
+          "group": "navigation"
+        },
+        {
+          "command": "skillpack.assess",
+          "when": "view == skillpackView",
+          "group": "navigation"
+        },
+        {
+          "command": "skillpack.package",
+          "when": "view == skillpackView",
+          "group": "navigation"
+        },
+        {
+          "command": "skillpack.publish",
+          "when": "view == skillpackView",
+          "group": "navigation"
+        },
+        {
+          "command": "skillpack.eval",
+          "when": "view == skillpackView",
+          "group": "navigation"
+        },
+        {
+          "command": "skillpack.askAI",
+          "when": "view == skillpackView",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "skillpack.askAI",
+          "when": "view == skillpackView && viewItem == ai"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "skillpack.newSkill",
+          "group": "skillpack@1",
+          "when": "explorerResourceIsFolder"
+        },
+        {
+          "command": "skillpack.package",
+          "group": "skillpack@2",
+          "when": "workspaceHasSkill"
+        },
+        {
+          "command": "skillpack.publish",
+          "group": "skillpack@3",
+          "when": "workspaceHasSkill"
+        },
+        {
+          "command": "skillpack.eval",
+          "group": "skillpack@4",
+          "when": "workspaceHasSkill"
+        },
+        {
+          "command": "skillpack.generateCapacity",
+          "group": "skillpack@5",
+          "when": "workspaceHasSkill"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "skillpack.askAI",
+          "group": "skillpack@1",
+          "when": "resourceFilename =~ /SKILL.md|skill.cnsb.json|eval.yml/"
+        },
+        {
+          "command": "skillpack.improveSkill",
+          "group": "skillpack@2",
+          "when": "resourceFilename =~ /SKILL.md|skill.cnsb.json|eval.yml/"
+        },
+        {
+          "command": "skillpack.eval",
+          "group": "skillpack@3",
+          "when": "resourceFilename =~ /eval.yml/"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "skillpack.newSkill"
+        },
+        {
+          "command": "skillpack.askAI"
+        },
+        {
+          "command": "skillpack.improveSkill",
+          "when": "workspaceHasSkill"
+        },
+        {
+          "command": "skillpack.generateCapacity",
+          "when": "workspaceHasSkill"
+        },
+        {
+          "command": "skillpack.addExample",
+          "when": "workspaceHasSkill"
+        },
+        {
+          "command": "skillpack.generateTests",
+          "when": "workspaceHasSkill"
+        },
+        {
+          "command": "skillpack.assess",
+          "when": "workspaceHasSkill"
+        },
+        {
+          "command": "skillpack.validate",
+          "when": "workspaceHasSkill"
+        },
+        {
+          "command": "skillpack.showReport",
+          "when": "workspaceHasSkill"
+        },
+        {
+          "command": "skillpack.package",
+          "when": "workspaceHasSkill"
+        },
+        {
+          "command": "skillpack.publish",
+          "when": "workspaceHasSkill"
+        },
+        {
+          "command": "skillpack.eval",
+          "when": "workspaceHasSkill"
+        },
+        {
+          "command": "skillpack.init"
+        },
+        {
+          "command": "skillpack.refreshView",
+          "when": "workspaceHasSkill"
+        },
+        {
+          "command": "skillpack.openDocs"
+        },
+        {
+          "command": "skillpack.ociLogin"
+        },
+        {
+          "command": "skillpack.ociLogout"
+        },
+        {
+          "command": "skillpack.ociListRegistries"
+        }
+      ]
+    },
+    "jsonValidation": [
+      {
+        "fileMatch": [
+          "**/skill.cnsb.json",
+          "**/skills.cnsb.json"
+        ],
+        "url": "./schemas/cnsb.schema.json"
+      },
+      {
+        "fileMatch": [
+          "**/.skillpack.json",
+          "**/skillpack.config.json"
+        ],
+        "url": "./schemas/skillpack-config.schema.json"
+      },
+      {
+        "fileMatch": [
+          "**/skill.lock"
+        ],
+        "url": "./schemas/skill-lock.schema.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "json",
+        "path": "./snippets/skill.json"
+      },
+      {
+        "language": "markdown",
+        "path": "./snippets/skill-md.json"
+      },
+      {
+        "language": "yaml",
+        "path": "./snippets/skill-yaml.json"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "skillpackView",
+          "name": "SkillPack",
+          "when": "workspaceHasSkill",
+          "icon": "$(beaker)",
+          "contextualTitle": "Skill Quality"
+        },
+        {
+          "id": "skillpackRegistryView",
+          "name": "Skill Registry",
+          "icon": "$(package)",
+          "contextualTitle": "Browse and Install Skills"
+        },
+        {
+          "id": "skillpackOciView",
+          "name": "OCI Registries",
+          "icon": "$(database)",
+          "contextualTitle": "OCI Registry Credentials"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "skillpackView",
+        "contents": "No skill found in this workspace.\n[Create New Skill](command:skillpack.newSkill)\n[Open Documentation](command:skillpack.openDocs)"
+      },
+      {
+        "view": "skillpackRegistryView",
+        "contents": "No registries configured.\n[Discover Skills](command:skillpack.discoverSkills)\n[Search Registry](command:skillpack.searchRegistry)"
+      },
+      {
+        "view": "skillpackOciView",
+        "contents": "No logged-in OCI registries.\n[Login to Registry](command:skillpack.ociLogin)\n[Open Docs](command:skillpack.openDocs)"
+      }
+    ],
+    "configuration": {
+      "title": "SkillPack",
+      "properties": {
+        "skillpack.serverUrl": {
+          "type": "string",
+          "default": "http://localhost:50051",
+          "description": "SkillPack gRPC server URL"
+        },
+        "skillpack.autoAssess": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically assess skills on save"
+        },
+        "skillpack.minimumGrade": {
+          "type": "string",
+          "enum": [
+            "S+",
+            "S",
+            "A",
+            "B",
+            "C",
+            "D",
+            "F"
+          ],
+          "default": "C",
+          "description": "Minimum acceptable grade"
+        },
+        "skillpack.aiProvider": {
+          "type": "string",
+          "enum": [
+            "builtin",
+            "copilot",
+            "custom"
+          ],
+          "default": "builtin",
+          "description": "AI provider for skill authoring assistance"
+        },
+        "skillpack.showWizardOnNewWorkspace": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show skill creation wizard when opening an empty folder"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "generate-types": "json2ts ../schemas/skills-specs-next/client-model.schema.json --output src/generated/client-model.ts --unreachableDefinitions",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.118.0",
+    "@types/node": "^25.9.1",
+    "typescript": "^6.0.3",
+    "eslint": "^10.4.0",
+    "json-schema-to-typescript": "^15.0.4",
+    "vitest": "^3.0.0"
+  },
+  "dependencies": {
+    "@connectrpc/connect": "^2.1.1",
+    "@connectrpc/connect-node": "^2.1.1"
+  }
+}

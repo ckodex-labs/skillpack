@@ -1,0 +1,72 @@
+{
+  "apiVersion": "cnsb.ckodex.org/v1",
+  "kind": "SkillBundle",
+  "metadata": {
+    "name": "email-validator",
+    "version": "1.2.0",
+    "urn": "urn:ckodex:skill:acme:prod:platform:core:email-validator",
+    "description": "Validates email address format and MX record reachability"
+  },
+  "skills": [
+    {
+      "id": "email-validator",
+      "entry": "email-validator validate",
+      "description": "Validate a single email address with optional DNS MX lookup",
+      "galMin": 0,
+      "galMax": 2,
+      "asc": ["OIS-ASC-001", "OIS-ASC-042"],
+      "inputs": [
+        { "name": "email", "type": "string", "description": "Email address to validate", "required": true },
+        { "name": "dns_lookup", "type": "boolean", "description": "Enable MX record verification", "required": false },
+        { "name": "timeout_ms", "type": "number", "description": "DNS lookup timeout in milliseconds", "required": false }
+      ],
+      "outputs": [
+        { "name": "valid", "type": "string", "description": "true, false, or unknown" },
+        { "name": "reason", "type": "string", "description": "Human-readable reason for the result" },
+        { "name": "mx_records", "type": "json", "description": "Array of MX record hostnames (when dns_lookup enabled)", "required": false }
+      ]
+    }
+  ],
+  "lifecycle": {
+    "install": {
+      "command": "scripts/install.sh",
+      "timeout": "5m",
+      "retries": 1
+    },
+    "uninstall": {
+      "command": "scripts/uninstall.sh",
+      "timeout": "2m",
+      "retries": 0
+    },
+    "upgrade": {
+      "command": "scripts/upgrade.sh",
+      "timeout": "5m",
+      "retries": 1
+    },
+    "verify": {
+      "command": "scripts/verify.sh",
+      "timeout": "1m",
+      "retries": 0
+    },
+    "pack": {
+      "command": "scripts/pack.sh",
+      "timeout": "5m",
+      "retries": 0
+    },
+    "unpack": {
+      "command": "scripts/unpack.sh",
+      "timeout": "2m",
+      "retries": 0
+    },
+    "preInstall": {
+      "command": "scripts/pre-install.sh",
+      "timeout": "1m",
+      "retries": 0
+    },
+    "postInstall": {
+      "command": "scripts/post-install.sh",
+      "timeout": "2m",
+      "retries": 0
+    }
+  }
+}

@@ -1,0 +1,87 @@
+/* ============================================================
+ * SkillPack · VS Code extension — editor chrome on DS-3 tokens.
+ * The IDE frame is neutral; the extension's views (tree, webview,
+ * status item, inline decorations) carry the DS-3 evidence vocab.
+ * ============================================================ */
+.vs { height: 100vh; display: grid; grid-template-rows: 30px 1fr 26px; background: var(--ck-bg-0); overflow: hidden; }
+
+/* title bar */
+.vs-title { display: flex; align-items: center; gap: 10px; padding: 0 12px; border-bottom: 1px solid var(--ck-hairline); background: var(--ck-bg-1); }
+.vs-dots { display: flex; gap: 7px; }
+.vs-dots i { width: 11px; height: 11px; border-radius: 50%; border: 1px solid var(--ck-hairline-strong); display: block; }
+.vs-title__name { font: 500 11px/1 var(--ck-ff-mono); color: var(--ck-fg-3); margin: 0 auto; letter-spacing: .02em; }
+
+/* body: activity bar | sidebar | editor */
+.vs-body { display: grid; grid-template-columns: 48px 300px 1fr; min-height: 0; }
+.vs-activity { background: var(--ck-bg-1); border-right: 1px solid var(--ck-hairline); display: flex; flex-direction: column; align-items: center; padding: 10px 0; gap: 6px; }
+.vs-act { width: 34px; height: 34px; display: grid; place-items: center; cursor: pointer; background: transparent; border: none; color: var(--ck-fg-mute); border-left: 2px solid transparent; }
+.vs-act:hover { color: var(--ck-fg-1); }
+.vs-act[aria-pressed="true"] { color: var(--ck-fg-1); border-left-color: var(--ck-accent); }
+.vs-act[data-badge]::after { content: attr(data-badge); position: absolute; transform: translate(12px, 10px); font: 700 8px/1 var(--ck-ff-mono); background: var(--ck-proof); color: var(--ck-bg-0); padding: 2px 3px; }
+
+/* sidebar */
+.vs-side { border-right: 1px solid var(--ck-hairline); background: var(--ck-bg-0); display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+.vs-side__head { padding: 10px 14px; font: 600 10px/1 var(--ck-ff-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ck-fg-3); display: flex; align-items: center; justify-content: space-between; }
+.vs-tree { overflow-y: auto; flex: 1; }
+.vs-trow { display: flex; align-items: center; gap: 8px; padding: 5px 14px 5px 0; cursor: pointer; border: none; background: transparent; width: 100%; text-align: left; }
+.vs-trow:hover { background: var(--ck-bg-1); }
+.vs-trow[aria-selected="true"] { background: var(--ck-bg-2); }
+.vs-trow__name { font: 500 12px/1.3 var(--ck-ff-ui); color: var(--ck-fg-1); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vs-trow__state { margin-left: auto; font: 500 10px/1 var(--ck-ff-mono); flex: none; padding-right: 2px; }
+.vs-trow__state[data-s="proof"] { color: var(--ck-proof); }
+.vs-trow__state[data-s="tone"] { color: var(--ck-fg-mute); }
+.vs-trow__state[data-s="alarm"] { color: var(--ck-alarm); }
+
+/* editor group */
+.vs-editor { display: grid; grid-template-rows: 35px 1fr; min-width: 0; background: var(--ck-bg-0); }
+.vs-tabs { display: flex; border-bottom: 1px solid var(--ck-hairline); background: var(--ck-bg-1); }
+.vs-tab { display: flex; align-items: center; gap: 8px; padding: 0 16px; border-right: 1px solid var(--ck-hairline); font: 500 12px/1 var(--ck-ff-mono); color: var(--ck-fg-3); background: transparent; cursor: pointer; border-top: 2px solid transparent; }
+.vs-tab[aria-selected="true"] { background: var(--ck-bg-0); color: var(--ck-fg-1); border-top-color: var(--ck-accent); }
+.vs-tab__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ck-proof); }
+.vs-pane { min-height: 0; overflow: auto; display: grid; grid-template-columns: 1fr; }
+
+/* code view with gutter */
+.vs-code { display: grid; grid-template-columns: 52px 1fr; font: 500 12.5px/1.85 var(--ck-ff-mono); }
+.vs-gutter { text-align: right; padding: 16px 10px 16px 0; color: var(--ck-fg-mute); background: var(--ck-bg-0); border-right: 1px solid var(--ck-hairline); user-select: none; }
+.vs-lines { padding: 16px 18px; white-space: pre; overflow-x: auto; }
+.vs-lines .k { color: var(--ck-accent); }
+.vs-lines .s { color: var(--ck-fg-2); }
+.vs-lines .c { color: var(--ck-fg-mute); font-style: italic; }
+.vs-lines .p { color: var(--ck-proof); }
+.vs-deco { display: inline-flex; align-items: center; gap: 6px; margin-left: 14px; padding: 1px 8px; border: 1px solid var(--ck-proof); color: var(--ck-proof); font: 600 10px/1.4 var(--ck-ff-mono); vertical-align: middle; }
+.vs-deco[data-s="alarm"] { border-color: var(--ck-alarm); color: var(--ck-alarm); }
+.vs-deco[data-s="tone"] { border-color: var(--ck-hairline-strong); color: var(--ck-fg-3); }
+
+/* webview panel (the extension's rich view) */
+.vs-webview { padding: 22px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; background: var(--ck-bg-0); }
+.vs-wv__banner { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid var(--ck-hairline-strong); background: var(--ck-bg-1); font: 500 11px/1.4 var(--ck-ff-mono); color: var(--ck-fg-2); }
+
+/* status bar */
+.vs-status { display: flex; align-items: center; gap: 0; background: var(--ck-accent); color: var(--ck-accent-ink); font: 600 10.5px/1 var(--ck-ff-mono); letter-spacing: .02em; }
+.vs-status__item { display: flex; align-items: center; gap: 6px; padding: 0 12px; height: 100%; }
+.vs-status__item + .vs-status__item { border-left: 1px solid color-mix(in oklab, var(--ck-accent-ink) 22%, transparent); }
+.vs-status__spacer { margin-left: auto; }
+.vs-status__seal { background: var(--ck-proof); color: var(--ck-bg-0); padding: 0 12px; height: 100%; display: flex; align-items: center; gap: 6px; }
+
+/* bottom panel (SkillPack output) */
+.vs-panel { border-top: 1px solid var(--ck-hairline); background: var(--ck-bg-1); max-height: 180px; overflow-y: auto; }
+.vs-panel__head { display: flex; gap: 18px; padding: 8px 16px; border-bottom: 1px solid var(--ck-hairline); }
+.vs-panel__tab { font: 600 10px/1 var(--ck-ff-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ck-fg-mute); background: none; border: none; cursor: pointer; }
+.vs-panel__tab[aria-selected="true"] { color: var(--ck-fg-1); }
+.vs-log { padding: 12px 16px; font: 500 11.5px/1.7 var(--ck-ff-mono); color: var(--ck-fg-2); }
+.vs-log b.p { color: var(--ck-proof); font-weight: 600; }
+.vs-log b.a { color: var(--ck-alarm); font-weight: 600; }
+
+.vs-themeswitch { display: inline-flex; border: 1px solid var(--ck-hairline-strong); }
+.vs-themeswitch button { cursor: pointer; font: 600 9px/1 var(--ck-ff-mono); padding: 5px 8px; border: none; border-left: 1px solid var(--ck-hairline-strong); background: transparent; color: var(--ck-fg-3); }
+.vs-themeswitch button:first-child { border-left: none; }
+.vs-themeswitch button[aria-pressed="true"] { background: var(--ck-fg-1); color: var(--ck-bg-1); }
+
+/* responsive: collapse sidebar into an overlay, stack editor + webview */
+@media (max-width: 900px) {
+  .vs-body { grid-template-columns: 44px 1fr; }
+  .vs-side { position: absolute; top: 30px; bottom: 26px; left: 44px; width: 280px; z-index: 20; box-shadow: 0 0 0 100vmax color-mix(in oklab, var(--ck-fg-1) 30%, transparent); transform: translateX(-110%); transition: transform var(--ck-t-state) var(--ck-ease); }
+  .vs[data-sideopen="true"] .vs-side { transform: none; }
+  .vs-splitcols { grid-template-columns: 1fr !important; }
+}
+@media (min-width: 901px) { .vs-sidetoggle { display: none; } }

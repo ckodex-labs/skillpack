@@ -1,0 +1,15 @@
+[package]
+name = "skillpack-fabricator"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "CKODEX Skill Fabricator - Unified skill domain types and OCI operations"
+keywords = ["ckodex", "skills", "fabricator", "oci", "cnsb"]
+
+[dependencies]
+skillpack-domain = { path = "../skillpack-domain" }
+skillpack-adapters = { path = "../skillpack-adapters" }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }

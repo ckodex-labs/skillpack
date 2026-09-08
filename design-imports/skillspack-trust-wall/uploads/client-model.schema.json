@@ -1,0 +1,289 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ckodex.org/schemas/client-model/v1",
+  "title": "SkillPack Unified Client Model",
+  "description": "Canonical data model shared across all SkillPack client surfaces. Generated bindings: Rust (schemars), TypeScript (json-schema-to-typescript), Swift (quicktype).",
+  "version": 1,
+  "definitions": {
+    "SkillSummary": {
+      "type": "object",
+      "description": "Lightweight skill list item for high-density UI.",
+      "required": ["id", "name", "version", "grade", "tier", "updatedAt"],
+      "properties": {
+        "id": { "type": "string", "format": "uuid", "description": "Canonical skill UUID." },
+        "name": { "type": "string", "description": "Skill directory name / package identifier." },
+        "displayName": { "type": "string", "description": "Human-readable name from manifest." },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(-.+)?$", "description": "SemVer string." },
+        "grade": { "$ref": "#/definitions/Grade" },
+        "tier": { "$ref": "#/definitions/Tier" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "isLocal": { "type": "boolean", "default": true, "description": "True if skill lives in canonical store; false if registry-only." },
+        "hasAssessment": { "type": "boolean", "default": false }
+      }
+    },
+    "SkillDetail": {
+      "type": "object",
+      "description": "Full skill representation for detail views and editing.",
+      "required": ["id", "name", "version", "grade", "tier", "manifest", "updatedAt"],
+      "properties": {
+        "id": { "type": "string", "format": "uuid" },
+        "name": { "type": "string" },
+        "displayName": { "type": "string" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(-.+)?$" },
+        "grade": { "$ref": "#/definitions/Grade" },
+        "tier": { "$ref": "#/definitions/Tier" },
+        "manifest": { "$ref": "#/definitions/SkillManifest" },
+        "assessment": { "$ref": "#/definitions/AssessmentResult" },
+        "lifecycle": { "$ref": "#/definitions/LifecycleState" },
+        "contentHash": { "type": "string", "pattern": "^[a-f0-9]{64}$", "description": "SHA-256 of skill content." },
+        "path": { "type": "string", "description": "Absolute or relative path to skill directory." },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "installedAt": { "type": "string", "format": "date-time" },
+        "registryUrl": { "type": "string", "format": "uri" }
+      }
+    },
+    "SkillManifest": {
+      "type": "object",
+      "description": "Subset of CNSB manifest relevant to clients.",
+      "required": ["apiVersion", "kind", "metadata"],
+      "properties": {
+        "apiVersion": { "type": "string", "enum": ["ckodex.org/skill/v1", "ckodex.org/skill/v1.1"] },
+        "kind": { "type": "string", "const": "Skill" },
+        "metadata": {
+          "type": "object",
+          "required": ["name", "description", "version"],
+          "properties": {
+            "name": { "type": "string" },
+            "description": { "type": "string" },
+            "synopsis": { "type": "string", "maxLength": 2048 },
+            "version": { "type": "string" },
+            "tags": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "ontology": {
+          "type": "object",
+          "properties": {
+            "subjects": { "type": "array", "items": { "type": "string" } },
+            "produces": { "type": "array", "items": { "type": "string" } },
+            "consumes": { "type": "array", "items": { "type": "string" } },
+            "related": { "type": "array", "items": { "type": "string" } },
+            "triggers": { "type": "array", "items": { "type": "string" } },
+            "exclusiveOf": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "runtime": {
+          "type": "object",
+          "properties": {
+            "implicitInvocation": { "type": "boolean", "default": true },
+            "minTier": { "type": "string", "enum": ["L0", "L1", "L2", "L3", "L4R", "L4X"] },
+            "maxTier": { "type": "string", "enum": ["L0", "L1", "L2", "L3", "L4R", "L4X"] },
+            "l4xAllowed": { "type": "boolean", "default": false }
+          }
+        },
+        "governance": {
+          "type": "object",
+          "properties": {
+            "scope": {
+              "type": "object",
+              "properties": {
+                "tenant": { "type": "string" },
+                "environment": { "type": "array", "items": { "type": "string" } },
+                "workspace": { "type": "string" }
+              }
+            },
+            "requiresTipForCrossTenant": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "AssessmentResult": {
+      "type": "object",
+      "description": "Full assessment with dimension breakdown.",
+      "required": ["id", "skillId", "totalScore", "grade", "dimensions", "issues", "assessedAt"],
+      "properties": {
+        "id": { "type": "string", "format": "uuid" },
+        "skillId": { "type": "string", "format": "uuid" },
+        "totalScore": { "type": "number", "minimum": 0, "maximum": 150 },
+        "grade": { "$ref": "#/definitions/Grade" },
+        "dimensions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/DimensionScore" }
+        },
+        "issues": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Issue" }
+        },
+        "bonusPoints": { "type": "integer", "minimum": 0 },
+        "stubCount": { "type": "integer", "minimum": 0 },
+        "assessedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "DimensionScore": {
+      "type": "object",
+      "required": ["dimensionId", "dimensionName", "score", "maxScore", "weight"],
+      "properties": {
+        "dimensionId": { "type": "string", "enum": ["identity", "security", "provenance", "documentation", "testing", "compatibility", "lifecycle", "governance", "evals_hitl"] },
+        "dimensionName": { "type": "string" },
+        "score": { "type": "number", "minimum": 0, "maximum": 100 },
+        "maxScore": { "type": "number", "minimum": 0, "maximum": 100 },
+        "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+        "findings": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "Issue": {
+      "type": "object",
+      "required": ["severity", "message", "dimensionId"],
+      "properties": {
+        "severity": { "type": "string", "enum": ["error", "warning", "info"] },
+        "dimensionId": { "type": "string" },
+        "message": { "type": "string" },
+        "path": { "type": "string" },
+        "line": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "SyncStatus": {
+      "type": "object",
+      "description": "Daemon and canonical store health snapshot.",
+      "required": ["root", "skillCount", "agents", "transport", "storageBackend"],
+      "properties": {
+        "root": { "type": "string", "description": "Canonical store path." },
+        "skillCount": { "type": "integer", "minimum": 0 },
+        "agents": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/AgentStatus" }
+        },
+        "transport": { "type": "string", "enum": ["local", "XPC", "gRPC", "REST"] },
+        "storageBackend": { "type": "string", "enum": ["local", "distributed"] },
+        "fdbStatus": { "type": "string", "enum": ["online", "offline", "n/a"] },
+        "rustFSStatus": { "type": "string", "enum": ["online", "offline", "n/a"] },
+        "lastSyncAt": { "type": "string", "format": "date-time" },
+        "isSyncing": { "type": "boolean" }
+      }
+    },
+    "AgentStatus": {
+      "type": "object",
+      "required": ["name", "type", "directory", "synced"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["symlink", "indexFile", "copy"] },
+        "directory": { "type": "string" },
+        "synced": { "type": "boolean" },
+        "skillCount": { "type": "integer" }
+      }
+    },
+    "RegistryEntry": {
+      "type": "object",
+      "description": "Search result from remote registry.",
+      "required": ["name", "version", "registry", "ociRef"],
+      "properties": {
+        "name": { "type": "string" },
+        "displayName": { "type": "string" },
+        "version": { "type": "string" },
+        "description": { "type": "string" },
+        "registry": { "type": "string" },
+        "ociRef": { "type": "string", "description": "e.g. ghcr.io/ckodex/my-skill:0.1.0" },
+        "grade": { "$ref": "#/definitions/Grade" },
+        "publishedAt": { "type": "string", "format": "date-time" },
+        "downloadCount": { "type": "integer" },
+        "author": { "type": "string" }
+      }
+    },
+    "LifecycleEvent": {
+      "type": "object",
+      "description": "Emitted on every promote/demote/supersede/retire.",
+      "required": ["eventId", "skillName", "decision", "newStatus", "decidedAt"],
+      "properties": {
+        "eventId": { "type": "string", "format": "uuid" },
+        "skillName": { "type": "string" },
+        "skillId": { "type": "string", "format": "uuid" },
+        "decision": { "type": "string", "enum": ["promoted", "demoted", "superseded", "retired"] },
+        "newStatus": { "type": "string", "enum": ["draft", "active", "deprecated", "retired"] },
+        "previousStatus": { "type": "string", "enum": ["draft", "active", "deprecated", "retired"] },
+        "decidedAt": { "type": "string", "format": "date-time" },
+        "supersededBy": { "type": "string" },
+        "actorUrn": { "type": "string", "pattern": "^urn:ckodex:actor:[a-z]+:[A-Za-z0-9._:-]+$" },
+        "scoreAtDecision": { "type": "number", "minimum": 0, "maximum": 1 },
+        "privacyMode": { "type": "string", "enum": ["debug-local", "audit-private", "public-anchor", "regulated-export"] }
+      }
+    },
+    "UserPreference": {
+      "type": "object",
+      "description": "Client-agnostic user settings. Stored per-client but schema is shared.",
+      "properties": {
+        "schemaVersion": { "type": "integer", "minimum": 1 },
+        "autoAssess": { "type": "boolean", "default": true },
+        "minimumGrade": { "type": "string", "enum": ["S+", "S", "A", "B", "C", "D", "F"], "default": "C" },
+        "aiProvider": { "type": "string", "enum": ["builtin", "copilot", "custom"], "default": "builtin" },
+        "showWizardOnNewWorkspace": { "type": "boolean", "default": true },
+        "serverUrl": { "type": "string", "format": "uri", "default": "http://localhost:50051" },
+        "preferredTransport": { "type": "string", "enum": ["gRPC", "REST", "auto"], "default": "auto" },
+        "theme": { "type": "string", "enum": ["system", "light", "dark"], "default": "system" },
+        "reducedMotion": { "type": "boolean", "default": false }
+      }
+    },
+    "ClientError": {
+      "type": "object",
+      "description": "Structured error returned by all surfaces.",
+      "required": ["code", "category", "severity", "message"],
+      "properties": {
+        "code": { "type": "string", "pattern": "^SKILLPACK_[A-Z_]+$" },
+        "category": { "type": "string", "enum": ["validation", "security", "network", "storage", "auth", "internal"] },
+        "severity": { "type": "string", "enum": ["fatal", "error", "warning", "info"] },
+        "message": { "type": "string" },
+        "details": { "type": "object" },
+        "clientHint": { "$ref": "#/definitions/ClientHint" },
+        "traceId": { "type": "string", "format": "uuid" }
+      }
+    },
+    "ClientHint": {
+      "type": "object",
+      "description": "Per-client rendering instructions. Clients MAY ignore hints they don't recognize.",
+      "properties": {
+        "cli": { "type": "string" },
+        "vscode": { "type": "string" },
+        "web": { "type": "string" },
+        "macos": { "type": "string" },
+        "cni": { "type": "string" },
+        "mcp": { "type": "string" }
+      }
+    },
+    "JobStatus": {
+      "type": "object",
+      "description": "Async job tracking for REST clients without streaming.",
+      "required": ["jobId", "status", "createdAt"],
+      "properties": {
+        "jobId": { "type": "string", "format": "uuid" },
+        "status": { "type": "string", "enum": ["pending", "running", "completed", "failed", "cancelled"] },
+        "progressPercent": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "result": {},
+        "error": { "$ref": "#/definitions/ClientError" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "completedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Grade": {
+      "type": "string",
+      "enum": ["S+", "S", "A", "B", "C", "D", "F"]
+    },
+    "Tier": {
+      "type": "string",
+      "enum": ["L0", "L1", "L2", "L3", "L4R", "L4X"]
+    },
+    "LifecycleState": {
+      "type": "object",
+      "required": ["status", "promotedAt"],
+      "properties": {
+        "status": { "type": "string", "enum": ["draft", "active", "deprecated", "retired"] },
+        "promotedAt": { "type": "string", "format": "date-time" },
+        "demotedAt": { "type": "string", "format": "date-time" },
+        "supersededBy": { "type": "string" },
+        "actorUrn": { "type": "string" }
+      }
+    }
+  },
+  "type": "object",
+  "required": ["schemaVersion"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 }
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "SKILL.md Template": {
+    "prefix": "skill-md",
+    "body": [
+      "---",
+      "name: ${1:my-skill}",
+      "version: ${2:0.1.0}",
+      "description: ${3:A brief description}",
+      "author: ${4:Your Name <email@example.com>}",
+      "---",
+      "",
+      "# ${1:my-skill}",
+      "",
+      "${3:A brief description}",
+      "",
+      "## Usage",
+      "",
+      "```bash",
+      "skillpack install ${1:my-skill}",
+      "```",
+      "",
+      "## Examples",
+      "",
+      "### Basic Usage",
+      "",
+      "```typescript",
+      "const result = await skill.run({ input: 'hello' });",
+      "```",
+      "",
+      "## Configuration",
+      "",
+      "Configure via `.skillpack.json` or environment variables:",
+      "",
+      "| Name | Type | Default | Description |",
+      "|------|------|---------|-------------|",
+      "| `${5:option}` | string | `${6:default}` | ${7:Description} |",
+      "",
+      "## Security",
+      "",
+      "This skill follows CKODEX security guidelines.",
+      ""
+    ],
+    "description": "Complete SKILL.md template"
+  },
+  "Usage Section": {
+    "prefix": "skill-usage",
+    "body": [
+      "## Usage",
+      "",
+      "```bash",
+      "skillpack install ${1:skill-name}",
+      "```",
+      "",
+      "```typescript",
+      "import { ${2:Skill} } from '${1:skill-name}';",
+      "",
+      "const skill = new ${2:Skill}();",
+      "const result = await skill.run({ ${3:input}: '${4:value}' });",
+      "```",
+      ""
+    ],
+    "description": "Usage section for SKILL.md"
+  },
+  "Example Section": {
+    "prefix": "skill-example",
+    "body": [
+      "### ${1:Example Name}",
+      "",
+      "${2:Brief description of this example.}",
+      "",
+      "```typescript",
+      "${3:// Example code}",
+      "```",
+      "",
+      "**Output:**",
+      "```json",
+      "${4:{ \"result\": \"...\" \\}}",
+      "```",
+      ""
+    ],
+    "description": "Example section for SKILL.md"
+  },
+  "Configuration Table": {
+    "prefix": "skill-config",
+    "body": [
+      "## Configuration",
+      "",
+      "| Name | Type | Default | Description |",
+      "|------|------|---------|-------------|",
+      "| `${1:option}` | ${2|string,number,boolean|} | `${3:default}` | ${4:Description} |",
+      ""
+    ],
+    "description": "Configuration table for SKILL.md"
+  },
+  "Security Section": {
+    "prefix": "skill-security",
+    "body": [
+      "## Security",
+      "",
+      "This skill follows CKODEX security guidelines:",
+      "",
+      "- All operations are idempotent",
+      "- Inputs are validated before processing",
+      "- Secrets are never logged or echoed",
+      "- Sigstore signing is enabled for releases",
+      "",
+      "### Threat Model",
+      "",
+      "See `security/threat-model.yaml` for STRIDE analysis.",
+      ""
+    ],
+    "description": "Security section for SKILL.md"
+  },
+  "Changelog Entry": {
+    "prefix": "skill-changelog",
+    "body": [
+      "## Changelog",
+      "",
+      "### [${1:0.1.0}] - ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}",
+      "",
+      "#### Added",
+      "- ${2:Initial release}",
+      ""
+    ],
+    "description": "Changelog section for SKILL.md"
+  }
+}

@@ -1,0 +1,550 @@
+syntax = "proto3";
+
+package skillpack.v1;
+
+option go_package = "github.com/ckodex/skillpack/gen/go/skillpack/v1";
+
+// ========================================
+// SkillPack Assessment Service - Kernel Space
+// ========================================
+
+service SkillPackService {
+  // Assess a skill pack
+  rpc Assess(AssessRequest) returns (AssessResponse);
+  
+  // Grade a skill pack
+  rpc Grade(GradeRequest) returns (GradeResponse);
+  
+  // Generate assessment report
+  rpc Report(ReportRequest) returns (ReportResponse);
+  
+  // Stream assessment progress
+  rpc AssessStream(AssessRequest) returns (stream AssessEvent);
+
+  // Bidirectional batch assessment stream
+  rpc AssessBatchStream(stream AssessRequest) returns (stream AssessEvent);
+}
+
+// ========================================
+// Skills Index Service (like S&P 500)
+// ========================================
+
+service IndexService {
+  // Create a new index
+  rpc CreateIndex(CreateIndexRequest) returns (CreateIndexResponse);
+  
+  // Get index by ID
+  rpc GetIndex(GetIndexRequest) returns (GetIndexResponse);
+  
+  // List all indices
+  rpc ListIndices(ListIndicesRequest) returns (ListIndicesResponse);
+  
+  // Add skill to index
+  rpc AddConstituent(AddConstituentRequest) returns (AddConstituentResponse);
+  
+  // Calculate current index value
+  rpc CalculateValue(CalculateValueRequest) returns (CalculateValueResponse);
+  
+  // Get index history
+  rpc GetHistory(GetHistoryRequest) returns (GetHistoryResponse);
+}
+
+// ========================================
+// Ratings Service (Moody's-style)
+// ========================================
+
+service RatingsService {
+  // Get skill rating
+  rpc GetRating(GetRatingRequest) returns (GetRatingResponse);
+  
+  // Get rating history
+  rpc GetRatingHistory(GetRatingHistoryRequest) returns (GetRatingHistoryResponse);
+  
+  // Compare ratings
+  rpc CompareRatings(CompareRatingsRequest) returns (CompareRatingsResponse);
+}
+
+// ========================================
+// Query Service (Search & CanIUse)
+// ========================================
+
+service QueryService {
+  // Search skills with filters
+  rpc Search(SearchRequest) returns (SearchResponse);
+  
+  // Get skill profile (full details)
+  rpc GetSkillProfile(GetSkillProfileRequest) returns (GetSkillProfileResponse);
+  
+  // Get CanIUse compatibility
+  rpc GetCompatibility(GetCompatibilityRequest) returns (GetCompatibilityResponse);
+  
+  // Get cost estimate
+  rpc GetCostEstimate(GetCostEstimateRequest) returns (GetCostEstimateResponse);
+}
+
+// ========================================
+// Assessment Messages
+// ========================================
+
+message AssessRequest {
+  string skill_path = 1;
+  optional double min_score = 2;
+  optional string skill_name = 3;
+  optional string skill_version = 4;
+}
+
+message AssessResponse {
+  Assessment assessment = 1;
+  bool meets_minimum = 2;
+}
+
+message GradeRequest {
+  string skill_path = 1;
+  string minimum_grade = 2;
+}
+
+message GradeResponse {
+  string grade = 1;
+  double total_score = 2;
+  bool meets_minimum = 3;
+}
+
+message ReportRequest {
+  string skill_path = 1;
+  ReportFormat format = 2;
+}
+
+message ReportResponse {
+  string content = 1;
+  ReportFormat format = 2;
+}
+
+message Assessment {
+  string id = 1;
+  SkillIdentity skill = 2;
+  map<string, double> dimension_scores = 3;
+  BonusPoints bonus_points = 4;
+  repeated Issue issues = 5;
+  string assessed_at = 6;
+  double base_score = 7;
+  double total_score = 8;
+  string grade = 9;
+}
+
+message SkillIdentity {
+  string name = 1;
+  string version = 2;
+  string path = 3;
+}
+
+message BonusPoints {
+  bool slsa_level_3 = 1;
+  bool sigstore_signing = 2;
+  bool dagger_pipeline = 3;
+  bool stride_threat_model = 4;
+  bool mcp_server = 5;
+  uint32 total = 6;
+}
+
+message Issue {
+  string dimension = 1;
+  Severity severity = 2;
+  string message = 3;
+  optional string file = 4;
+  optional uint32 line = 5;
+}
+
+message AssessEvent {
+  oneof event {
+    DimensionProgress dimension_progress = 1;
+    DimensionComplete dimension_complete = 2;
+    AssessmentComplete assessment_complete = 3;
+  }
+}
+
+message DimensionProgress {
+  string dimension = 1;
+  string status = 2;
+}
+
+message DimensionComplete {
+  string dimension = 1;
+  double score = 2;
+  repeated Issue issues = 3;
+}
+
+message AssessmentComplete {
+  Assessment assessment = 1;
+}
+
+// ========================================
+// Index Messages
+// ========================================
+
+message CreateIndexRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string methodology = 4;
+}
+
+message CreateIndexResponse {
+  SkillsIndex index = 1;
+}
+
+message GetIndexRequest {
+  string index_id = 1;
+}
+
+message GetIndexResponse {
+  SkillsIndex index = 1;
+  IndexValue current_value = 2;
+}
+
+message ListIndicesRequest {
+  optional string category = 1;
+  optional uint32 limit = 2;
+}
+
+message ListIndicesResponse {
+  repeated SkillsIndex indices = 1;
+}
+
+message AddConstituentRequest {
+  string index_id = 1;
+  string skill_ref = 2;
+  optional double weight = 3;
+}
+
+message AddConstituentResponse {
+  SkillsIndex index = 1;
+}
+
+message CalculateValueRequest {
+  string index_id = 1;
+}
+
+message CalculateValueResponse {
+  IndexValue value = 1;
+  IndexTrend trend = 2;
+}
+
+message GetHistoryRequest {
+  string index_id = 1;
+  optional string start_date = 2;
+  optional string end_date = 3;
+}
+
+message GetHistoryResponse {
+  repeated IndexValue values = 1;
+}
+
+message SkillsIndex {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string methodology = 4;
+  repeated IndexConstituent constituents = 5;
+  string created_at = 6;
+  string last_rebalanced = 7;
+}
+
+message IndexConstituent {
+  string skill_ref = 1;
+  double weight = 2;
+  string added_at = 3;
+  optional double quality_score = 4;
+  optional string grade = 5;
+  optional string reputation_tier = 6;
+  optional uint32 compatibility_score = 7;
+  optional string carbon_rating = 8;
+  optional double monthly_cost_usd = 9;
+  optional string moodys_rating = 10;
+}
+
+message IndexValue {
+  string index_id = 1;
+  double value = 2;
+  string timestamp = 3;
+  uint32 constituent_count = 4;
+  string grade = 5;
+}
+
+message IndexTrend {
+  TrendDirection direction = 1;
+  double absolute_change = 2;
+  double percent_change = 3;
+}
+
+// ========================================
+// Ratings Messages
+// ========================================
+
+message GetRatingRequest {
+  string skill_ref = 1;
+}
+
+message GetRatingResponse {
+  RatingAssessment rating = 1;
+}
+
+message GetRatingHistoryRequest {
+  string skill_ref = 1;
+  optional uint32 limit = 2;
+}
+
+message GetRatingHistoryResponse {
+  repeated RatingChange history = 1;
+}
+
+message CompareRatingsRequest {
+  repeated string skill_refs = 1;
+}
+
+message CompareRatingsResponse {
+  repeated RatingComparison comparisons = 1;
+  string best_rated = 2;
+}
+
+message RatingAssessment {
+  string skill_ref = 1;
+  string rating = 2;
+  RatingCategory category = 3;
+  bool is_investment_grade = 4;
+  RatingOutlook outlook = 5;
+  string assessed_at = 6;
+  RatingFactors factors = 7;
+  optional string notes = 8;
+}
+
+message RatingFactors {
+  double quality_score = 1;
+  double security_score = 2;
+  double governance_score = 3;
+  double track_record_score = 4;
+  double maintainer_score = 5;
+  double composite = 6;
+}
+
+message RatingChange {
+  string from_rating = 1;
+  string to_rating = 2;
+  RatingAction action = 3;
+  string reason = 4;
+  string timestamp = 5;
+}
+
+message RatingComparison {
+  string skill_ref = 1;
+  string rating = 2;
+  bool is_investment_grade = 3;
+  double composite_score = 4;
+}
+
+// ========================================
+// Query Messages
+// ========================================
+
+message SearchRequest {
+  optional string text = 1;
+  optional double min_score = 2;
+  optional string min_grade = 3;
+  repeated string requires_capabilities = 4;
+  optional string min_reputation = 5;
+  optional string in_index = 6;
+  repeated string tags = 7;
+  SortField sort_by = 8;
+  SortDirection sort_direction = 9;
+  optional uint32 limit = 10;
+  optional uint32 offset = 11;
+}
+
+message SearchResponse {
+  repeated SkillSummary skills = 1;
+  uint32 total_count = 2;
+  uint32 page_size = 3;
+  uint32 offset = 4;
+}
+
+message GetSkillProfileRequest {
+  string skill_ref = 1;
+}
+
+message GetSkillProfileResponse {
+  SkillProfile profile = 1;
+}
+
+message GetCompatibilityRequest {
+  string skill_ref = 1;
+}
+
+message GetCompatibilityResponse {
+  SkillCompatibility compatibility = 1;
+}
+
+message GetCostEstimateRequest {
+  string skill_ref = 1;
+  optional uint64 monthly_invocations = 2;
+  optional string region = 3;
+}
+
+message GetCostEstimateResponse {
+  CostEstimate cost = 1;
+}
+
+message SkillSummary {
+  string skill_ref = 1;
+  string name = 2;
+  optional string description = 3;
+  double score = 4;
+  string grade = 5;
+  string moodys_rating = 6;
+  string reputation_tier = 7;
+  uint32 compatibility_score = 8;
+  string carbon_rating = 9;
+  double monthly_cost_usd = 10;
+  repeated string tags = 11;
+}
+
+message SkillProfile {
+  SkillSummary summary = 1;
+  SkillCompatibility compatibility = 2;
+  SkillReputation reputation = 3;
+  CostEstimate cost = 4;
+  RatingAssessment rating = 5;
+  repeated string indices = 6;
+}
+
+message SkillCompatibility {
+  string skill_ref = 1;
+  repeated CapabilitySupport capabilities = 2;
+  uint32 compatibility_score = 3;
+  string updated_at = 4;
+}
+
+message CapabilitySupport {
+  string capability_id = 1;
+  string capability_name = 2;
+  SupportLevel level = 3;
+  optional string notes = 4;
+}
+
+message SkillReputation {
+  string skill_ref = 1;
+  uint32 score = 2;
+  string tier = 3;
+  repeated VerificationBadge badges = 4;
+  UsageMetrics metrics = 5;
+}
+
+message VerificationBadge {
+  string badge_type = 1;
+  string issued_by = 2;
+  string issued_at = 3;
+}
+
+message UsageMetrics {
+  uint64 total_downloads = 1;
+  uint64 weekly_downloads = 2;
+  uint32 dependent_skills = 3;
+  uint32 stars = 4;
+}
+
+message CostEstimate {
+  string skill_ref = 1;
+  double monthly_cost_usd = 2;
+  string cost_tier = 3;
+  CarbonFootprint carbon = 4;
+  TokenCost tokens = 5;
+}
+
+message CarbonFootprint {
+  double co2_grams_per_invocation = 1;
+  double monthly_co2_kg = 2;
+  string carbon_rating = 3;
+  optional string region = 4;
+}
+
+message TokenCost {
+  uint64 input_tokens = 1;
+  uint64 output_tokens = 2;
+  double cost_per_invocation = 3;
+}
+
+// ========================================
+// Enums
+// ========================================
+
+enum ReportFormat {
+  REPORT_FORMAT_UNSPECIFIED = 0;
+  REPORT_FORMAT_JSON = 1;
+  REPORT_FORMAT_SARIF = 2;
+  REPORT_FORMAT_MARKDOWN = 3;
+}
+
+enum Severity {
+  SEVERITY_UNSPECIFIED = 0;
+  SEVERITY_ERROR = 1;
+  SEVERITY_WARNING = 2;
+  SEVERITY_NOTE = 3;
+}
+
+enum TrendDirection {
+  TREND_DIRECTION_UNSPECIFIED = 0;
+  TREND_DIRECTION_UP = 1;
+  TREND_DIRECTION_DOWN = 2;
+  TREND_DIRECTION_FLAT = 3;
+}
+
+enum RatingCategory {
+  RATING_CATEGORY_UNSPECIFIED = 0;
+  RATING_CATEGORY_PRIME = 1;
+  RATING_CATEGORY_HIGH_GRADE = 2;
+  RATING_CATEGORY_MEDIUM_GRADE = 3;
+  RATING_CATEGORY_SPECULATIVE = 4;
+  RATING_CATEGORY_HIGHLY_SPECULATIVE = 5;
+  RATING_CATEGORY_SUBSTANTIAL_RISK = 6;
+}
+
+enum RatingOutlook {
+  RATING_OUTLOOK_UNSPECIFIED = 0;
+  RATING_OUTLOOK_POSITIVE = 1;
+  RATING_OUTLOOK_STABLE = 2;
+  RATING_OUTLOOK_NEGATIVE = 3;
+  RATING_OUTLOOK_UNDER_REVIEW = 4;
+}
+
+enum RatingAction {
+  RATING_ACTION_UNSPECIFIED = 0;
+  RATING_ACTION_UPGRADE = 1;
+  RATING_ACTION_DOWNGRADE = 2;
+  RATING_ACTION_AFFIRMED = 3;
+  RATING_ACTION_INITIAL = 4;
+  RATING_ACTION_WITHDRAWN = 5;
+}
+
+enum SupportLevel {
+  SUPPORT_LEVEL_UNSPECIFIED = 0;
+  SUPPORT_LEVEL_FULL = 1;
+  SUPPORT_LEVEL_PARTIAL = 2;
+  SUPPORT_LEVEL_NONE = 3;
+  SUPPORT_LEVEL_UNKNOWN = 4;
+  SUPPORT_LEVEL_DEPRECATED = 5;
+}
+
+enum SortField {
+  SORT_FIELD_UNSPECIFIED = 0;
+  SORT_FIELD_SCORE = 1;
+  SORT_FIELD_NAME = 2;
+  SORT_FIELD_REPUTATION = 3;
+  SORT_FIELD_DOWNLOADS = 4;
+  SORT_FIELD_UPDATED = 5;
+  SORT_FIELD_COST = 6;
+  SORT_FIELD_CARBON = 7;
+}
+
+enum SortDirection {
+  SORT_DIRECTION_UNSPECIFIED = 0;
+  SORT_DIRECTION_ASC = 1;
+  SORT_DIRECTION_DESC = 2;
+}

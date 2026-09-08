@@ -1,0 +1,22 @@
+%% CKODEX STX v1 — Publish-Subscribe Sequence (T4 swimlane)
+%% Capability handshake (unauthenticated) -> bearer auth -> query/response -> event stream
+sequenceDiagram
+    autonumber
+    participant C as Consumer
+    participant P as Publisher (harness)
+    Note over C,P: 1. Capability handshake (unauthenticated)
+    C->>P: GET /capability
+    P-->>C: CapabilityDescriptor<br/>defaultPrivacyMode = audit-private
+
+    Note over C,P: 2. Query (authenticated; Stx-Privacy-Mode header)
+    C->>P: GET /sessions/{id}<br/>Stx-Privacy-Mode: audit-private
+    P-->>C: StxQueryResponse<br/>(nodes + redacted-paths)
+
+    Note over C,P: 3. Event stream (server-streaming, per-session sequence)
+    C->>P: GET /events?sessionId=...&since=0
+    P-->>C: StxEvent seq=0 session_open
+    P-->>C: StxEvent seq=1 skill_registered
+    P-->>C: StxEvent seq=2 evidence_emitted
+    P-->>C: StxEvent seq=3 tier_transition<br/>references evidenceBundleId from seq=2
+
+    Note over C: Consumer rejects any event with<br/>sequence <= last_seen[sessionId]

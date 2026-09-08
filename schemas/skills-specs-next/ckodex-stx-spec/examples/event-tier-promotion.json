@@ -1,0 +1,17 @@
+{
+  "apiVersion": "ckodex.org/stx/v1",
+  "kind": "StxEvent",
+  "sessionId": "urn:ckodex:session:demo-001",
+  "sequence": 4,
+  "timestamp": "2026-05-25T13:14:15.123456Z",
+  "eventType": "tier_transition",
+  "payload": {
+    "transitionId": "urn:ckodex:transition:state-abc:1",
+    "skillStateId": "urn:ckodex:state:abc-12345678",
+    "fromTier": "L2",
+    "toTier": "L3",
+    "trigger": "intent_to_invoke",
+    "evidenceBundleId": "urn:ckodex:evidence:state-abc:0"
+  },
+  "privacyMode": "audit-private"
+}

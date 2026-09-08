@@ -1,0 +1,139 @@
+{
+    "$id": "https://schemas.ckodex.org/evidence/v1/envelope-standalone.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "OpenEvidence Envelope v1 - Standalone",
+    "description": "Self-contained evidence envelope schema with embedded common types",
+    "type": "object",
+    "required": [
+        "id",
+        "subject",
+        "statement",
+        "issuedAt",
+        "actor",
+        "signatures"
+    ],
+    "properties": {
+        "id": {
+            "$ref": "#/$defs/Urn"
+        },
+        "subject": {
+            "type": "object",
+            "required": ["urn", "kind"],
+            "properties": {
+                "urn": { "$ref": "#/$defs/Urn" },
+                "kind": {
+                    "type": "string",
+                    "description": "Classifier (e.g. 'Model', 'Dataset', 'SkillBundle', 'AgentApp')."
+                },
+                "labels": { "$ref": "#/$defs/LabelMap" }
+            },
+            "additionalProperties": false
+        },
+        "statement": {
+            "type": "object",
+            "required": ["type", "payload"],
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "Statement type (e.g. 'BuildProvenance', 'Inference', 'PolicyDecision')."
+                },
+                "schema": {
+                    "type": "string",
+                    "format": "uri"
+                },
+                "payload": {
+                    "type": "object"
+                }
+            },
+            "additionalProperties": false
+        },
+        "issuedAt": { "$ref": "#/$defs/Timestamp" },
+        "actor": { "$ref": "#/$defs/Actor" },
+        "gal": { "$ref": "#/$defs/GAL" },
+        "asc": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/ASC" }
+        },
+        "chain": {
+            "type": "object",
+            "properties": {
+                "previous": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/EvidenceRef" }
+                }
+            },
+            "additionalProperties": false
+        },
+        "signatures": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "$ref": "#/$defs/Signature" }
+        }
+    },
+    "$defs": {
+        "Urn": {
+            "type": "string",
+            "pattern": "^urn:",
+            "minLength": 4
+        },
+        "Timestamp": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "LabelMap": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+        },
+        "GAL": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5
+        },
+        "ASC": {
+            "type": "string"
+        },
+        "ActorType": {
+            "type": "string",
+            "enum": ["Human", "Agent", "Service", "System"]
+        },
+        "Actor": {
+            "type": "object",
+            "required": ["urn", "type"],
+            "properties": {
+                "urn": { "$ref": "#/$defs/Urn" },
+                "type": { "$ref": "#/$defs/ActorType" },
+                "displayName": { "type": "string" },
+                "tenantUrn": { "$ref": "#/$defs/Urn" },
+                "labels": { "$ref": "#/$defs/LabelMap" }
+            },
+            "additionalProperties": false
+        },
+        "Signature": {
+            "type": "object",
+            "required": ["alg", "value", "keyId"],
+            "properties": {
+                "alg": {
+                    "type": "string",
+                    "description": "Signature algorithm (e.g. 'ed25519', 'ecdsa-p256-sha256')."
+                },
+                "value": {
+                    "type": "string",
+                    "contentEncoding": "base64"
+                },
+                "keyId": { "$ref": "#/$defs/Urn" },
+                "createdAt": { "$ref": "#/$defs/Timestamp" }
+            },
+            "additionalProperties": false
+        },
+        "EvidenceRef": {
+            "type": "object",
+            "required": ["id"],
+            "properties": {
+                "id": { "$ref": "#/$defs/Urn" },
+                "kind": { "type": "string" }
+            },
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false
+}

@@ -1,0 +1,134 @@
+{
+  "Skill Manifest": {
+    "prefix": "skill-manifest",
+    "body": [
+      "{",
+      "  \"\\$schema\": \"./schemas/cnsb.schema.json\",",
+      "  \"metadata\": {",
+      "    \"name\": \"${1:my-skill}\",",
+      "    \"version\": \"${2:0.1.0}\",",
+      "    \"description\": \"${3:A skill that...}\",",
+      "    \"author\": \"${4:Author <email@example.com>}\"",
+      "  },",
+      "  \"lifecycle\": {",
+      "    \"install\": { \"command\": \"${5:npm ci}\", \"timeout\": \"5m\" },",
+      "    \"verify\": { \"command\": \"${6:npm test}\" },",
+      "    \"uninstall\": { \"command\": \"${7:rm -rf node_modules}\" }",
+      "  },",
+      "  \"capacities\": [$0]",
+      "}"
+    ],
+    "description": "Complete skill manifest with metadata and lifecycle"
+  },
+  "MCP Capacity": {
+    "prefix": "capacity-mcp",
+    "body": [
+      "{",
+      "  \"type\": \"mcp\",",
+      "  \"server\": {",
+      "    \"command\": \"${1:node}\",",
+      "    \"args\": [\"${2:capacities/mcp/server.js}\"]",
+      "  },",
+      "  \"tools\": [",
+      "    {",
+      "      \"name\": \"${3:skill_action}\",",
+      "      \"description\": \"${4:Performs an action}\",",
+      "      \"inputSchema\": {",
+      "        \"type\": \"object\",",
+      "        \"properties\": {",
+      "          \"${5:input}\": { \"type\": \"string\" }",
+      "        }",
+      "      }",
+      "    }",
+      "  ]",
+      "}"
+    ],
+    "description": "MCP (Model Context Protocol) capacity for AI agents"
+  },
+  "Lifecycle Operations": {
+    "prefix": "lifecycle",
+    "body": [
+      "\"lifecycle\": {",
+      "  \"install\": {",
+      "    \"command\": \"${1:npm ci}\",",
+      "    \"timeout\": \"${2:5m}\"",
+      "  },",
+      "  \"verify\": {",
+      "    \"command\": \"${3:npm test}\"",
+      "  },",
+      "  \"upgrade\": {",
+      "    \"command\": \"${4:npm update}\"",
+      "  },",
+      "  \"uninstall\": {",
+      "    \"command\": \"${5:rm -rf node_modules}\"",
+      "  }",
+      "}"
+    ],
+    "description": "Lifecycle operations (install, verify, upgrade, uninstall)"
+  },
+  "Security Configuration": {
+    "prefix": "security",
+    "body": [
+      "\"security\": {",
+      "  \"attestation\": {",
+      "    \"sigstore\": true,",
+      "    \"slsa_level\": ${1:3}",
+      "  },",
+      "  \"sbom\": {",
+      "    \"format\": \"cyclonedx\",",
+      "    \"generate_on_build\": true",
+      "  },",
+      "  \"permissions\": [",
+      "    \"${2:network}\",",
+      "    \"${3:filesystem:read}\"",
+      "  ]",
+      "}"
+    ],
+    "description": "Security configuration with attestation and SBOM"
+  },
+  "Skill Example": {
+    "prefix": "example",
+    "body": [
+      "{",
+      "  \"name\": \"${1:basic-usage}\",",
+      "  \"description\": \"${2:Shows basic usage}\",",
+      "  \"input\": ${3:{}},",
+      "  \"expected_output\": ${4:{}}",
+      "}"
+    ],
+    "description": "Skill example with input and expected output"
+  },
+  "Parameter Definition": {
+    "prefix": "param",
+    "body": [
+      "{",
+      "  \"name\": \"${1:param_name}\",",
+      "  \"type\": \"${2|string,number,boolean,array,object|}\",",
+      "  \"description\": \"${3:Parameter description}\",",
+      "  \"required\": ${4|true,false|},",
+      "  \"default\": ${5:null}",
+      "}"
+    ],
+    "description": "Skill parameter definition"
+  },
+  "Tool Definition": {
+    "prefix": "tool",
+    "body": [
+      "{",
+      "  \"name\": \"${1:tool_name}\",",
+      "  \"description\": \"${2:What this tool does}\",",
+      "  \"inputSchema\": {",
+      "    \"type\": \"object\",",
+      "    \"properties\": {",
+      "      \"${3:input}\": {",
+      "        \"type\": \"${4|string,number,boolean,array,object|}\",",
+      "        \"description\": \"${5:Input description}\"",
+      "      }",
+      "    },",
+      "    \"required\": [\"${3:input}\"]",
+      "  }",
+      "}"
+    ],
+    "description": "MCP tool definition with input schema"
+  }
+}

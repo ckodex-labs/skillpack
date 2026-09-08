@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillPack Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>SkillPack Dashboard</h1>
+        <span class="badge">Alpha</span>
+    </header>
+
+    <main>
+        <section id="connection">
+            <h2>Connection</h2>
+            <div id="conn-status" class="status disconnected">Disconnected</div>
+            <button id="btn-connect">Connect WebSocket</button>
+            <button id="btn-disconnect" disabled>Disconnect</button>
+        </section>
+
+        <section id="skills">
+            <h2>Skills</h2>
+            <button id="btn-refresh">Refresh List</button>
+            <table id="skills-table">
+                <thead>
+                    <tr><th>Ref</th><th>Name</th><th>Grade</th><th>Score</th></tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+
+        <section id="events">
+            <h2>Live Events</h2>
+            <div id="event-log"></div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

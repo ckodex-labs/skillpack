@@ -1,0 +1,26 @@
+{
+  "apiVersion": "cnsb.ckodex.org/v1",
+  "kind": "SkillBundle",
+  "metadata": {
+    "name": "cnsb-only",
+    "urn": "urn:cnsb:cnsb-only:1.0.0",
+    "version": "1.0.0"
+  },
+  "spec": {
+    "skills": [{
+      "name": "cnsb-only",
+      "description": "Pure CNSB SkillBundle without SKILL.md.",
+      "asc": ["OIS-ASC-001"],
+      "galMin": 2,
+      "galMax": 4,
+      "examples": [
+        {"title": "basic", "input": "echo hello", "expected": "hello"}
+      ],
+      "lifecycle": {
+        "install":     {"command": "echo installing"},
+        "uninstall":   {"command": "echo uninstalling"},
+        "verify":      {"command": "test -f ."}
+      }
+    }]
+  }
+}

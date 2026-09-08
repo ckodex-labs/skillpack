@@ -1,0 +1,153 @@
+/* ============================================================
+ * SkillPack Registry · Accessibility + Theme Extension Layer
+ * Extends CKODEX-DS-1 with:
+ *   1. A 4th theme [data-theme="fc"] — a faithful EMULATION of an
+ *      OS forced-colors / Windows High Contrast surface, so the look
+ *      is demonstrable in any browser.
+ *   2. Real @media (forced-colors: active) rules — so the page also
+ *      works correctly on a genuine forced-colors OS surface.
+ *   3. Global focus-visible rings (WCAG 3.0 / APCA · keyboard parity).
+ *
+ * Why this file exists: the base DS paints all component chrome with
+ * clip-path + inset box-shadow rings. Both are STRIPPED in forced-colors
+ * mode (box-shadow removed, backgrounds flattened). Without solid-border
+ * fallbacks, every card/badge/button would lose its outline and become
+ * an unreadable shape. The rules below restore real borders.
+ * ============================================================ */
+
+/* ---------- A · GLOBAL FOCUS PARITY (all themes) ---------- */
+:where(button, a, input, [tabindex], [role="button"], [role="tab"], [role="option"]):focus-visible {
+  outline: 2px solid var(--ck-accent);
+  outline-offset: 2px;
+}
+/* Yellow box-ring keeps the canonical look on top of the outline */
+.ckr-focusring:focus-visible {
+  box-shadow: var(--ck-ring-focus);
+  outline: 2px solid var(--ck-accent);
+  outline-offset: 2px;
+}
+/* Remove the focus ring only when pointer-driven, never for keyboard */
+:focus:not(:focus-visible) { outline: none; }
+
+/* Skip link — first tab stop */
+.ckr-skip {
+  position: absolute;
+  left: 8px; top: -48px;
+  z-index: 100;
+  padding: 8px 14px;
+  background: var(--ck-accent);
+  color: var(--ck-deep-blue);
+  font: 700 12px/1 'Lato', sans-serif;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  border-bottom: none;
+  transition: top .12s var(--ck-ease-resolve);
+}
+.ckr-skip:focus { top: 8px; outline: 2px solid var(--ck-fg-1); }
+
+/* sr-only — visible to AT, not to sighted users */
+.ckr-sr {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* ============================================================
+ * B · [data-theme="fc"] — FORCED-COLORS EMULATION
+ * A self-contained black/white/cyan/gold palette that mirrors what
+ * a Windows High Contrast "Aquatic"-style scheme produces. Tokens are
+ * remapped; component chrome is converted from box-shadow → border.
+ * ============================================================ */
+[data-theme="fc"] {
+  --ck-bg-0:      #000000;
+  --ck-bg-1:      #000000;
+  --ck-bg-2:      #000000;
+  --ck-bg-elev:   #000000;
+
+  --ck-fg-1:      #FFFFFF;
+  --ck-fg-2:      #FFFFFF;
+  --ck-fg-3:      #FFFFFF;
+  --ck-fg-mute:   #FFFFFF;
+
+  --ck-stroke:    #FFFFFF;
+  --ck-stroke-2c: #FFFFFF;
+  --ck-rail:      #1AEBFF;          /* system "accent" cyan */
+
+  --ck-accent:    #FFE100;          /* selected / focus gold  */
+  --ck-witness:   #1AEBFF;          /* link cyan              */
+  --ck-text-role: #FFE100;
+  --ck-link:      #1AEBFF;
+  --ck-link-hov:  #FFFFFF;
+
+  --ck-deny:      #FF6D6D;          /* system error red       */
+  color-scheme: dark;
+
+  /* fc tokens consumed by components for border fallbacks */
+  --fc: 1;
+  --fc-line: #FFFFFF;
+  --fc-sel: #FFE100;
+  --fc-link: #1AEBFF;
+  --fc-err: #FF6D6D;
+}
+[data-theme="fc"] * { opacity: 1 !important; }
+
+/* In the emulation, convert ring-drawn chrome into solid borders so
+   nothing relies on box-shadow (which a real FC surface would drop). */
+[data-theme="fc"] .ckr-bento,
+[data-theme="fc"] .ckr-panel,
+[data-theme="fc"] .ckr-row,
+[data-theme="fc"] .ckr-input,
+[data-theme="fc"] .ckr-chip,
+[data-theme="fc"] .ckr-badge,
+[data-theme="fc"] .ckr-btn,
+[data-theme="fc"] .ckr-seg {
+  box-shadow: none !important;
+  outline: 1px solid var(--fc-line);
+  outline-offset: -1px;
+}
+[data-theme="fc"] .ckr-btn--primary,
+[data-theme="fc"] .ckr-seg[aria-selected="true"],
+[data-theme="fc"] .ckr-chip[aria-pressed="true"] {
+  background: var(--fc-sel) !important;
+  color: #000 !important;
+  outline-color: var(--fc-sel);
+}
+[data-theme="fc"] .ckr-btn--deny { outline-color: var(--fc-err); color: var(--fc-err) !important; }
+[data-theme="fc"] a, [data-theme="fc"] .ckr-link { color: var(--fc-link) !important; }
+[data-theme="fc"] .ckr-rail > i { outline: 1px solid var(--fc-line); outline-offset: -1px; }
+
+/* ============================================================
+ * C · REAL @media (forced-colors: active)
+ * Applies on a genuine OS forced-colors surface, on top of WHATEVER
+ * data-theme is active. Uses CSS system color keywords so the user's
+ * own scheme is honoured. forced-color-adjust:auto is the default —
+ * we only restore structural borders the DS painted with box-shadow.
+ * ============================================================ */
+@media (forced-colors: active) {
+  .ckr-bento, .ckr-panel, .ckr-row, .ckr-input, .ckr-chip, .ckr-seg {
+    border: 1px solid CanvasText;
+    box-shadow: none !important;
+  }
+  .ckr-badge { border: 1px solid CanvasText; }
+  .ckr-btn {
+    border: 1px solid ButtonText;
+    box-shadow: none !important;
+  }
+  .ckr-btn--primary, .ckr-seg[aria-selected="true"], .ckr-chip[aria-pressed="true"] {
+    background: Highlight;
+    color: HighlightText;
+    border-color: Highlight;
+  }
+  .ckr-rail > i { border: 1px solid CanvasText; }
+  .ckr-rail > i.on { background: Highlight; }
+  a, .ckr-link { color: LinkText; }
+  :focus-visible { outline: 2px solid Highlight !important; outline-offset: 2px; }
+  /* SVG glyphs/meters re-map to system ink */
+  .ckr-glyph { forced-color-adjust: auto; }
+}
+
+/* ---------- D · reduced motion (extends DS) ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .ckr-spin, .ckr-pulse, .ckr-stream-bar { animation: none !important; }
+  * { scroll-behavior: auto !important; }
+}

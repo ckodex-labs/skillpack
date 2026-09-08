@@ -1,0 +1,39 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "stx":      "https://ckodex.org/stx/v1/",
+    "ckodex":   "https://ckodex.org/vocab/",
+    "schema":   "https://schema.org/",
+    "dcterms":  "http://purl.org/dc/terms/",
+    "xsd":      "http://www.w3.org/2001/XMLSchema#",
+
+    "Harness":          "stx:Harness",
+    "Session":          "stx:Session",
+    "SkillState":       "stx:SkillState",
+    "TierTransition":   "stx:TierTransition",
+    "EvidenceBundle":   "stx:EvidenceBundle",
+    "AttestationChain": "stx:AttestationChain",
+    "PolicyGate":       "stx:PolicyGate",
+    "CapabilityDescriptor": "stx:CapabilityDescriptor",
+
+    "tier":         { "@id": "ckodex:tier" },
+    "score":        { "@id": "ckodex:score",        "@type": "xsd:decimal" },
+    "fromTier":     { "@id": "stx:fromTier" },
+    "toTier":       { "@id": "stx:toTier" },
+    "trigger":      { "@id": "stx:trigger" },
+    "privacyMode":  { "@id": "ckodex:privacyMode" },
+    "digest":       { "@id": "ckodex:digest" },
+    "predicate":    { "@id": "stx:predicate" },
+    "subject":      { "@id": "stx:subject" },
+    "policyVersion":{ "@id": "stx:policyVersion" },
+    "rekorAnchor":  { "@id": "ckodex:rekorAnchor" },
+
+    "sessionIds":         { "@id": "stx:hasSession",         "@type": "@id", "@container": "@set" },
+    "skillStateIds":      { "@id": "stx:hasSkillState",      "@type": "@id", "@container": "@set" },
+    "transitionIds":      { "@id": "stx:hasTransition",      "@type": "@id", "@container": "@set" },
+    "evidenceBundleId":   { "@id": "stx:hasEvidence",        "@type": "@id" },
+    "attestationChainId": { "@id": "stx:hasAttestation",     "@type": "@id" },
+    "evidenceBundleIds":  { "@id": "stx:attestsEvidence",    "@type": "@id", "@container": "@set" }
+  }
+}

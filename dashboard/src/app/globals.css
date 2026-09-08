@@ -1,0 +1,471 @@
+/* ==========================================================================
+   Fable Skills Fleet — application layout on CKODEX-DS-3
+   Tokens, themes, type, surfaces, and shells come from the vendored
+   ckodex-ds3-core.css / ckodex-ds3-surfaces.css. This file holds only
+   app-specific composition, rebuilt on --ck-* tokens:
+   square cards · 1px hairlines · 4px proof-grid · governed motion tiers.
+   No border-radius, no drop shadows, no rotation/pulse/glow.
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ---------- Skip link ---------- */
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  padding: var(--ck-sp-3) var(--ck-sp-4);
+  background: var(--ck-fg-1);
+  color: var(--ck-bg-0);
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-caption);
+  font-weight: 600;
+  z-index: 9999;
+  border-bottom: none;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ---------- Shell integration ---------- */
+
+/* The AuthorityFooter is the shell footer (the handling band). */
+.ck-shell > .ck-authority {
+  grid-area: footer;
+}
+
+/* Narrow viewports: landmarks stack; the margin stays an <aside>
+   (after main, never a tab), the nav rail becomes a row. */
+@media (max-width: 960px) {
+  .ck-shell,
+  .ck-shell--document {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr auto auto;
+    grid-template-areas:
+      "header"
+      "nav"
+      "main"
+      "margin"
+      "footer";
+  }
+  .ck-shell--document {
+    grid-template-rows: auto 1fr auto auto;
+    grid-template-areas:
+      "header"
+      "main"
+      "margin"
+      "footer";
+  }
+  .ck-shell--reading {
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      "header"
+      "main"
+      "footer";
+  }
+  .ck-shell__nav {
+    display: flex;
+    flex-wrap: wrap;
+    border-right: none;
+    border-bottom: 1px solid var(--ck-hairline);
+    padding: 0;
+  }
+  .ck-shell__margin {
+    border-left: none;
+    border-top: 1px solid var(--ck-hairline);
+  }
+}
+
+/* ---------- Fleet home ---------- */
+
+.fleet-header {
+  margin-bottom: var(--ck-sp-10);
+  padding-bottom: var(--ck-sp-6);
+  border-bottom: 1px solid var(--ck-hairline);
+}
+
+.fleet-eyebrow {
+  margin-bottom: var(--ck-sp-3);
+}
+
+.fleet-title {
+  margin: 0 0 var(--ck-sp-3);
+}
+
+.fleet-subtitle {
+  max-width: var(--ck-measure);
+  margin: 0;
+}
+
+.fleet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--ck-sp-4);
+}
+
+@media (max-width: 768px) {
+  .fleet-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Skill card — quiet surface, square, hairline ---------- */
+
+.skill-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ck-sp-3);
+  padding: var(--ck-sp-5);
+  background: var(--ck-bg-1);
+  border: 1px solid var(--ck-hairline);
+  border-bottom: 1px solid var(--ck-hairline);
+  color: var(--ck-fg-1);
+  text-decoration: none;
+  transition: border-color var(--ck-t-micro) var(--ck-ease);
+}
+
+.skill-card:hover {
+  color: var(--ck-fg-1);
+  border-color: var(--ck-hairline-strong);
+}
+
+.skill-card:focus-visible {
+  outline: none;
+  box-shadow: var(--ck-ring-focus);
+}
+
+.skill-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--ck-sp-2);
+}
+
+.skill-card-name {
+  font-family: var(--ck-ff-display);
+  font-weight: 400;
+  font-size: var(--ck-fs-h2);
+  line-height: var(--ck-lh-h2);
+  margin: 0;
+}
+
+.skill-card-tagline {
+  margin: 0;
+  font-size: var(--ck-fs-body-sm);
+  line-height: var(--ck-lh-body-sm);
+  color: var(--ck-fg-3);
+}
+
+.skill-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ck-sp-3);
+  margin-top: auto;
+  padding-top: var(--ck-sp-3);
+  border-top: 1px solid var(--ck-hairline);
+}
+
+.skill-card-enter {
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-micro);
+  color: var(--ck-fg-mute);
+  font-variant-ligatures: none;
+}
+
+.skill-card:hover .skill-card-enter {
+  color: var(--ck-fg-1);
+}
+
+/* ---------- GAL badge — no hue; rank is glyph fill + ink weight ---------- */
+
+.gal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border: 1px solid var(--ck-hairline-strong);
+  font-family: var(--ck-ff-mono);
+  font-weight: 600;
+  font-size: var(--ck-fs-micro);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-variant-ligatures: none;
+  color: var(--ck-fg-3);
+  white-space: nowrap;
+}
+
+.gal-badge--strong {
+  border-color: var(--ck-fg-1);
+  color: var(--ck-fg-1);
+}
+
+/* GAL-5 caution: presence by inversion, still no hue */
+.gal-badge--caution {
+  background: var(--ck-fg-1);
+  border-color: var(--ck-fg-1);
+  color: var(--ck-bg-0);
+}
+
+/* ---------- Trust strip ---------- */
+
+.trust-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ck-sp-2);
+  padding: var(--ck-sp-3) 0;
+}
+
+.trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border: 1px solid var(--ck-hairline);
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-micro);
+  font-weight: 500;
+  color: var(--ck-fg-3);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-variant-ligatures: none;
+}
+
+.trust-badge--asserted {
+  border-color: var(--ck-hairline-strong);
+  color: var(--ck-fg-1);
+}
+
+/* ---------- Skill hero ---------- */
+
+.skill-hero {
+  padding: var(--ck-sp-8) 0 var(--ck-sp-8);
+  border-bottom: 1px solid var(--ck-hairline);
+  margin-bottom: var(--ck-sp-8);
+}
+
+.skill-hero-eyebrow {
+  margin-bottom: var(--ck-sp-3);
+}
+
+.skill-hero-title {
+  margin: 0 0 var(--ck-sp-3);
+}
+
+.skill-hero-tagline {
+  font-size: var(--ck-fs-h3);
+  line-height: var(--ck-lh-h3);
+  color: var(--ck-fg-3);
+  margin: 0 0 var(--ck-sp-4);
+  max-width: var(--ck-measure);
+}
+
+.skill-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ck-sp-2);
+  margin-top: var(--ck-sp-5);
+}
+
+/* ---------- Sections ---------- */
+
+.section {
+  margin-bottom: var(--ck-sp-10);
+}
+
+.section-label {
+  margin-bottom: var(--ck-sp-3);
+}
+
+.section-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--ck-sp-4);
+}
+
+@media (max-width: 768px) {
+  .section-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.section-card {
+  background: var(--ck-bg-1);
+  border: 1px solid var(--ck-hairline);
+  padding: var(--ck-sp-5);
+}
+
+/* ---------- Authority path ---------- */
+
+.authority-path {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ck-sp-2);
+  padding: var(--ck-sp-4);
+  background: var(--ck-bg-1);
+  border: 1px solid var(--ck-hairline);
+  overflow-x: auto;
+}
+
+.authority-node {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--ck-sp-1);
+  padding: 3px 10px;
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-caption);
+  color: var(--ck-fg-3);
+  background: var(--ck-bg-0);
+  border: 1px solid var(--ck-hairline);
+  white-space: nowrap;
+  font-variant-ligatures: none;
+}
+
+.authority-node-label {
+  font-size: var(--ck-fs-micro);
+  color: var(--ck-fg-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.authority-node-value {
+  color: var(--ck-fg-1);
+  font-weight: 500;
+}
+
+.authority-separator {
+  color: var(--ck-fg-mute);
+  font-size: var(--ck-fs-caption);
+}
+
+/* ---------- Field note & failure story — tone rules, no hue ---------- */
+
+.fun-fact,
+.failure-story {
+  padding: var(--ck-sp-5) var(--ck-sp-6);
+  background: var(--ck-bg-1);
+  border: 1px solid var(--ck-hairline);
+  border-left: var(--ck-rule) solid var(--ck-fg-3);
+}
+
+.fun-fact-label,
+.failure-story-label {
+  margin-bottom: var(--ck-sp-2);
+}
+
+.failure-story {
+  border-left-color: var(--ck-fg-1);
+}
+
+.fun-fact-text {
+  font-family: var(--ck-ff-display);
+  font-style: italic;
+  font-size: var(--ck-fs-h3);
+  color: var(--ck-fg-1);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.failure-story-text {
+  font-size: var(--ck-fs-body-sm);
+  color: var(--ck-fg-1);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ---------- Capability list ---------- */
+
+.capability-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ck-sp-1);
+  margin: 0;
+  padding: 0;
+}
+
+.capability-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ck-sp-3);
+  padding: var(--ck-sp-2) 0;
+  font-size: var(--ck-fs-body-sm);
+  border-bottom: 1px solid var(--ck-hairline);
+}
+
+.capability-item:last-child {
+  border-bottom: none;
+}
+
+.capability-glyph {
+  flex-shrink: 0;
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-caption);
+  color: var(--ck-fg-1);
+  margin-top: 1px;
+}
+
+.capability-cannot .capability-glyph {
+  color: var(--ck-fg-3);
+}
+
+.capability-item-text {
+  color: var(--ck-fg-2);
+}
+
+/* ---------- Economics ---------- */
+
+.economics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--ck-sp-3);
+  margin-bottom: var(--ck-sp-4);
+}
+
+.economics-gauge {
+  height: 6px;
+  background: var(--ck-bg-2);
+  border: 1px solid var(--ck-hairline);
+  margin-bottom: var(--ck-sp-4);
+  overflow: hidden;
+}
+
+.economics-gauge-fill {
+  height: 100%;
+  background: var(--ck-fg-3);
+  transition: width var(--ck-t-state) var(--ck-ease);
+}
+
+.economics-drivers {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ck-sp-2);
+  margin: 0;
+  padding: 0;
+}
+
+.economics-driver {
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-code);
+  color: var(--ck-fg-3);
+  padding-left: var(--ck-sp-4);
+  position: relative;
+  font-variant-ligatures: none;
+}
+
+.economics-driver::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--ck-fg-mute);
+}

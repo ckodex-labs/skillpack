@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>STX v1 — Publish-Subscribe Sequence</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root {
+    --paper:   #faf7f2;
+    --paper-2: #f2ede4;
+    --ink:     #1c1917;
+    --muted:   #57534e;
+    --accent:  #d46a3a;
+    --proof:   #7c3aed;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+  html, body { margin: 0; padding: 0; background: var(--paper); color: var(--ink);
+    font-family: "Geist", system-ui, -apple-system, "Helvetica Neue", sans-serif; }
+  .frame { max-width: 1080px; margin: 32px auto; padding: 0 24px; }
+  h1 { font-family: "Instrument Serif", Georgia, serif; font-style: italic;
+       font-weight: 400; font-size: 28px; margin: 0 0 4px; }
+  .sub { color: var(--muted); font-size: 14px; margin: 0 0 24px; }
+  .legend { display: flex; gap: 20px; margin: 16px 0 24px; font-size: 12px; color: var(--muted); }
+  .legend span { display: inline-block; width: 12px; height: 12px; vertical-align: middle;
+    margin-right: 6px; border-radius: 2px; }
+  .legend .ink   { background: var(--ink); }
+  .legend .acc   { background: var(--accent); }
+  .legend .proof { background: var(--proof); }
+  svg { width: 100%; height: auto; background:
+    radial-gradient(circle at 1px 1px, rgba(28,25,23,0.08) 1px, transparent 0) 0 0/16px 16px,
+    var(--paper); }
+  text { font-family: "Geist", system-ui, sans-serif; fill: var(--ink); }
+  .mono { font-family: "Geist Mono", ui-monospace, "SF Mono", Consolas, monospace; }
+  .lane-label { font-size: 14px; font-weight: 600; }
+  .step-num { font-size: 11px; fill: var(--muted); }
+  .msg-label { font-size: 12px; }
+  .phase-label { font-family: "Instrument Serif", Georgia, serif; font-style: italic;
+                 font-size: 16px; fill: var(--muted); }
+  .lifeline { stroke: var(--ink); stroke-width: 1; stroke-dasharray: 4 4; opacity: 0.5; }
+  .arrow-req { stroke: var(--ink); stroke-width: 1.5; fill: none; }
+  .arrow-res { stroke: var(--ink); stroke-width: 1.5; fill: none; stroke-dasharray: 6 4; }
+  .arrow-accent { stroke: var(--accent); stroke-width: 1.5; fill: none; }
+  .arrow-accent-res { stroke: var(--accent); stroke-width: 1.5; fill: none; stroke-dasharray: 6 4; }
+  .arrow-proof { stroke: var(--proof); stroke-width: 1.5; fill: none; stroke-dasharray: 6 4; }
+  .actor-box { fill: var(--paper-2); stroke: var(--ink); stroke-width: 1.5; rx: 4; }
+  .actor-box-accent { fill: var(--paper-2); stroke: var(--accent); stroke-width: 2; rx: 4; }
+  .phase-divider { stroke: var(--muted); stroke-width: 0.5; stroke-dasharray: 2 4; }
+  .note-box { fill: var(--paper-2); stroke: var(--muted); stroke-width: 1; rx: 4; opacity: 0.7; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <h1>STX v1 — Publish-Subscribe Sequence</h1>
+  <p class="sub">Capability handshake → authenticated query → server-streamed event flow with per-session monotonic sequence</p>
+  <div class="legend">
+    <div><span class="ink"></span> ink — authenticated traffic</div>
+    <div><span class="acc"></span> accent — unauthenticated handshake (focal)</div>
+    <div><span class="proof"></span> proof-violet — evidence-bearing event</div>
+  </div>
+
+  <svg viewBox="0 0 1040 760" role="img" aria-label="Sequence diagram between a Consumer and a Publisher harness across three phases: capability handshake, authenticated query, and the event stream. Handshake is unauthenticated and returns defaultPrivacyMode audit-private. Query uses Stx-Privacy-Mode header and returns an StxQueryResponse with redacted paths. Event stream returns four ordered events per session id with monotonic sequence numbers zero through three: session_open, skill_registered, evidence_emitted, tier_transition. The tier_transition at sequence three references the evidence bundle from sequence two. Consumers must reject events whose sequence is less than or equal to the highest seen for that session.">
+    <defs>
+      <marker id="arr"        viewBox="0 0 12 12" refX="11" refY="6" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+        <path d="M0 0 L12 6 L0 12 z" fill="#1c1917"/>
+      </marker>
+      <marker id="arr-acc"    viewBox="0 0 12 12" refX="11" refY="6" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+        <path d="M0 0 L12 6 L0 12 z" fill="#d46a3a"/>
+      </marker>
+      <marker id="arr-proof"  viewBox="0 0 12 12" refX="11" refY="6" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+        <path d="M0 0 L12 6 L0 12 z" fill="#7c3aed"/>
+      </marker>
+    </defs>
+
+    <!-- ACTOR HEADERS -->
+    <g aria-label="Consumer lifeline">
+      <rect class="actor-box" x="120" y="32" width="200" height="56"/>
+      <text class="lane-label" x="220" y="60" text-anchor="middle">Consumer</text>
+      <text class="step-num"   x="220" y="78" text-anchor="middle">(client)</text>
+    </g>
+    <g aria-label="Publisher lifeline">
+      <rect class="actor-box" x="720" y="32" width="200" height="56"/>
+      <text class="lane-label" x="820" y="60" text-anchor="middle">Publisher</text>
+      <text class="step-num"   x="820" y="78" text-anchor="middle">(harness)</text>
+    </g>
+
+    <!-- LIFELINES -->
+    <line class="lifeline" x1="220" y1="88"  x2="220" y2="720"/>
+    <line class="lifeline" x1="820" y1="88"  x2="820" y2="720"/>
+
+    <!-- PHASE 1: HANDSHAKE -->
+    <text class="phase-label" x="40" y="124">1 · handshake (unauthenticated)</text>
+    <line class="phase-divider" x1="120" y1="132" x2="920" y2="132"/>
+
+    <text class="step-num" x="80" y="172" text-anchor="end">①</text>
+    <path class="arrow-accent" d="M 220 172 L 820 172" marker-end="url(#arr-acc)"/>
+    <text class="msg-label mono" x="520" y="164" text-anchor="middle">GET /capability</text>
+
+    <text class="step-num" x="80" y="212" text-anchor="end">②</text>
+    <path class="arrow-accent-res" d="M 820 212 L 220 212" marker-end="url(#arr-acc)"/>
+    <text class="msg-label" x="520" y="200" text-anchor="middle">CapabilityDescriptor</text>
+    <text class="msg-label mono" x="520" y="226" text-anchor="middle">defaultPrivacyMode = audit-private</text>
+
+    <!-- PHASE 2: QUERY -->
+    <text class="phase-label" x="40" y="276">2 · authenticated query</text>
+    <line class="phase-divider" x1="120" y1="284" x2="920" y2="284"/>
+
+    <text class="step-num" x="80" y="320" text-anchor="end">③</text>
+    <path class="arrow-req" d="M 220 320 L 820 320" marker-end="url(#arr)"/>
+    <text class="msg-label mono" x="520" y="312" text-anchor="middle">GET /sessions/{id}</text>
+    <text class="msg-label mono" x="520" y="328" text-anchor="middle">Authorization: Bearer ··· · Stx-Privacy-Mode: audit-private</text>
+
+    <text class="step-num" x="80" y="372" text-anchor="end">④</text>
+    <path class="arrow-res" d="M 820 372 L 220 372" marker-end="url(#arr)"/>
+    <text class="msg-label" x="520" y="364" text-anchor="middle">StxQueryResponse</text>
+    <text class="msg-label mono" x="520" y="386" text-anchor="middle">result.nodes[] · pageInfo · redacted-paths</text>
+
+    <!-- PHASE 3: EVENTS -->
+    <text class="phase-label" x="40" y="436">3 · event stream (server-streamed)</text>
+    <line class="phase-divider" x1="120" y1="444" x2="920" y2="444"/>
+
+    <text class="step-num" x="80" y="480" text-anchor="end">⑤</text>
+    <path class="arrow-req" d="M 220 480 L 820 480" marker-end="url(#arr)"/>
+    <text class="msg-label mono" x="520" y="472" text-anchor="middle">GET /events?sessionId=...&amp;since=0</text>
+
+    <text class="step-num" x="80" y="516" text-anchor="end">⑥</text>
+    <path class="arrow-res" d="M 820 516 L 220 516" marker-end="url(#arr)"/>
+    <text class="msg-label mono" x="520" y="508" text-anchor="middle">StxEvent · seq=0 · session_open</text>
+
+    <text class="step-num" x="80" y="548" text-anchor="end">⑦</text>
+    <path class="arrow-res" d="M 820 548 L 220 548" marker-end="url(#arr)"/>
+    <text class="msg-label mono" x="520" y="540" text-anchor="middle">StxEvent · seq=1 · skill_registered</text>
+
+    <text class="step-num" x="80" y="580" text-anchor="end">⑧</text>
+    <path class="arrow-proof" d="M 820 580 L 220 580" marker-end="url(#arr-proof)"/>
+    <text class="msg-label mono" x="520" y="572" text-anchor="middle" fill="#7c3aed">StxEvent · seq=2 · evidence_emitted</text>
+
+    <text class="step-num" x="80" y="612" text-anchor="end">⑨</text>
+    <path class="arrow-res" d="M 820 612 L 220 612" marker-end="url(#arr)"/>
+    <text class="msg-label mono" x="520" y="604" text-anchor="middle">StxEvent · seq=3 · tier_transition</text>
+    <text class="msg-label" x="520" y="626" text-anchor="middle">references evidenceBundleId from seq=2</text>
+
+    <!-- NOTE -->
+    <g aria-label="Consumer-side ordering rule">
+      <rect class="note-box" x="120" y="660" width="800" height="56"/>
+      <text class="msg-label" x="520" y="682" text-anchor="middle">Consumer-side ordering rule</text>
+      <text class="msg-label mono" x="520" y="702" text-anchor="middle">reject any event with sequence ≤ last_seen[sessionId]</text>
+    </g>
+  </svg>
+</div>
+</body>
+</html>

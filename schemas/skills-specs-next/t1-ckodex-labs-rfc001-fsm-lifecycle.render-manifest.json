@@ -1,0 +1,139 @@
+{
+  "schemaVersion": "ckodex.org/diagram/render-manifest/v1",
+  "ckodex": {
+    "framework": "v16.0",
+    "designSystem": "mcdesign-v1.3.0"
+  },
+  "diagram": {
+    "type": "T1-ckodex-native-fsm-lifecycle",
+    "tenant": "ckodex-labs",
+    "slug": "t1-ckodex-labs-rfc001-fsm-lifecycle",
+    "title": "RFC-001 Skill Lifecycle FSM \u2014 Six Tiers"
+  },
+  "source": {
+    "file": "t1-ckodex-labs-rfc001-fsm-lifecycle.mmd",
+    "sha256": "sha256:946d26ab4d7e3957148fc39a47cfe120a60f525bfc6c7181fac70e999bdbff3f",
+    "bytes": 2423,
+    "format": "mermaid-statediagram-v2+yaml-frontmatter"
+  },
+  "render": {
+    "file": "t1-ckodex-labs-rfc001-fsm-lifecycle.html",
+    "sha256": "sha256:aed08feb7f91566bf9e9c2fcb7133f12441d8961601d62c9033fc2ae3bb75e73",
+    "bytes": 20737,
+    "format": "html+inline-svg",
+    "renderer": "ckodex-handcraft",
+    "layout": "horizontal-linear-with-l4-branch",
+    "layoutStatus": "exact"
+  },
+  "semantics": {
+    "nodeCount": 6,
+    "edgeCount": 13,
+    "promotionArrows": 6,
+    "demotionArrows": 5,
+    "emergencyArrows": 2,
+    "proofNodes": 0,
+    "focalAccentCount": 2,
+    "fsmStates": [
+      "L0",
+      "L1",
+      "L2",
+      "L3",
+      "L4R",
+      "L4X"
+    ],
+    "claims": {
+      "everyStateCarriesTriple_label_icon_color": true,
+      "everyEdgeLabeled": true,
+      "colorIsNotOnlySemanticCarrier": true,
+      "everyStateHasTokenCostClaim": true,
+      "everyStateHasRiskClassClaim": true
+    }
+  },
+  "tokens": {
+    "palette": "CKODEX-DS-1",
+    "accent": "#38a3a5",
+    "lavender": "#bc96e6",
+    "yellow": "#fcca46",
+    "emergency": "#dc2626",
+    "deep": "#00152b"
+  },
+  "accessibility": {
+    "themesSupported": [
+      "light",
+      "dark",
+      "high-contrast",
+      "forced-colors"
+    ],
+    "themesTested": [
+      "light",
+      "dark"
+    ],
+    "wcagTarget": "AA",
+    "minimumContrast": "4.5:1 normal text \u00b7 3:1 large text",
+    "respectsPrefersReducedMotion": true,
+    "respectsForcedColors": true,
+    "dottedPatternHiddenInForcedColors": true,
+    "noColorOnlySignal": true,
+    "svgRoleImg": true,
+    "svgTitle": true,
+    "svgDesc": true
+  },
+  "redaction": {
+    "secretsDetected": false,
+    "policy": "public-safe",
+    "placeholders": []
+  },
+  "conformance": {
+    "CV-DIAGRAM-001": "PASS \u00b7 every node has tier/icon/color/cost/risk",
+    "CV-DIAGRAM-002": "PASS \u00b7 every transition labeled with threshold or trigger",
+    "CV-DIAGRAM-003": "PASS \u00b7 focal accent count = 2 (L3 + L4X border)",
+    "CV-DIAGRAM-004": "PASS",
+    "CV-DIAGRAM-005": "N/A \u00b7 no proof nodes in this view (proof emission lives in event-loop diagram)",
+    "CV-DIAGRAM-006": "PASS \u00b7 FSM states each carry label + icon + color triple",
+    "CV-DIAGRAM-007": "PASS",
+    "CV-DIAGRAM-008": "PASS",
+    "CV-DIAGRAM-009": "PASS",
+    "CV-DIAGRAM-010": "PASS \u00b7 color reinforced by labels and channel position (above/below)",
+    "CV-DIAGRAM-011": "PASS \u00b7 RFC-001 v0.2.0 \u00a7\u00a73.1, 3.2, 5, 6 cited",
+    "CV-DIAGRAM-012": "PASS \u00b7 6 nodes, within 9-node budget",
+    "CV-DIAGRAM-013": "PASS",
+    "CV-DIAGRAM-014": "PASS",
+    "CV-DIAGRAM-015": "PASS",
+    "CV-DIAGRAM-016": "PASS",
+    "CV-DIAGRAM-017": "PASS",
+    "CV-DIAGRAM-018": "PASS",
+    "CV-DIAGRAM-019": "PASS \u00b7 13 connection paths, 0 diagonal segments",
+    "CV-DIAGRAM-020": "PASS \u00b7 no crossings in this layout"
+  },
+  "references": [
+    "RFC-001 v0.2.0 \u00a73.1 (state definitions)",
+    "RFC-001 v0.2.0 \u00a73.2 (transitions)",
+    "RFC-001 v0.2.0 \u00a75 (hysteresis bands)",
+    "RFC-001 v0.2.0 \u00a76 (eviction policy)"
+  ],
+  "governance": {
+    "galMinimum": 1,
+    "proofTypes": [
+      "DCA",
+      "WCAG",
+      "CLP"
+    ],
+    "enforcementPoints": [
+      "pre_exec",
+      "post_exec"
+    ],
+    "emergencyProtocols": [
+      "EP-001",
+      "EP-013",
+      "EP-014"
+    ],
+    "brandStatus": "tenant-applied",
+    "status": "draft-non-attested"
+  },
+  "pairedDiagrams": [
+    {
+      "slug": "t4-ckodex-labs-rfc001-event-loop",
+      "relation": "this view shows STATES; paired diagram shows the per-turn CONTROLLER FLOW that moves skills between these states"
+    }
+  ]
+}

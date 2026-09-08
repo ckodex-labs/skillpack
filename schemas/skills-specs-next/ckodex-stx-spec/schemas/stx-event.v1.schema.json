@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ckodex.org/stx-event.v1.schema.json",
+  "title": "CKODEX STX Event v1",
+  "description": "Schema for events emitted by an STX publisher (harness) on the event stream. One event per state-changing action. Events are ordered by sequence number per session and timestamp globally.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "sessionId", "sequence", "timestamp", "eventType", "payload"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "type": "string", "const": "ckodex.org/stx/v1" },
+    "kind":       { "type": "string", "const": "StxEvent" },
+    "sessionId": {
+      "type": "string",
+      "pattern": "^urn:ckodex:[a-z]+:[A-Za-z0-9._:-]+$"
+    },
+    "sequence": {
+      "type": "integer", "minimum": 0,
+      "description": "Per-session monotonic. Consumers MUST reject out-of-order events from the same sessionId."
+    },
+    "timestamp": {
+      "type": "string", "format": "date-time"
+    },
+    "eventType": {
+      "type": "string",
+      "enum": [
+        "session_open",
+        "session_close",
+        "skill_registered",
+        "tier_transition",
+        "evidence_emitted",
+        "attestation_signed",
+        "policy_gate_evaluated",
+        "capability_updated",
+        "emergency_protocol"
+      ]
+    },
+    "payload": {
+      "description": "Event-type-specific payload. Shape determined by eventType (renderers may flatten).",
+      "type": "object"
+    },
+    "privacyMode": {
+      "type": "string",
+      "enum": ["debug-local", "audit-private", "public-anchor", "regulated-export"]
+    },
+    "redacted": {
+      "type": "array",
+      "items": { "type": "string", "maxLength": 128 },
+      "description": "Field paths that were redacted to satisfy privacyMode. Permits round-trip reconstruction by privileged consumers."
+    }
+  }
+}

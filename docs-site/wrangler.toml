@@ -1,0 +1,5 @@
+name = "ckodex-skillpack-specs"
+compatibility_date = "2026-06-06"
+
+# Pages deployment settings
+[env.production]

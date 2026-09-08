@@ -1,0 +1,10 @@
+{
+  "apiVersion": "ckodex.org/skill/v1.1",
+  "kind": "Skill",
+  "metadata": {
+    "name": "minimal-example",
+    "description": "Minimum-viable v1.1 skill manifest. Demonstrates the required fields plus a synopsis. Use as a starter template.",
+    "synopsis": "Demonstration skill. Triggers: explicit mention only. Does nothing. Use as a starter template for new v1.1 skills."
+  },
+  "entrypoints": { "skillMd": "SKILL.md" }
+}

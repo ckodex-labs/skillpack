@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>RFC-001 Skill Lifecycle FSM — Six Tiers</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="ckodex.framework" content="v16.0">
+<meta name="ckodex.design-system" content="mcdesign-v1.3.0">
+<meta name="ckodex.tenant" content="ckodex-labs">
+<meta name="ckodex.diagram.type" content="T1-ckodex-native-fsm-lifecycle">
+<meta name="ckodex.diagram.slug" content="rfc001-fsm-lifecycle">
+<meta name="ckodex.diagram.brand-status" content="tenant-applied">
+<meta name="ckodex.diagram.governance-status" content="draft-non-attested">
+
+<style>
+:root {
+  --color-paper:        #faf7f2;
+  --color-paper-2:      #f2ede4;
+  --color-ink:          #1c1917;
+  --color-muted:        #57534e;
+  --color-line:         #d6d3d0;
+  --color-line-strong:  #57534e;
+  --color-accent:       #38a3a5;
+  --color-deep:         #00152b;
+  --color-lavender:     #bc96e6;
+  --color-lavender-soft:#dfc8f0;
+  --color-yellow:       #fcca46;
+  --color-yellow-soft:  #fde58a;
+  --color-slate-soft:   #e8e6e1;
+  --color-proof:        #7c3aed;
+  --color-emergency:    #dc2626;
+  --color-emergency-soft: rgba(220, 38, 38, 0.08);
+  --color-tier-tint:    rgba(56, 163, 165, 0.04);
+
+  --font-sans:  "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-mono:  "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-paper:        #00152b;
+    --color-paper-2:      #001a36;
+    --color-ink:          #faf7f2;
+    --color-muted:        #a8a29e;
+    --color-line:         #1f3658;
+    --color-line-strong:  #a8a29e;
+    --color-accent:       #5cc1c3;
+    --color-lavender:     #cbb1ee;
+    --color-lavender-soft:#3d2c5a;
+    --color-yellow:       #fcca46;
+    --color-yellow-soft:  #3d3210;
+    --color-slate-soft:   #1a2b46;
+    --color-proof:        #a78bfa;
+    --color-emergency:    #f87171;
+    --color-emergency-soft: rgba(248, 113, 113, 0.12);
+    --color-tier-tint:    rgba(92, 193, 195, 0.06);
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --color-line:         var(--color-ink);
+    --color-line-strong:  var(--color-ink);
+    --color-lavender-soft:transparent;
+    --color-yellow-soft:  transparent;
+    --color-slate-soft:   transparent;
+    --color-tier-tint:    transparent;
+    --color-emergency-soft: transparent;
+  }
+}
+
+@media (forced-colors: active) {
+  :root {
+    --color-paper:        Canvas;
+    --color-paper-2:      Canvas;
+    --color-ink:          CanvasText;
+    --color-muted:        CanvasText;
+    --color-line:         CanvasText;
+    --color-line-strong:  CanvasText;
+    --color-accent:       LinkText;
+    --color-lavender:     CanvasText;
+    --color-lavender-soft:transparent;
+    --color-yellow:       CanvasText;
+    --color-yellow-soft:  transparent;
+    --color-slate-soft:   transparent;
+    --color-proof:        LinkText;
+    --color-emergency:    Mark;
+    --color-emergency-soft: transparent;
+    --color-tier-tint:    transparent;
+  }
+  #dots { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+html, body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  margin: 0; padding: 24px; line-height: 1.5;
+}
+.page-title {
+  font-family: var(--font-serif);
+  font-size: 24px; font-weight: 400; margin: 0 0 4px 0;
+}
+.page-subtitle {
+  font-family: var(--font-serif); font-style: italic;
+  font-size: 14px; color: var(--color-muted); margin: 0 0 20px 0;
+}
+.diagram-wrap { max-width: 1300px; margin: 0 auto; }
+.colophon {
+  margin-top: 16px; padding-top: 12px;
+  border-top: 1px solid var(--color-line);
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--color-muted);
+  display: flex; flex-wrap: wrap; gap: 16px;
+}
+.colophon span { white-space: nowrap; }
+
+svg { display: block; width: 100%; height: auto; max-width: 1300px; }
+svg text { font-family: var(--font-sans); fill: var(--color-ink); }
+svg text.mono { font-family: var(--font-mono); }
+svg text.serif-i { font-family: var(--font-serif); font-style: italic; }
+svg text.muted { fill: var(--color-muted); }
+</style>
+</head>
+<body>
+
+<div class="diagram-wrap">
+
+<h1 class="page-title">RFC-001 — Skill Lifecycle FSM</h1>
+<p class="page-subtitle">Six tiers · five promotions · five demotions · emergency funnel to L1</p>
+
+<svg viewBox="0 0 1300 680" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-labelledby="ttl desc">
+  <title id="ttl">RFC-001 Skill Lifecycle FSM — Six Tiers</title>
+  <desc id="desc">
+    State machine diagram showing the six tiers of the RFC-001 progressive
+    skill lifecycle: L0 registered, L1 metadata, L2 synopsis, L3 full
+    SKILL.md body, L4R resource read, and L4X script execute. The first
+    four tiers are arranged left to right along a horizontal axis. From
+    L3 the lifecycle branches into L4R above and L4X below, separating
+    medium-risk resource reading from high-risk script execution. Each
+    state shows its tier label, an icon, a token-cost claim, and a risk
+    class. Solid arrows on the upper channel represent promotions and
+    carry the threshold or trigger that initiates them, including the
+    synopsis load threshold of 0.45, the full load threshold of 0.65
+    with the intent-to-invoke gate, and the capability-policy gate
+    feeding L4X. Dashed arrows on the lower channel represent
+    demotions and carry their triggering conditions, including drift
+    of 0.35, idle timeout, score decay, task completion, and
+    registry pressure. A dedicated emergency callout on the right
+    shows that EP-001 context overflow and EP-013 framework
+    integrity breach both demote affected tiers down to L1. The L3
+    state is rendered in the CKODEX teal focal accent because it is
+    the active hot tier where most work happens. The L4X state is
+    rendered with a yellow fill and an accent border because it is
+    the only high-risk tier.
+  </desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--color-line-strong)"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--color-accent)"/>
+    </marker>
+    <marker id="arrow-demote" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--color-muted)"/>
+    </marker>
+    <marker id="arrow-emergency" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--color-emergency)"/>
+    </marker>
+    <pattern id="dots" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="0.6" fill="var(--color-line)"/>
+    </pattern>
+  </defs>
+
+  <rect x="0" y="0" width="1300" height="680" fill="var(--color-paper)"/>
+  <rect x="0" y="0" width="1300" height="680" fill="url(#dots)" opacity="0.55"/>
+
+  <!-- ─────────── Channel labels (left margin) ─────────── -->
+  <text x="40" y="208" font-size="11" font-weight="600" fill="var(--color-muted)">PROMOTION</text>
+  <text x="40" y="222" class="serif-i muted" font-size="10">solid · forward</text>
+
+  <text x="40" y="468" font-size="11" font-weight="600" fill="var(--color-muted)">DEMOTION</text>
+  <text x="40" y="482" class="serif-i muted" font-size="10">dashed · reverse</text>
+
+  <text x="40" y="588" font-size="11" font-weight="600" fill="var(--color-emergency)">EMERGENCY</text>
+  <text x="40" y="602" class="serif-i muted" font-size="10">any → L1</text>
+
+  <!-- ─────────── PROMOTION ARROWS (drawn first, behind states) ─────────── -->
+
+  <!-- start dot → L0 -->
+  <circle cx="135" cy="350" r="6" fill="var(--color-ink)"/>
+  <path d="M 141 350 L 175 350" fill="none"
+        stroke="var(--color-line-strong)" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- L0 → L1 -->
+  <path d="M 305 340 L 365 340" fill="none"
+        stroke="var(--color-line-strong)" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <!-- L1 → L2 -->
+  <path d="M 495 340 L 555 340" fill="none"
+        stroke="var(--color-line-strong)" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <!-- L2 → L3 -->
+  <path d="M 685 340 L 745 340" fill="none"
+        stroke="var(--color-accent)" stroke-width="2" marker-end="url(#arrow-accent)"/>
+
+  <!-- L3 → L4R (branch upward) -->
+  <path d="M 875 320 L 920 320 L 920 200 L 1000 200" fill="none"
+        stroke="var(--color-line-strong)" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <!-- L3 → L4X (branch downward) -->
+  <path d="M 875 360 L 920 360 L 920 480 L 1000 480" fill="none"
+        stroke="var(--color-line-strong)" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- ─────────── PROMOTION LABELS (with opaque masks) ─────────── -->
+  <rect x="180" y="316" width="124" height="16" fill="var(--color-paper)"/>
+  <text x="242" y="328" class="mono" font-size="10" text-anchor="middle">registry scan</text>
+
+  <rect x="368" y="316" width="124" height="16" fill="var(--color-paper)"/>
+  <text x="430" y="328" class="mono" font-size="10" text-anchor="middle">score ≥ τ_syn=0.45</text>
+
+  <rect x="554" y="316" width="132" height="16" fill="var(--color-paper)"/>
+  <text x="620" y="328" class="mono" font-size="10" text-anchor="middle">score ≥ τ_full ∧ intent</text>
+
+  <rect x="894" y="240" width="124" height="16" fill="var(--color-paper)"/>
+  <text x="956" y="252" class="mono" font-size="10" text-anchor="middle">resource needed</text>
+
+  <rect x="894" y="424" width="148" height="16" fill="var(--color-paper)"/>
+  <text x="968" y="436" class="mono" font-size="10" text-anchor="middle">capability admits</text>
+
+  <!-- ─────────── DEMOTION ARROWS (dashed, lower channel, drawn before states) ─────────── -->
+
+  <!-- L4R → L3 -->
+  <path d="M 1000 240 L 920 240 L 920 380 L 875 380" fill="none"
+        stroke="var(--color-muted)" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-demote)"/>
+  <!-- L4X → L3 -->
+  <path d="M 1000 440 L 940 440 L 940 380 L 875 380" fill="none"
+        stroke="var(--color-muted)" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-demote)"/>
+
+  <!-- L3 → L2 -->
+  <path d="M 745 380 L 685 380" fill="none"
+        stroke="var(--color-muted)" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-demote)"/>
+  <!-- L2 → L1 -->
+  <path d="M 555 380 L 495 380" fill="none"
+        stroke="var(--color-muted)" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-demote)"/>
+  <!-- L1 → L0 -->
+  <path d="M 365 380 L 305 380" fill="none"
+        stroke="var(--color-muted)" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-demote)"/>
+
+  <!-- ─────────── DEMOTION LABELS ─────────── -->
+  <rect x="182" y="396" width="124" height="32" fill="var(--color-paper)"/>
+  <text x="244" y="408" class="mono" font-size="10" text-anchor="middle">registry_pressure</text>
+  <text x="244" y="421" class="mono" font-size="9"  text-anchor="middle" fill="var(--color-muted)">∧ rank_below_floor</text>
+
+  <rect x="368" y="396" width="124" height="32" fill="var(--color-paper)"/>
+  <text x="430" y="408" class="mono" font-size="10" text-anchor="middle">drift ≥ 0.35</text>
+  <text x="430" y="421" class="mono" font-size="9"  text-anchor="middle" fill="var(--color-muted)">| idle ≥ N_syn</text>
+
+  <rect x="554" y="396" width="132" height="32" fill="var(--color-paper)"/>
+  <text x="620" y="408" class="mono" font-size="10" text-anchor="middle">drift | idle ≥ N_full</text>
+  <text x="620" y="421" class="mono" font-size="9"  text-anchor="middle" fill="var(--color-muted)">| score &lt; τ_full_keep | task_complete</text>
+
+  <rect x="944" y="328" width="80" height="16" fill="var(--color-paper)"/>
+  <text x="984" y="340" class="mono" font-size="10" text-anchor="middle">resource done</text>
+
+  <rect x="944" y="404" width="100" height="32" fill="var(--color-paper)"/>
+  <text x="994" y="416" class="mono" font-size="10" text-anchor="middle">execution done</text>
+  <text x="994" y="429" class="mono" font-size="9"  text-anchor="middle" fill="var(--color-muted)">| policy revoked</text>
+
+  <!-- ─────────── STATE NODES (drawn ON TOP) ─────────── -->
+
+  <!-- L0 registered (slate, cold) -->
+  <g aria-label="L0 registered tier, cold storage, ~10 tokens">
+    <rect x="175" y="300" width="130" height="80" rx="6" ry="6"
+          fill="var(--color-slate-soft)" stroke="var(--color-line-strong)" stroke-width="1.5"/>
+    <text x="240" y="322" font-size="13" font-weight="700" text-anchor="middle">L0</text>
+    <text x="240" y="338" font-size="11" text-anchor="middle">📋 registered</text>
+    <text x="240" y="356" class="mono" font-size="10" text-anchor="middle" fill="var(--color-muted)">~10 tokens</text>
+    <text x="240" y="370" class="serif-i muted" font-size="10" text-anchor="middle">cold storage</text>
+  </g>
+
+  <!-- L1 metadata (lavender soft) -->
+  <g aria-label="L1 metadata tier, low risk, ~80 tokens">
+    <rect x="365" y="300" width="130" height="80" rx="6" ry="6"
+          fill="var(--color-lavender-soft)" stroke="var(--color-line-strong)" stroke-width="1.5"/>
+    <text x="430" y="322" font-size="13" font-weight="700" text-anchor="middle">L1</text>
+    <text x="430" y="338" font-size="11" text-anchor="middle">📝 metadata</text>
+    <text x="430" y="356" class="mono" font-size="10" text-anchor="middle" fill="var(--color-muted)">~80 tokens</text>
+    <text x="430" y="370" class="serif-i muted" font-size="10" text-anchor="middle">low risk</text>
+  </g>
+
+  <!-- L2 synopsis (lavender) -->
+  <g aria-label="L2 synopsis tier, low risk, ~400 tokens">
+    <rect x="555" y="300" width="130" height="80" rx="6" ry="6"
+          fill="var(--color-paper-2)" stroke="var(--color-lavender)" stroke-width="2"/>
+    <text x="620" y="322" font-size="13" font-weight="700" text-anchor="middle">L2</text>
+    <text x="620" y="338" font-size="11" text-anchor="middle">📄 synopsis</text>
+    <text x="620" y="356" class="mono" font-size="10" text-anchor="middle" fill="var(--color-muted)">~400 tokens</text>
+    <text x="620" y="370" class="serif-i muted" font-size="10" text-anchor="middle">low risk</text>
+  </g>
+
+  <!-- L3 full SKILL.md — FOCAL ACCENT TEAL -->
+  <g aria-label="L3 full SKILL.md tier, medium risk, 3000 to 5000 tokens, focal active state">
+    <rect x="745" y="300" width="130" height="80" rx="6" ry="6"
+          fill="var(--color-paper)" stroke="var(--color-accent)" stroke-width="2.5"/>
+    <rect x="745" y="300" width="130" height="4" fill="var(--color-accent)"/>
+    <text x="810" y="324" font-size="13" font-weight="700" text-anchor="middle" fill="var(--color-accent)">L3</text>
+    <text x="810" y="340" font-size="11" text-anchor="middle">📖 full SKILL.md</text>
+    <text x="810" y="358" class="mono" font-size="10" text-anchor="middle" fill="var(--color-muted)">3000–5000 tokens</text>
+    <text x="810" y="372" class="serif-i muted" font-size="10" text-anchor="middle">medium · hot tier</text>
+  </g>
+
+  <!-- L4R resource read (lavender strong) -->
+  <g aria-label="L4R resource read tier, medium risk, per-file cost">
+    <rect x="1000" y="170" width="160" height="80" rx="6" ry="6"
+          fill="var(--color-paper-2)" stroke="var(--color-line-strong)" stroke-width="1.5"/>
+    <text x="1080" y="192" font-size="13" font-weight="700" text-anchor="middle">L4R</text>
+    <text x="1080" y="208" font-size="11" text-anchor="middle">🔍 resource read</text>
+    <text x="1080" y="226" class="mono" font-size="10" text-anchor="middle" fill="var(--color-muted)">per-file</text>
+    <text x="1080" y="240" class="serif-i muted" font-size="10" text-anchor="middle">medium risk</text>
+  </g>
+
+  <!-- L4X script execute — YELLOW + ACCENT BORDER (elevated, not emergency) -->
+  <g aria-label="L4X script execute tier, HIGH risk, requires capability policy and sandbox">
+    <rect x="1000" y="440" width="160" height="80" rx="6" ry="6"
+          fill="var(--color-yellow-soft)" stroke="var(--color-accent)" stroke-width="2.5"/>
+    <rect x="1000" y="440" width="160" height="4" fill="var(--color-accent)"/>
+    <text x="1080" y="464" font-size="13" font-weight="700" text-anchor="middle">L4X</text>
+    <text x="1080" y="480" font-size="11" text-anchor="middle">⚡ script execute</text>
+    <text x="1080" y="498" class="mono" font-size="10" text-anchor="middle" fill="var(--color-muted)">per-tool · sandbox</text>
+    <text x="1080" y="512" class="serif-i" font-size="10" text-anchor="middle" fill="var(--color-accent)" font-weight="600">HIGH risk</text>
+  </g>
+
+  <!-- ─────────── EMERGENCY CALLOUT (bottom right, dashed red border) ─────────── -->
+  <g aria-label="Emergency callout: EP-001 context overflow and EP-013 framework integrity breach both force demotion to L1">
+    <rect x="175" y="560" width="985" height="80" rx="6" ry="6"
+          fill="var(--color-emergency-soft)" stroke="var(--color-emergency)" stroke-width="1.5"
+          stroke-dasharray="5 3"/>
+    <text x="195" y="585" font-size="12" font-weight="700" fill="var(--color-emergency)">⚠ Emergency funnel · any state → L1</text>
+    <text x="195" y="606" class="mono" font-size="10" fill="var(--color-ink)">
+      EP-001 STOP_ALL · context_overflow ≥ 0.85  →  all → L1, freeze registry, revoke L4X
+    </text>
+    <text x="195" y="624" class="mono" font-size="10" fill="var(--color-ink)">
+      EP-013 FRAMEWORK_INTEGRITY · version mismatch  →  incompatible skills → L0
+    </text>
+    <text x="195" y="640" class="mono" font-size="10" fill="var(--color-ink)" font-style="italic">
+      EP-014 CONTAINMENT  →  snapshot full pool to signed evidence, then evict
+    </text>
+  </g>
+
+  <!-- Emergency feed arrows (dashed red) from L3 and L4X down to the callout -->
+  <path d="M 810 380 L 810 540 L 230 540 L 230 560" fill="none"
+        stroke="var(--color-emergency)" stroke-width="1.5"
+        stroke-dasharray="5 3" marker-end="url(#arrow-emergency)"/>
+  <path d="M 1080 520 L 1080 540 L 1100 540 L 1100 560" fill="none"
+        stroke="var(--color-emergency)" stroke-width="1.5"
+        stroke-dasharray="5 3" marker-end="url(#arrow-emergency)"/>
+
+  <!-- ─────────── LEGEND ─────────── -->
+  <g aria-label="Legend">
+    <rect x="175" y="80" width="985" height="36" rx="4" ry="4"
+          fill="var(--color-paper-2)" stroke="var(--color-line)" stroke-width="1"/>
+    <!-- Solid promotion -->
+    <line x1="188" y1="98" x2="220" y2="98" stroke="var(--color-line-strong)" stroke-width="1.5"/>
+    <text x="226" y="102" class="mono" font-size="10">promotion</text>
+    <!-- Dashed demotion -->
+    <line x1="324" y1="98" x2="356" y2="98" stroke="var(--color-muted)" stroke-width="1.5" stroke-dasharray="5 3"/>
+    <text x="362" y="102" class="mono" font-size="10">demotion</text>
+    <!-- Emergency -->
+    <line x1="448" y1="98" x2="480" y2="98" stroke="var(--color-emergency)" stroke-width="1.5" stroke-dasharray="5 3"/>
+    <text x="486" y="102" class="mono" font-size="10">emergency</text>
+    <!-- Focal accent -->
+    <rect x="588" y="92" width="14" height="10" fill="var(--color-accent)"/>
+    <text x="608" y="102" class="mono" font-size="10">focal · hot tier</text>
+    <!-- High-risk -->
+    <rect x="724" y="92" width="14" height="10" fill="var(--color-yellow-soft)" stroke="var(--color-accent)" stroke-width="1.5"/>
+    <text x="744" y="102" class="mono" font-size="10">elevated risk</text>
+    <!-- Token cost note -->
+    <text x="856" y="102" class="serif-i muted" font-size="10">tokens are typical · vary by skill</text>
+  </g>
+</svg>
+
+<div class="colophon" role="contentinfo">
+  <span>Type: T1-ckodex-native-fsm-lifecycle</span>
+  <span>Tenant: ckodex-labs (CKODEX-DS-1)</span>
+  <span>Framework: CKODEX v16.0</span>
+  <span>Design system: MCDESIGN v1.3.0</span>
+  <span>Themes: light · dark · high-contrast · forced-colors</span>
+  <span>Brand: tenant-applied</span>
+  <span>Governance: draft-non-attested</span>
+  <span>Source: RFC-001 v0.2.0 §§3.1, 3.2, 5, 6</span>
+</div>
+
+</div>
+</body>
+</html>

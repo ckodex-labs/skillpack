@@ -1,0 +1,18 @@
+{
+  "buildDefinition": {
+    "buildType": "https://slsa.dev/provenance/v1",
+    "externalParameters": {
+      "source": "https://github.com/acme-corp/email-validator",
+      "ref": "refs/tags/v1.2.0"
+    }
+  },
+  "runDetails": {
+    "builder": {
+      "id": "https://github.com/acme-corp/email-validator/.github/workflows/publish-skill.yml"
+    },
+    "metadata": {
+      "startedOn": "2026-05-09T00:00:00Z",
+      "finishedOn": "2026-05-09T00:02:00Z"
+    }
+  }
+}

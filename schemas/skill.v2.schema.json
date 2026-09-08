@@ -1,0 +1,1480 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ckodex.org/skill.v2.schema.json",
+  "title": "CKODEX Skill Manifest v2",
+  "description": "Unified schema consolidating all prior layers: skill.v1, skill.v1.1, cnsb/v1, cnsb/v1/skill-lock, pca-lifecycle.v1, skill-runtime-capabilities.v1, stx-domain.v1, skillsbundle.v1, client-model, and common/types. A v2 manifest is self-contained and supersedes all prior apiVersion values.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "apiVersion",
+    "kind",
+    "metadata",
+    "entrypoints"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "CkodexUrn": {
+      "type": "string",
+      "pattern": "^urn:ckodex:[a-z]+:[A-Za-z0-9._:-]+$",
+      "description": "Strict CKODEX URN: urn:ckodex:<type>:<id>"
+    },
+    "Urn": {
+      "type": "string",
+      "pattern": "^urn:",
+      "description": "Loose URN — any urn: prefix."
+    },
+    "Sha256Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "IsoTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 / RFC 3339 timestamp in UTC."
+    },
+    "GAL": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5,
+      "description": "Governance Autonomy Level 0–5."
+    },
+    "ASC": {
+      "type": "string",
+      "description": "Atomic Security Control identifier (e.g. ASC_SLSA4)."
+    },
+    "LabelMap": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Arbitrary string key/value map."
+    },
+    "SignatureType": {
+      "type": "string",
+      "enum": [
+        "cosign",
+        "pgp",
+        "x509",
+        "dilithium3"
+      ]
+    },
+    "SignatureRef": {
+      "type": "object",
+      "required": [
+        "type",
+        "ref"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/SignatureType"
+        },
+        "ref": {
+          "type": "string",
+          "maxLength": 2048
+        }
+      }
+    },
+    "Actor": {
+      "type": "object",
+      "required": [
+        "urn",
+        "type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "urn": {
+          "$ref": "#/$defs/CkodexUrn"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "Human",
+            "Agent",
+            "Service",
+            "System"
+          ]
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "tenantUrn": {
+          "$ref": "#/$defs/Urn"
+        },
+        "labels": {
+          "$ref": "#/$defs/LabelMap"
+        }
+      }
+    },
+    "Tier": {
+      "type": "string",
+      "enum": [
+        "L0",
+        "L1",
+        "L2",
+        "L3",
+        "L4R",
+        "L4X"
+      ],
+      "description": "Runtime FSM tier (RFC-001 §3.1)."
+    },
+    "DeploymentTier": {
+      "type": "string",
+      "enum": [
+        "experimental",
+        "beta",
+        "stable",
+        "deprecated",
+        "retired"
+      ],
+      "description": "Skill deployment lifecycle tier."
+    },
+    "ProofType": {
+      "type": "string",
+      "enum": [
+        "PCA",
+        "UCA",
+        "TIP",
+        "ZKP",
+        "DCA",
+        "TKP",
+        "WCAG",
+        "CLP",
+        "UFP"
+      ]
+    },
+    "EnforcementPoint": {
+      "type": "string",
+      "enum": [
+        "pre_exec",
+        "runtime",
+        "post_exec",
+        "promotion",
+        "emergency"
+      ]
+    },
+    "PrivacyMode": {
+      "type": "string",
+      "enum": [
+        "debug-local",
+        "audit-private",
+        "public-anchor",
+        "regulated-export"
+      ]
+    },
+    "Grade": {
+      "type": "string",
+      "enum": [
+        "S+",
+        "S",
+        "A",
+        "B",
+        "C",
+        "D",
+        "F"
+      ],
+      "description": "Assessment grade."
+    },
+    "LifecycleStatus": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "deprecated",
+        "retired",
+        "experimental",
+        "superseded"
+      ]
+    },
+    "LifecycleTrigger": {
+      "type": "string",
+      "enum": [
+        "score_threshold",
+        "policy_pre_filter",
+        "intent_to_invoke",
+        "topic_drift",
+        "idle_timeout",
+        "score_decay",
+        "budget_pressure",
+        "task_complete",
+        "mutex",
+        "framework_break",
+        "capability_denied",
+        "emergency_evict",
+        "explicit_user_signal",
+        "resource_load",
+        "execution_complete",
+        "policy_revoked"
+      ]
+    },
+    "SignalWeights": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "lex": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "sem": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "ont": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "co": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "rec": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "usr": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "SkillParam": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean",
+          "default": true
+        },
+        "schemaRef": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "SkillExample": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "input": {
+          "type": "object"
+        },
+        "expectedOutput": {
+          "type": "object"
+        }
+      }
+    },
+    "LifecycleHook": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "command": {
+          "type": "string",
+          "maxLength": 1024
+        },
+        "script": {
+          "type": "string",
+          "maxLength": 1024
+        },
+        "timeout": {
+          "type": "string"
+        },
+        "retries": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "env": {
+          "$ref": "#/$defs/LabelMap"
+        }
+      }
+    },
+    "DimensionScore": {
+      "type": "object",
+      "required": [
+        "dimensionId",
+        "dimensionName",
+        "score",
+        "maxScore",
+        "weight"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "dimensionId": {
+          "type": "string"
+        },
+        "dimensionName": {
+          "type": "string"
+        },
+        "score": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maxScore": {
+          "type": "number",
+          "minimum": 0
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "findings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "AssessmentIssue": {
+      "type": "object",
+      "required": [
+        "severity",
+        "dimensionId",
+        "message"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "severity": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warning",
+            "info"
+          ]
+        },
+        "dimensionId": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "line": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "AssessmentResult": {
+      "type": "object",
+      "required": [
+        "totalScore",
+        "grade",
+        "assessedAt"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "totalScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "grade": {
+          "$ref": "#/$defs/Grade"
+        },
+        "dimensions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DimensionScore"
+          }
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AssessmentIssue"
+          }
+        },
+        "bonusPoints": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stubCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "assessedAt": {
+          "$ref": "#/$defs/IsoTimestamp"
+        }
+      }
+    },
+    "LockedDependency": {
+      "type": "object",
+      "required": [
+        "version",
+        "resolved",
+        "integrity"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "resolved": {
+          "type": "string"
+        },
+        "integrity": {
+          "type": "string",
+          "pattern": "^sha(256|384|512)-[A-Za-z0-9+/=]+$"
+        },
+        "registry": {
+          "type": "string"
+        },
+        "signatures": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SignatureRef"
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Urn"
+          }
+        }
+      }
+    },
+    "PCADecision": {
+      "type": "object",
+      "required": [
+        "skillId",
+        "fromTier",
+        "toTier",
+        "trigger"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "skillId": {
+          "$ref": "#/$defs/Sha256Digest"
+        },
+        "skillName": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "fromTier": {
+          "$ref": "#/$defs/Tier"
+        },
+        "toTier": {
+          "$ref": "#/$defs/Tier"
+        },
+        "trigger": {
+          "$ref": "#/$defs/LifecycleTrigger"
+        },
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "drift": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "theta": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "idleTurns": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "capability": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "weights": {
+          "$ref": "#/$defs/SignalWeights"
+        }
+      }
+    },
+    "ArtifactFamily": {
+      "type": "string",
+      "enum": [
+        "model",
+        "capability",
+        "control",
+        "knowledge",
+        "assurance",
+        "composite"
+      ],
+      "description": "AIPACK v0.1.1 artifact family hierarchy. For Skill manifests this MUST be capability when declared."
+    },
+    "AipackArtifactCode": {
+      "type": "string",
+      "enum": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
+        "A10",
+        "A11",
+        "A12",
+        "A13",
+        "A14",
+        "C1"
+      ],
+      "description": "Stable AIPACK artifact registry code."
+    },
+    "OciDigestRef": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*(?::[0-9]+)?/[A-Za-z0-9._~/-]+@sha256:[0-9a-f]{64}$",
+      "description": "Fully-qualified OCI reference pinned by sha256 digest."
+    },
+    "AipackSkillProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Projection metadata for agent plugin ecosystems. Projection does not change the canonical AIPACK kind.",
+      "properties": {
+        "vscodeAgentPlugin": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "pluginJson": {
+              "type": "string",
+              "default": "plugin.json"
+            },
+            "skillsPath": {
+              "type": "string",
+              "default": "skills/"
+            }
+          }
+        },
+        "copilotCliPlugin": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "pluginJson": {
+              "type": "string",
+              "default": "plugin.json"
+            },
+            "skillsPath": {
+              "type": "string",
+              "default": "skills/"
+            }
+          }
+        },
+        "claudePlugin": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "pluginJson": {
+              "type": "string",
+              "default": ".claude-plugin/plugin.json"
+            },
+            "pluginRootToken": {
+              "type": "string",
+              "enum": [
+                "CLAUDE_PLUGIN_ROOT"
+              ],
+              "default": "CLAUDE_PLUGIN_ROOT"
+            },
+            "skillsPath": {
+              "type": "string",
+              "default": "skills/"
+            }
+          }
+        },
+        "openPlugin": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "pluginJson": {
+              "type": "string",
+              "default": ".plugin/plugin.json"
+            },
+            "pluginRootToken": {
+              "type": "string",
+              "enum": [
+                "PLUGIN_ROOT"
+              ],
+              "default": "PLUGIN_ROOT"
+            },
+            "skillsPath": {
+              "type": "string",
+              "default": "skills/"
+            }
+          }
+        }
+      }
+    },
+    "AipackSkillIdentity": {
+      "type": "object",
+      "required": [
+        "code",
+        "kind",
+        "family",
+        "manifestMediaType",
+        "bundleMediaType"
+      ],
+      "additionalProperties": false,
+      "description": "Canonical AIPACK identity for this Skill artifact. Advisory for compatibility in v2, but SHOULD be emitted by packers.",
+      "properties": {
+        "code": {
+          "type": "string",
+          "const": "A4"
+        },
+        "kind": {
+          "type": "string",
+          "const": "Skill"
+        },
+        "family": {
+          "type": "string",
+          "const": "capability"
+        },
+        "manifestMediaType": {
+          "type": "string",
+          "const": "application/vnd.ai.skill.v1+json"
+        },
+        "bundleMediaType": {
+          "type": "string",
+          "const": "application/vnd.ai.skill.bundle.v1.tar+zstd"
+        },
+        "subjectDigest": {
+          "$ref": "#/$defs/Sha256Digest"
+        },
+        "ociRef": {
+          "$ref": "#/$defs/OciDigestRef"
+        },
+        "schemaCompatibility": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "aipack.v0.1.0",
+              "aipack.v0.1.1",
+              "ckodex.skill.v2"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "projections": {
+          "$ref": "#/$defs/AipackSkillProjection"
+        }
+      }
+    },
+    "PackageLifecycleState": {
+      "type": "string",
+      "enum": [
+        "authored",
+        "packed",
+        "signed",
+        "published",
+        "fetched",
+        "unpacked",
+        "verified",
+        "planned",
+        "approved",
+        "installed",
+        "enabled",
+        "active",
+        "disabled",
+        "upgraded",
+        "rolled_back",
+        "quarantined",
+        "deprecated",
+        "retired",
+        "uninstalled",
+        "removed"
+      ],
+      "description": "AIPACK package lifecycle FSM state."
+    },
+    "PackageLifecycleRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "AIPACK pack/unpack/install lifecycle state for this skill package.",
+      "properties": {
+        "state": {
+          "$ref": "#/$defs/PackageLifecycleState"
+        },
+        "previousState": {
+          "$ref": "#/$defs/PackageLifecycleState"
+        },
+        "changedAt": {
+          "$ref": "#/$defs/IsoTimestamp"
+        },
+        "changedBy": {
+          "$ref": "#/$defs/Actor"
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 2048
+        },
+        "receiptDigest": {
+          "$ref": "#/$defs/Sha256Digest"
+        },
+        "policyDecision": {
+          "type": "string",
+          "enum": [
+            "allow",
+            "ask",
+            "deny",
+            "quarantine",
+            "allow-with-sandbox",
+            "allow-readonly"
+          ]
+        }
+      }
+    }
+  },
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 2,
+      "description": "v2 — unified schema version."
+    },
+    "apiVersion": {
+      "type": "string",
+      "const": "ckodex.org/skill/v2"
+    },
+    "kind": {
+      "type": "string",
+      "const": "Skill"
+    },
+    "family": {
+      "type": "string",
+      "const": "capability",
+      "description": "AIPACK v0.1.1 artifact family. Optional for backward compatibility. If present on a Skill manifest, it MUST be capability."
+    },
+    "aipack": {
+      "$ref": "#/$defs/AipackSkillIdentity"
+    },
+    "packageLifecycle": {
+      "$ref": "#/$defs/PackageLifecycleRecord"
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "name",
+        "description"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^(?!-)(?!.*--)[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "displayName": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "synopsis": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048,
+          "description": "Precomputed L2 synopsis (RFC-001 §3.3)."
+        },
+        "synopsisHash": {
+          "$ref": "#/$defs/Sha256Digest"
+        },
+        "version": {
+          "type": "string"
+        },
+        "deploymentTier": {
+          "$ref": "#/$defs/DeploymentTier"
+        },
+        "license": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "authors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 256
+          }
+        },
+        "keywords": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 64
+          }
+        },
+        "labels": {
+          "$ref": "#/$defs/LabelMap"
+        },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "maxLength": 2048
+          }
+        },
+        "registryUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "urn": {
+          "$ref": "#/$defs/CkodexUrn"
+        }
+      }
+    },
+    "entrypoints": {
+      "type": "object",
+      "required": [
+        "skillMd"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "skillMd": {
+          "type": "string",
+          "const": "SKILL.md"
+        },
+        "manifest": {
+          "type": "string",
+          "const": "skill.json"
+        },
+        "readme": {
+          "type": "string"
+        }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "requiresNetwork": {
+          "type": "boolean",
+          "default": false
+        },
+        "requiresFilesystem": {
+          "type": "boolean",
+          "default": true
+        },
+        "requiresGpu": {
+          "type": "boolean",
+          "default": false
+        },
+        "os": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 32
+          }
+        },
+        "arch": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 32
+          }
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "maxLength": 128
+              },
+              "scope": {
+                "type": "string",
+                "maxLength": 256
+              },
+              "risk": {
+                "type": "string",
+                "enum": [
+                  "low",
+                  "medium",
+                  "high"
+                ],
+                "default": "medium"
+              }
+            }
+          }
+        }
+      }
+    },
+    "aipackCapabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "AIPACK §6.4 — 5-flag capability declaration.",
+      "properties": {
+        "read": {
+          "type": "boolean",
+          "default": true
+        },
+        "write": {
+          "type": "boolean",
+          "default": false
+        },
+        "network": {
+          "type": "boolean",
+          "default": false
+        },
+        "filesystem": {
+          "type": "boolean",
+          "default": true
+        },
+        "execution": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scripts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^scripts/[^\\s]+$"
+          }
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^references/[^\\s]+$"
+          }
+        },
+        "assets": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^assets/[^\\s]+$"
+          }
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sandbox": {
+          "type": "string",
+          "enum": [
+            "required",
+            "recommended",
+            "none"
+          ],
+          "default": "recommended"
+        },
+        "userConfirmation": {
+          "type": "string",
+          "enum": [
+            "always",
+            "dangerous-only",
+            "never"
+          ],
+          "default": "dangerous-only"
+        },
+        "dataHandling": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "pii": {
+              "type": "boolean",
+              "default": false
+            },
+            "secrets": {
+              "type": "boolean",
+              "default": true
+            },
+            "allowedOutputs": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 64
+              }
+            }
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "galMinimum": {
+          "$ref": "#/$defs/GAL"
+        },
+        "galMax": {
+          "$ref": "#/$defs/GAL"
+        },
+        "proofRequired": {
+          "type": "boolean"
+        },
+        "proofTypes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ProofType"
+          },
+          "uniqueItems": true
+        },
+        "enforcementPoints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EnforcementPoint"
+          },
+          "uniqueItems": true
+        },
+        "emergencyProtocols": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^EP-\\d{3}$"
+          },
+          "uniqueItems": true
+        },
+        "asc": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ASC"
+          }
+        }
+      }
+    },
+    "ontology": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Structural semantics for ontology-aware skill routing (RFC-001 §4.1).",
+      "properties": {
+        "@context": {
+          "type": "string",
+          "const": "https://ckodex.org/skill-context/v1"
+        },
+        "subjects": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "uniqueItems": true
+        },
+        "produces": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "uniqueItems": true
+        },
+        "consumes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "uniqueItems": true
+        },
+        "related": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "uniqueItems": true
+        },
+        "exclusiveOf": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "uniqueItems": true
+        },
+        "triggers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "uniqueItems": true
+        },
+        "galMinimum": {
+          "$ref": "#/$defs/GAL"
+        },
+        "proofTypes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ProofType"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Runtime hints for the harness lifecycle manager (RFC-001).",
+      "properties": {
+        "implicitInvocation": {
+          "type": "boolean",
+          "default": true
+        },
+        "minTier": {
+          "$ref": "#/$defs/Tier"
+        },
+        "maxTier": {
+          "$ref": "#/$defs/Tier"
+        },
+        "l4xAllowed": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "supplyChain": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "repo": {
+              "type": "string",
+              "maxLength": 2048
+            },
+            "path": {
+              "type": "string",
+              "maxLength": 2048
+            },
+            "revision": {
+              "type": "string",
+              "maxLength": 256
+            }
+          }
+        },
+        "digest": {
+          "$ref": "#/$defs/Sha256Digest"
+        },
+        "signatures": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SignatureRef"
+          }
+        },
+        "sbom": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "spdx": {
+              "type": "string",
+              "maxLength": 2048
+            },
+            "cyclonedx": {
+              "type": "string",
+              "maxLength": 2048
+            }
+          }
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "inToto": {
+              "type": "string",
+              "maxLength": 2048
+            },
+            "slsaLevel": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4
+            }
+          }
+        }
+      }
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/SkillParam"
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/SkillParam"
+      }
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/SkillExample"
+      }
+    },
+    "lifecycleHooks": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Execution hooks at key lifecycle events (from cnsb SkillLifecycle + archived skill.type.ts).",
+      "properties": {
+        "pack": {
+          "$ref": "#/$defs/LifecycleHook"
+        },
+        "unpack": {
+          "$ref": "#/$defs/LifecycleHook"
+        },
+        "install": {
+          "$ref": "#/$defs/LifecycleHook"
+        },
+        "upgrade": {
+          "$ref": "#/$defs/LifecycleHook"
+        },
+        "uninstall": {
+          "$ref": "#/$defs/LifecycleHook"
+        },
+        "verify": {
+          "$ref": "#/$defs/LifecycleHook"
+        },
+        "preInstall": {
+          "$ref": "#/$defs/LifecycleHook"
+        },
+        "postInstall": {
+          "$ref": "#/$defs/LifecycleHook"
+        },
+        "preInvoke": {
+          "type": "string",
+          "maxLength": 1024
+        },
+        "postInvoke": {
+          "type": "string",
+          "maxLength": 1024
+        },
+        "onDeprecate": {
+          "type": "string",
+          "maxLength": 1024
+        }
+      }
+    },
+    "lifecycleState": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Current lifecycle FSM state record.",
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/LifecycleStatus"
+        },
+        "promotedAt": {
+          "$ref": "#/$defs/IsoTimestamp"
+        },
+        "demotedAt": {
+          "$ref": "#/$defs/IsoTimestamp"
+        },
+        "deprecatedAt": {
+          "$ref": "#/$defs/IsoTimestamp"
+        },
+        "retiredAt": {
+          "$ref": "#/$defs/IsoTimestamp"
+        },
+        "supersededBy": {
+          "type": "string"
+        },
+        "actorUrn": {
+          "$ref": "#/$defs/CkodexUrn"
+        }
+      }
+    },
+    "assessment": {
+      "$ref": "#/$defs/AssessmentResult"
+    },
+    "runtimeCapabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Harness capability requirements this skill declares (skill-runtime-capabilities.v1).",
+      "properties": {
+        "supportsSynopsisTier": {
+          "type": "boolean"
+        },
+        "supportsOntologyScoring": {
+          "type": "boolean"
+        },
+        "supportsHysteresis": {
+          "type": "boolean"
+        },
+        "supportsEviction": {
+          "type": "boolean"
+        },
+        "supportsLifecyclePca": {
+          "type": "boolean"
+        },
+        "supportsL4xSandbox": {
+          "type": "boolean"
+        },
+        "maxSkillPoolTokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "defaultWeights": {
+          "$ref": "#/$defs/SignalWeights"
+        }
+      }
+    },
+    "pca": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Most recent Proof-Carrying Action bundle for this skill (pca-lifecycle.v1).",
+      "properties": {
+        "predicate": {
+          "type": "string",
+          "const": "ckodex/skill-lifecycle@v1"
+        },
+        "subject": {
+          "$ref": "#/$defs/CkodexUrn"
+        },
+        "timestamp": {
+          "$ref": "#/$defs/IsoTimestamp"
+        },
+        "privacyMode": {
+          "$ref": "#/$defs/PrivacyMode"
+        },
+        "policyVersion": {
+          "type": "string",
+          "pattern": "^ckodex-skill-lifecycle/v\\d+\\.\\d+$"
+        },
+        "decisions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PCADecision"
+          }
+        }
+      }
+    },
+    "stx": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Skills Transparency Exchange graph reference for this skill (stx-domain.v1).",
+      "properties": {
+        "skillId": {
+          "$ref": "#/$defs/Sha256Digest"
+        },
+        "harnessId": {
+          "$ref": "#/$defs/CkodexUrn"
+        },
+        "sessionId": {
+          "$ref": "#/$defs/CkodexUrn"
+        },
+        "currentTier": {
+          "$ref": "#/$defs/Tier"
+        },
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "tokenCost": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "locked": {
+          "type": "boolean"
+        }
+      }
+    },
+    "lock": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Pinned dependency lock record (cnsb/v1/skill-lock).",
+      "properties": {
+        "lockVersion": {
+          "type": "integer",
+          "const": 1
+        },
+        "integrity": {
+          "type": "string",
+          "pattern": "^sha(256|384|512)-[A-Za-z0-9+/=]+$"
+        },
+        "resolved": {
+          "type": "string"
+        },
+        "dependencies": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/LockedDependency"
+          }
+        }
+      }
+    },
+    "agentCompatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "asm / skills-cli provider compatibility (legacy agentSkillsFrontmatter).",
+      "properties": {
+        "compatibility": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "allowedTools": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "allowedToolsRaw": {
+          "type": "string",
+          "maxLength": 2048
+        },
+        "effort": {
+          "type": "string"
+        },
+        "marketplace": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

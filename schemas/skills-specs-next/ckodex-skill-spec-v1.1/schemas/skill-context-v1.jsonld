@@ -1,0 +1,40 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ckodex":   "https://ckodex.org/vocab/",
+    "oscal":    "https://docs.oasis-open.org/oscal/",
+    "nist":     "https://csrc.nist.gov/projects/",
+    "iso":      "urn:iso:std:iso:",
+    "spdx":     "https://spdx.org/rdf/terms#",
+    "cyclonedx":"https://cyclonedx.org/schema/",
+    "slsa":     "https://slsa.dev/spec/v1.0/",
+    "intoto":   "https://in-toto.io/Statement/v1/",
+    "schema":   "https://schema.org/",
+    "dcterms":  "http://purl.org/dc/terms/",
+    "skos":     "http://www.w3.org/2004/02/skos/core#",
+    "xsd":      "http://www.w3.org/2001/XMLSchema#",
+
+    "Skill":       "ckodex:Skill",
+    "Ontology":    "ckodex:SkillOntology",
+
+    "subjects":    { "@id": "ckodex:subjects",    "@type": "@id", "@container": "@set" },
+    "produces":    { "@id": "ckodex:produces",    "@type": "@id", "@container": "@set" },
+    "consumes":    { "@id": "ckodex:consumes",    "@type": "@id", "@container": "@set" },
+    "related":     { "@id": "ckodex:related",     "@type": "@id", "@container": "@set" },
+    "exclusiveOf": { "@id": "ckodex:exclusiveOf", "@type": "@id", "@container": "@set" },
+    "triggers":    { "@id": "ckodex:triggers",                    "@container": "@set" },
+    "galMinimum":  { "@id": "ckodex:galMinimum",  "@type": "xsd:integer" },
+    "proofTypes":  { "@id": "ckodex:proofTypes",                  "@container": "@set" },
+
+    "PCA":  "ckodex:proof/PCA",
+    "UCA":  "ckodex:proof/UCA",
+    "TIP":  "ckodex:proof/TIP",
+    "ZKP":  "ckodex:proof/ZKP",
+    "DCA":  "ckodex:proof/DCA",
+    "TKP":  "ckodex:proof/TKP",
+    "WCAG": "ckodex:proof/WCAG",
+    "CLP":  "ckodex:proof/CLP",
+    "UFP":  "ckodex:proof/UFP"
+  }
+}

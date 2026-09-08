@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ckodex.org/skillsbundle.v1.schema.json",
+  "title": "CKODEX SkillsBundle Manifest v1",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "skills"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "type": "string", "const": "ckodex.org/skillsbundle/v1" },
+    "kind":       { "type": "string", "const": "SkillsBundle" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "name":    { "type": "string", "maxLength": 128 },
+        "version": { "type": "string", "maxLength": 64 },
+        "license": { "type": "string", "maxLength": 256 },
+        "authors": { "type": "array", "items": { "type": "string", "maxLength": 256 } },
+        "labels":  { "type": "object", "additionalProperties": { "type": "string", "maxLength": 256 } }
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "sandbox":          { "type": "string", "enum": ["required", "recommended", "none"], "default": "recommended" },
+            "userConfirmation": { "type": "string", "enum": ["always", "dangerous-only", "never"], "default": "dangerous-only" }
+          }
+        },
+        "allowedToolsRaw": { "type": "string", "maxLength": 4096 },
+        "governance": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "galMinimum":    { "type": "integer", "minimum": 0, "maximum": 5 },
+            "proofRequired": { "type": "boolean" },
+            "proofTypes": {
+              "type": "array",
+              "items": { "type": "string", "enum": ["PCA","UCA","TIP","ZKP","DCA","TKP","WCAG","CLP","UFP"] },
+              "uniqueItems": true
+            },
+            "enforcementPoints": {
+              "type": "array",
+              "items": { "type": "string", "enum": ["pre_exec","runtime","post_exec","promotion","emergency"] },
+              "uniqueItems": true
+            },
+            "emergencyProtocols": {
+              "type": "array", "items": { "type": "string", "pattern": "^EP-\\d{3}$" }, "uniqueItems": true
+            }
+          }
+        }
+      }
+    },
+    "skills": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "entrypoints"],
+        "additionalProperties": false,
+        "properties": {
+          "name":    { "type": "string", "maxLength": 64, "pattern": "^(?!-)(?!.*--)[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "version": { "type": "string", "maxLength": 64 },
+          "path":    { "type": "string", "pattern": "^skills/[^\\s]+/$" },
+          "entrypoints": {
+            "type": "object", "required": ["skillMd"], "additionalProperties": false,
+            "properties": {
+              "skillMd":  { "type": "string", "const": "SKILL.md" },
+              "manifest": { "type": "string", "const": "skill.json" }
+            }
+          },
+          "integrity": {
+            "type": "object", "additionalProperties": false,
+            "properties": {
+              "digest":    { "type": "string", "maxLength": 256 },
+              "sizeBytes": { "type": "integer", "minimum": 0 }
+            }
+          },
+          "supplyChain": {
+            "type": "object", "additionalProperties": false,
+            "properties": {
+              "sbomRef":       { "type": "string", "maxLength": 2048 },
+              "provenanceRef": { "type": "string", "maxLength": 2048 },
+              "signatures": {
+                "type": "array",
+                "items": {
+                  "type": "object", "required": ["type","ref"], "additionalProperties": false,
+                  "properties": {
+                    "type": { "type": "string", "enum": ["cosign","pgp","x509"] },
+                    "ref":  { "type": "string", "maxLength": 2048 }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "bundleSupplyChain": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "digest": { "type": "string", "maxLength": 256 },
+        "signatures": {
+          "type": "array",
+          "items": {
+            "type": "object", "required": ["type","ref"], "additionalProperties": false,
+            "properties": {
+              "type": { "type": "string", "enum": ["cosign","pgp","x509"] },
+              "ref":  { "type": "string", "maxLength": 2048 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "lockVersion": 1,
+  "metadata": {
+    "generated": "2026-05-09T00:00:00Z",
+    "generator": "skillpack@1.0.0",
+    "checksum": "sha256-placeholder-tree-checksum"
+  },
+  "dependencies": {
+    "urn:ckodex:skill:acme:prod:platform:core:email-validator": {
+      "version": "1.2.0",
+      "resolved": "oci://registry.acme.corp/skills/email-validator@sha256:abc123placeholder",
+      "integrity": "sha256-placeholderIntegrityHashForEmailValidator1200",
+      "registry": "acme-internal"
+    }
+  },
+  "registries": {
+    "acme-internal": {
+      "url": "https://registry.acme.corp",
+      "type": "oci",
+      "auth": "oidc"
+    }
+  }
+}

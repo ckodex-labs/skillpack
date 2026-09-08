@@ -1,0 +1,31 @@
+{
+  "apiVersion": "ckodex.org/stx/v1",
+  "kind": "StxQueryResponse",
+  "queryId": "q-demo-001",
+  "respondedAt": "2026-05-25T13:14:16.001234Z",
+  "privacyMode": "audit-private",
+  "result": {
+    "nodes": [
+      {
+        "@type": "SkillState",
+        "node": {
+          "id": "urn:ckodex:state:abc-12345678",
+          "sessionId": "urn:ckodex:session:demo-001",
+          "skillId": "sha256:a3f4b8c9d2e1f7090a1b2c3d4e5f6789a3f4b8c9d2e1f7090a1b2c3d4e5f6789",
+          "skillName": "ckodex-oscal",
+          "skillVersion": "1.0.0",
+          "tier": "L3",
+          "score": 0.72,
+          "turnsSinceLastReference": 0,
+          "locked": false,
+          "transitionIds": [
+            "urn:ckodex:transition:state-abc:0",
+            "urn:ckodex:transition:state-abc:1"
+          ]
+        }
+      }
+    ],
+    "pageInfo": { "hasNext": false, "total": 1 }
+  },
+  "redacted": ["tokenCost"]
+}

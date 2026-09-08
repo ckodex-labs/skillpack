@@ -1,0 +1,251 @@
+openapi: 3.1.0
+info:
+  title: CKODEX Skills Transparency Exchange (REST)
+  version: "1.0.0"
+  description: |
+    REST transport for the STX domain. Every type defined in
+    stx-domain.v1.schema.json is exposed here as a path operation.
+    This document is normative for the REST transport but is generated
+    from the shared schema — when domain and protocol disagree, the
+    domain wins.
+
+    Default privacy mode for STX transport is `audit-private`. Other modes
+    are negotiated via the `Stx-Privacy-Mode` header during handshake.
+
+servers:
+  - url: https://{harness}.example/stx/v1
+    variables:
+      harness:
+        default: harness-id
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    PrivacyModeHeader:
+      name: Stx-Privacy-Mode
+      in: header
+      schema:
+        type: string
+        enum: [debug-local, audit-private, public-anchor, regulated-export]
+        default: audit-private
+    QueryIdHeader:
+      name: Stx-Query-Id
+      in: header
+      required: true
+      schema:
+        type: string
+
+  schemas:
+    Tier:
+      type: string
+      enum: [L0, L1, L2, L3, L4R, L4X]
+
+    PrivacyMode:
+      type: string
+      enum: [debug-local, audit-private, public-anchor, regulated-export]
+
+    CapabilityDescriptor:
+      $ref: "../schemas/stx-domain.v1.schema.json#/$defs/CapabilityDescriptor"
+
+    Harness:
+      $ref: "../schemas/stx-domain.v1.schema.json#/$defs/Harness"
+
+    Session:
+      $ref: "../schemas/stx-domain.v1.schema.json#/$defs/Session"
+
+    SkillState:
+      $ref: "../schemas/stx-domain.v1.schema.json#/$defs/SkillState"
+
+    TierTransition:
+      $ref: "../schemas/stx-domain.v1.schema.json#/$defs/TierTransition"
+
+    EvidenceBundle:
+      $ref: "../schemas/stx-domain.v1.schema.json#/$defs/EvidenceBundle"
+
+    StxQueryResponse:
+      $ref: "../schemas/stx-query-response.v1.schema.json"
+
+    StxEvent:
+      $ref: "../schemas/stx-event.v1.schema.json"
+
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          enum: [not_found, denied, rate_limited, invalid_request, privacy_violation, version_mismatch, internal_error]
+        message: { type: string, maxLength: 1024 }
+
+security:
+  - bearerAuth: []
+
+paths:
+  /capability:
+    get:
+      operationId: getCapability
+      summary: Capability handshake — discover transports, privacy modes, defaults
+      description: |
+        Returns the publisher's CapabilityDescriptor. MUST succeed without
+        auth (capability discovery is public). The default privacy mode
+        for v1 is `audit-private`.
+      security: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CapabilityDescriptor"
+
+  /harness:
+    get:
+      operationId: getHarness
+      summary: Harness state — root of the STX graph
+      parameters:
+        - $ref: "#/components/parameters/PrivacyModeHeader"
+        - $ref: "#/components/parameters/QueryIdHeader"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/StxQueryResponse"
+        "401": { description: Unauthorized }
+        "429":
+          description: Rate limited
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /sessions:
+    get:
+      operationId: listSessions
+      summary: List sessions for this harness
+      parameters:
+        - $ref: "#/components/parameters/PrivacyModeHeader"
+        - $ref: "#/components/parameters/QueryIdHeader"
+        - name: cursor
+          in: query
+          schema: { type: string, maxLength: 512 }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 200, default: 50 }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/StxQueryResponse" }
+
+  /sessions/{sessionId}:
+    get:
+      operationId: getSession
+      summary: One session and its full skill pool
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema: { type: string }
+        - $ref: "#/components/parameters/PrivacyModeHeader"
+        - $ref: "#/components/parameters/QueryIdHeader"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/StxQueryResponse" }
+        "404": { description: Not found }
+
+  /sessions/{sessionId}/skill-states:
+    get:
+      operationId: listSkillStates
+      summary: All SkillStates in a session, optionally filtered by tier
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema: { type: string }
+        - name: tier
+          in: query
+          schema: { $ref: "#/components/schemas/Tier" }
+        - $ref: "#/components/parameters/PrivacyModeHeader"
+        - $ref: "#/components/parameters/QueryIdHeader"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/StxQueryResponse" }
+
+  /sessions/{sessionId}/transitions:
+    get:
+      operationId: listTransitions
+      summary: TierTransitions in a session
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema: { type: string }
+        - name: since
+          in: query
+          schema: { type: string, format: date-time }
+        - $ref: "#/components/parameters/PrivacyModeHeader"
+        - $ref: "#/components/parameters/QueryIdHeader"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/StxQueryResponse" }
+
+  /evidence/{evidenceId}:
+    get:
+      operationId: getEvidenceBundle
+      summary: One evidence bundle by URN
+      parameters:
+        - name: evidenceId
+          in: path
+          required: true
+          schema: { type: string }
+        - $ref: "#/components/parameters/PrivacyModeHeader"
+        - $ref: "#/components/parameters/QueryIdHeader"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/StxQueryResponse" }
+        "404": { description: Not found }
+
+  /events:
+    get:
+      operationId: streamEvents
+      summary: Subscribe to the publisher event stream (Server-Sent Events)
+      description: |
+        Server-Sent Events stream of StxEvent objects. Per-session
+        sequence numbers are monotonic; consumers MUST reject
+        out-of-order events from the same sessionId. The stream
+        respects the negotiated privacy mode.
+      parameters:
+        - name: sessionId
+          in: query
+          schema: { type: string }
+        - name: since
+          in: query
+          schema: { type: integer, minimum: 0 }
+          description: Replay from this sequence number (per session).
+        - $ref: "#/components/parameters/PrivacyModeHeader"
+      responses:
+        "200":
+          description: SSE stream
+          content:
+            text/event-stream:
+              schema: { $ref: "#/components/schemas/StxEvent" }

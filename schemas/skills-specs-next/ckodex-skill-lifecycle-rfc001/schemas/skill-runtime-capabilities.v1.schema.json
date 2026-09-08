@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ckodex.org/skill-runtime-capabilities.v1.schema.json",
+  "title": "Skill Runtime Capabilities",
+  "description": "Capability negotiation descriptor published by an RFC-001-aware harness at session start. Skills MAY declare minimum capability requirements; a harness that does not advertise the required capability MUST refuse to load the skill rather than load with degraded behavior.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["supports_synopsis_tier"],
+  "properties": {
+    "supports_synopsis_tier":    { "type": "boolean" },
+    "supports_ontology_scoring": { "type": "boolean" },
+    "supports_hysteresis":       { "type": "boolean" },
+    "supports_eviction":         { "type": "boolean" },
+    "supports_lifecycle_pca":    { "type": "boolean" },
+    "supports_l4x_sandbox":      { "type": "boolean" },
+    "pca_privacy_modes": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["debug-local", "audit-private", "public-anchor", "regulated-export"] },
+      "uniqueItems": true
+    },
+    "max_skill_pool_tokens": { "type": "integer", "minimum": 0 },
+    "default_weights": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "lex": { "type": "number", "minimum": 0, "maximum": 1 },
+        "sem": { "type": "number", "minimum": 0, "maximum": 1 },
+        "ont": { "type": "number", "minimum": 0, "maximum": 1 },
+        "co":  { "type": "number", "minimum": 0, "maximum": 1 },
+        "rec": { "type": "number", "minimum": 0, "maximum": 1 },
+        "usr": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "default_thresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tau_syn_load":  { "type": "number", "minimum": 0, "maximum": 1 },
+        "tau_syn_keep":  { "type": "number", "minimum": 0, "maximum": 1 },
+        "tau_full_load": { "type": "number", "minimum": 0, "maximum": 1 },
+        "tau_full_keep": { "type": "number", "minimum": 0, "maximum": 1 },
+        "tau_floor":     { "type": "number", "minimum": 0, "maximum": 1 },
+        "theta_drift":   { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    }
+  }
+}

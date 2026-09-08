@@ -1,0 +1,41 @@
+{
+  "Threat Model": {
+    "prefix": "threat-model",
+    "body": [
+      "# Threat Model for ${1:skill-name}",
+      "",
+      "threats:",
+      "  - id: T001",
+      "    name: ${2:Unauthorized Access}",
+      "    stride: ${3|Spoofing,Tampering,Repudiation,Information Disclosure,Denial of Service,Elevation of Privilege|}",
+      "    description: ${4:Description of the threat}",
+      "    mitigation: ${5:How this threat is mitigated}",
+      "    status: ${6|mitigated,accepted,in-progress|}"
+    ],
+    "description": "STRIDE threat model template"
+  },
+  "Threat Entry": {
+    "prefix": "threat",
+    "body": [
+      "  - id: ${1:T00X}",
+      "    name: ${2:Threat Name}",
+      "    stride: ${3|Spoofing,Tampering,Repudiation,Information Disclosure,Denial of Service,Elevation of Privilege|}",
+      "    description: ${4:Description}",
+      "    mitigation: ${5:Mitigation strategy}",
+      "    status: ${6|mitigated,accepted,in-progress|}"
+    ],
+    "description": "Single threat entry"
+  },
+  "Security Control": {
+    "prefix": "control",
+    "body": [
+      "controls:",
+      "  - id: ${1:C001}",
+      "    name: ${2:Control Name}",
+      "    type: ${3|preventive,detective,corrective|}",
+      "    implementation: ${4:How this control is implemented}",
+      "    effectiveness: ${5|high,medium,low|}"
+    ],
+    "description": "Security control definition"
+  }
+}

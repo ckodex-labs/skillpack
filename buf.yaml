@@ -1,0 +1,11 @@
+version: v2
+modules:
+  - path: proto
+    name: buf.build/ckodex/skillpack
+lint:
+  use:
+    - STANDARD
+    - COMMENTS
+breaking:
+  use:
+    - FILE

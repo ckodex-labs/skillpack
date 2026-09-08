@@ -1,0 +1,220 @@
+{
+    "$id": "https://schemas.ckodex.org/cnsb/v1/cnsb.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Cloud-Native Skills Bundle (CNSB) v1",
+    "type": "object",
+    "required": [
+        "schemaVersion",
+        "apiVersion",
+        "kind",
+        "metadata",
+        "skills"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "type": "integer",
+            "const": 1,
+            "description": "AIPACK §10.1 — manifest schema version. Must be 1 for CNSB v1."
+        },
+        "apiVersion": {
+            "type": "string",
+            "const": "cnsb.ckodex.org/v1"
+        },
+        "kind": {
+            "type": "string",
+            "const": "SkillBundle"
+        },
+        "metadata": {
+            "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/ResourceMetadata"
+        },
+        "skills": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "$ref": "#/$defs/Skill"
+            }
+        },
+        "dependencies": {
+            "type": "array",
+            "items": {
+                "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/Urn"
+            },
+            "description": "Other CNSBs or artifacts this bundle depends on."
+        },
+        "bundleLayer": {
+            "type": "object",
+            "description": "AIPACK §4.1/§4.2 — OCI layer descriptor for the skill bundle content layer.",
+            "required": [
+                "mediaType",
+                "digest"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "mediaType": {
+                    "type": "string",
+                    "const": "application/vnd.ai.skill.bundle.v1.tar+zstd",
+                    "description": "AIPACK-canonical layer media type (AIPACK §4.2)."
+                },
+                "digest": {
+                    "type": "string",
+                    "pattern": "^sha256:[0-9a-f]{64}$",
+                    "description": "sha256 digest of the bundle tar+zstd layer."
+                },
+                "size": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Layer size in bytes."
+                }
+            }
+        }
+    },
+    "$defs": {
+        "SkillParam": {
+            "title": "SkillParam",
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "description": "Logical type (e.g. 'string', 'number', 'json', 'uri', 'file', 'image', 'hsi-scene')."
+                },
+                "description": {
+                    "type": "string"
+                },
+                "required": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "schemaRef": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "Optional JSON Schema URI describing this parameter's structure."
+                }
+            },
+            "additionalProperties": false
+        },
+        "Skill": {
+            "title": "Skill",
+            "type": "object",
+            "required": [
+                "id",
+                "entry",
+                "galMin",
+                "galMax"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Stable skill identifier within this bundle."
+                },
+                "entry": {
+                    "type": "string",
+                    "description": "Entrypoint reference (e.g. CLI subcommand, function path, tool name)."
+                },
+                "description": {
+                    "type": "string"
+                },
+                "galMin": {
+                    "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/GAL"
+                },
+                "galMax": {
+                    "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/GAL"
+                },
+                "asc": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/ASC"
+                    },
+                    "description": "Atomic Security Controls required/enforced by this skill."
+                },
+                "inputs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/SkillParam"
+                    }
+                },
+                "outputs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/SkillParam"
+                    }
+                },
+                "examples": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "name"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "input": {
+                                "type": "object"
+                            },
+                            "expectedOutput": {
+                                "type": "object"
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                },
+                "labels": {
+                    "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/LabelMap"
+                },
+                "lifecycle": {
+                    "$ref": "#/$defs/SkillLifecycle"
+                }
+            },
+            "additionalProperties": false
+        },
+        "SkillLifecycle": {
+            "title": "SkillLifecycle",
+            "type": "object",
+            "description": "T-14 (§10.2) — Lifecycle hooks for a skill entry. Mirrors the Lifecycle interface in skill.type.ts.",
+            "additionalProperties": false,
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "active",
+                        "deprecated",
+                        "retired",
+                        "experimental"
+                    ],
+                    "description": "Current lifecycle status of the skill."
+                },
+                "deprecatedAt": {
+                    "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/Timestamp",
+                    "description": "ISO 8601 timestamp when the skill was marked deprecated."
+                },
+                "retiredAt": {
+                    "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/Timestamp",
+                    "description": "ISO 8601 timestamp when the skill was retired."
+                },
+                "supersededBy": {
+                    "type": "string",
+                    "description": "Skill id or URN of the replacement skill."
+                },
+                "hooks": {
+                    "type": "object",
+                    "description": "Lifecycle hook command strings keyed by hook name (e.g. preInvoke, postInvoke, onDeprecate).",
+                    "additionalProperties": {
+                        "type": "string",
+                        "maxLength": 1024
+                    }
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

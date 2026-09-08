@@ -1,0 +1,60 @@
+{
+  "apiVersion": "ckodex.org/skill/v1.1",
+  "kind": "Skill",
+  "metadata": {
+    "name": "ckodex-stx-spec",
+    "description": "Skills Transparency Exchange v1 — symmetric publisher/consumer protocol for exposing and querying CKODEX skill-lifecycle runtime state. Use when designing, implementing, or auditing how a harness publishes skill pool state or how a client queries it.",
+    "synopsis": "When the user mentions STX, Skills Transparency Exchange, skill transparency API, skill graph API, or asks to expose/query a CKODEX harness's skill pool: this skill ships the v1 spec — a symmetric protocol with one shared typed graph domain model and three normative transports (gRPC + REST + GraphQL). Defines: stx-domain.v1.schema.json (Harness, Session, SkillState, TierTransition, EvidenceBundle, AttestationChain, PolicyGate, CapabilityDescriptor); stx-event.v1.schema.json (publisher event stream); stx-query-response.v1.schema.json (consumer query envelope); capability handshake negotiating privacy mode (default audit-private) + rate-limit + transport. Bridges ckodex-skill-spec-v1.1 (static manifest) and ckodex-skill-lifecycle-rfc001 (runtime FSM). NOT a replacement for OpenTelemetry — STX is skill-specific. Inputs: JSON manifests + harness state. Outputs: signed events, query responses, attestation chains.",
+    "version": "0.1.0",
+    "license": "Apache-2.0",
+    "authors": ["ckodex-labs"],
+    "keywords": ["stx", "transparency", "graph-api", "grpc", "rest", "graphql", "json-ld"]
+  },
+  "entrypoints": { "skillMd": "SKILL.md" },
+  "agentSkillsFrontmatter": {
+    "compatibility": "Filesystem-based agents; Python 3.10+ stdlib only for reference + validators",
+    "allowedToolsRaw": "Read Bash(python3:*)"
+  },
+  "capabilities": {
+    "requiresNetwork": false,
+    "requiresFilesystem": true,
+    "tools": [
+      { "name": "Read", "risk": "low" },
+      { "name": "Bash", "scope": "python3:*", "risk": "medium" }
+    ]
+  },
+  "resources": {
+    "scripts":    ["scripts/validate.sh"],
+    "references": ["references/SPEC.md", "references/publisher.md", "references/consumer.md", "references/transports.md"],
+    "assets":     []
+  },
+  "policy": {
+    "sandbox": "recommended",
+    "userConfirmation": "dangerous-only",
+    "dataHandling": { "pii": false, "secrets": true }
+  },
+  "governance": {
+    "galMinimum": 2,
+    "proofRequired": true,
+    "proofTypes": ["PCA", "UCA"],
+    "enforcementPoints": ["pre_exec", "post_exec"],
+    "emergencyProtocols": ["EP-013"]
+  },
+  "ontology": {
+    "@context": "https://ckodex.org/skill-context/v1",
+    "subjects":    ["stx", "skill-transparency", "graph-api", "openapi", "grpc", "graphql"],
+    "produces":    ["stx-event", "stx-query-response", "capability-descriptor"],
+    "consumes":    ["skill-manifest-v1.1", "lifecycle-decision", "evidence-bundle"],
+    "related":     ["ckodex-skill-spec-v1.1", "ckodex-skill-lifecycle-rfc001"],
+    "exclusiveOf": [],
+    "triggers":    ["STX", "Skills Transparency Exchange", "skill graph API", "expose skill state", "publish skill events", "query skill pool"],
+    "galMinimum":  2,
+    "proofTypes":  ["PCA", "UCA"]
+  },
+  "runtime": {
+    "implicitInvocation": true,
+    "minTier": "L1",
+    "maxTier": "L4R",
+    "l4xAllowed": false
+  }
+}

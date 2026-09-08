@@ -1,0 +1,26 @@
+{
+  "apiVersion": "cnsb.ckodex.org/v1",
+  "kind": "SkillBundle",
+  "metadata": {
+    "name": "known-b",
+    "urn": "urn:cnsb:known-b:1.0.0",
+    "version": "1.0.0"
+  },
+  "spec": {
+    "skills": [{
+      "name": "known-b",
+      "description": "B-grade fixture with unsigned SBOM.",
+      "asc": ["OIS-ASC-001"],
+      "galMin": 2,
+      "galMax": 4,
+      "examples": [
+        {"title": "basic", "input": "echo hello", "expected": "hello"}
+      ],
+      "lifecycle": {
+        "install":     {"command": "echo installing known-b"},
+        "uninstall":   {"command": "echo uninstalling known-b"},
+        "verify":      {"command": "test -f SKILL.md"}
+      }
+    }]
+  }
+}

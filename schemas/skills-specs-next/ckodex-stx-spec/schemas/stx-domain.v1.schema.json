@@ -1,0 +1,274 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ckodex.org/stx-domain.v1.schema.json",
+  "title": "CKODEX STX Domain Model v1",
+  "description": "Shared typed graph for the Skills Transparency Exchange. Every node and edge defined here is projected identically into the REST OpenAPI document, the gRPC proto, and the GraphQL SDL. The schema is normative; the protocol files are renderings of it.",
+  "$defs": {
+    "Tier": {
+      "type": "string",
+      "enum": ["L0", "L1", "L2", "L3", "L4R", "L4X"],
+      "description": "Skill lifecycle tier (RFC-001 §3.1)."
+    },
+    "PrivacyMode": {
+      "type": "string",
+      "enum": ["debug-local", "audit-private", "public-anchor", "regulated-export"],
+      "description": "PCA privacy mode (RFC-001 §9)."
+    },
+    "Transport": {
+      "type": "string",
+      "enum": ["rest", "grpc", "graphql"],
+      "description": "Three normative transports. A conformant publisher MUST support at least one; SHOULD support all three."
+    },
+    "TriggerName": {
+      "type": "string",
+      "enum": [
+        "score_threshold",
+        "policy_pre_filter",
+        "intent_to_invoke",
+        "topic_drift",
+        "idle_timeout",
+        "score_decay",
+        "budget_pressure",
+        "task_complete",
+        "mutex",
+        "framework_break",
+        "capability_denied",
+        "emergency_evict",
+        "explicit_user_signal",
+        "resource_load",
+        "execution_complete",
+        "policy_revoked"
+      ]
+    },
+    "ProofType": {
+      "type": "string",
+      "enum": ["PCA", "UCA", "TIP", "ZKP", "DCA", "TKP", "WCAG", "CLP", "UFP"]
+    },
+    "Sha256Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "Urn": {
+      "type": "string",
+      "pattern": "^urn:ckodex:[a-z]+:[A-Za-z0-9._:-]+$"
+    },
+    "IsoTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 with nanosecond precision."
+    },
+
+    "CapabilityDescriptor": {
+      "type": "object",
+      "required": ["stxVersion", "transports", "privacyModesSupported", "defaultPrivacyMode"],
+      "additionalProperties": false,
+      "properties": {
+        "stxVersion": { "type": "string", "const": "v1" },
+        "transports": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Transport" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "privacyModesSupported": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/PrivacyMode" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "defaultPrivacyMode": {
+          "$ref": "#/$defs/PrivacyMode",
+          "description": "MUST be 'audit-private' for v1 conformance."
+        },
+        "maxEventsPerSecond": { "type": "integer", "minimum": 1 },
+        "maxQueryDepth":      { "type": "integer", "minimum": 1, "description": "GraphQL only." },
+        "harnessId":          { "$ref": "#/$defs/Urn" },
+        "harnessVersion":     { "type": "string", "maxLength": 64 },
+        "frameworkVersion":   { "type": "string", "maxLength": 64 }
+      }
+    },
+
+    "Harness": {
+      "type": "object",
+      "required": ["id", "frameworkVersion", "capability"],
+      "additionalProperties": false,
+      "properties": {
+        "id":               { "$ref": "#/$defs/Urn" },
+        "frameworkVersion": { "type": "string", "maxLength": 64 },
+        "capability":       { "$ref": "#/$defs/CapabilityDescriptor" },
+        "sessionIds": {
+          "type": "array", "items": { "$ref": "#/$defs/Urn" }, "uniqueItems": true,
+          "description": "Edge: Harness → Session (1..n)."
+        }
+      }
+    },
+
+    "Session": {
+      "type": "object",
+      "required": ["id", "harnessId", "startedAt", "currentGal", "privacyMode"],
+      "additionalProperties": false,
+      "properties": {
+        "id":          { "$ref": "#/$defs/Urn" },
+        "harnessId":   { "$ref": "#/$defs/Urn" },
+        "startedAt":   { "$ref": "#/$defs/IsoTimestamp" },
+        "endedAt":     { "$ref": "#/$defs/IsoTimestamp" },
+        "currentGal":  { "type": "integer", "minimum": 0, "maximum": 5 },
+        "privacyMode": { "$ref": "#/$defs/PrivacyMode" },
+        "skillPoolTokensBudget": { "type": "integer", "minimum": 0 },
+        "skillPoolTokensCurrent":{ "type": "integer", "minimum": 0 },
+        "skillStateIds": {
+          "type": "array", "items": { "$ref": "#/$defs/Urn" }, "uniqueItems": true,
+          "description": "Edge: Session → SkillState (1..n)."
+        }
+      }
+    },
+
+    "SkillState": {
+      "type": "object",
+      "required": ["id", "sessionId", "skillId", "tier", "score"],
+      "additionalProperties": false,
+      "properties": {
+        "id":         { "$ref": "#/$defs/Urn" },
+        "sessionId":  { "$ref": "#/$defs/Urn" },
+        "skillId":    {
+          "$ref": "#/$defs/Sha256Digest",
+          "description": "Canonical skill identity: sha256(name ⊕ namespace ⊕ issuer). NOT the human name."
+        },
+        "skillName": {
+          "type": "string", "maxLength": 64,
+          "description": "Human-readable name. Redacted under public-anchor unless on the public allowlist."
+        },
+        "skillVersion": { "type": "string", "maxLength": 64 },
+        "tier":         { "$ref": "#/$defs/Tier" },
+        "score":        { "type": "number", "minimum": 0, "maximum": 1 },
+        "turnsSinceLastReference": { "type": "integer", "minimum": 0 },
+        "tokenCost":    { "type": "integer", "minimum": 0 },
+        "locked":       { "type": "boolean" },
+        "transitionIds": {
+          "type": "array", "items": { "$ref": "#/$defs/Urn" }, "uniqueItems": true,
+          "description": "Edge: SkillState → TierTransition (0..n) ordered by time."
+        }
+      }
+    },
+
+    "TierTransition": {
+      "type": "object",
+      "required": ["id", "skillStateId", "timestamp", "fromTier", "toTier", "trigger"],
+      "additionalProperties": false,
+      "properties": {
+        "id":           { "$ref": "#/$defs/Urn" },
+        "skillStateId": { "$ref": "#/$defs/Urn" },
+        "timestamp":    { "$ref": "#/$defs/IsoTimestamp" },
+        "fromTier":     { "$ref": "#/$defs/Tier" },
+        "toTier":       { "$ref": "#/$defs/Tier" },
+        "trigger":      { "$ref": "#/$defs/TriggerName" },
+        "score":        { "type": "number", "minimum": 0, "maximum": 1 },
+        "evidenceBundleId": {
+          "$ref": "#/$defs/Urn",
+          "description": "Edge: TierTransition → EvidenceBundle (0..1). Present iff GAL ≥ 3 OR privacyMode != debug-local."
+        }
+      }
+    },
+
+    "EvidenceBundle": {
+      "type": "object",
+      "required": ["id", "predicate", "subject", "timestamp", "privacyMode", "digest"],
+      "additionalProperties": false,
+      "properties": {
+        "id":          { "$ref": "#/$defs/Urn" },
+        "predicate":   { "type": "string", "const": "ckodex/skill-lifecycle@v1" },
+        "subject":     { "$ref": "#/$defs/Urn" },
+        "timestamp":   { "$ref": "#/$defs/IsoTimestamp" },
+        "privacyMode": { "$ref": "#/$defs/PrivacyMode" },
+        "policyVersion": {
+          "type": "string",
+          "pattern": "^ckodex-skill-lifecycle/v\\d+\\.\\d+$"
+        },
+        "digest":      { "$ref": "#/$defs/Sha256Digest" },
+        "rekorAnchor": { "type": "string", "maxLength": 2048 },
+        "transitionIds": {
+          "type": "array", "items": { "$ref": "#/$defs/Urn" }, "uniqueItems": true
+        },
+        "attestationChainId": {
+          "$ref": "#/$defs/Urn",
+          "description": "Edge: EvidenceBundle → AttestationChain (0..1). Present iff GAL ≥ 4."
+        }
+      }
+    },
+
+    "AttestationChain": {
+      "type": "object",
+      "required": ["id", "issuer", "signedAt", "signatures"],
+      "additionalProperties": false,
+      "properties": {
+        "id":       { "$ref": "#/$defs/Urn" },
+        "issuer":   { "$ref": "#/$defs/Urn" },
+        "signedAt": { "$ref": "#/$defs/IsoTimestamp" },
+        "signatures": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["type", "ref"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "type": "string", "enum": ["cosign", "pgp", "x509", "dilithium3"] },
+              "ref":  { "type": "string", "maxLength": 2048 }
+            }
+          }
+        },
+        "evidenceBundleIds": {
+          "type": "array", "items": { "$ref": "#/$defs/Urn" }, "uniqueItems": true
+        }
+      }
+    },
+
+    "PolicyGate": {
+      "type": "object",
+      "required": ["id", "name", "decision", "evaluatedAt"],
+      "additionalProperties": false,
+      "properties": {
+        "id":          { "$ref": "#/$defs/Urn" },
+        "name":        { "type": "string", "enum": ["pre_exec", "runtime", "post_exec", "promotion", "emergency"] },
+        "decision":    { "type": "string", "enum": ["allow", "deny", "warn"] },
+        "evaluatedAt": { "$ref": "#/$defs/IsoTimestamp" },
+        "reason":      { "type": "string", "maxLength": 1024 },
+        "skillStateId": { "$ref": "#/$defs/Urn" }
+      }
+    },
+
+    "GraphNode": {
+      "description": "Discriminated union of every node type in the STX graph.",
+      "oneOf": [
+        { "type": "object", "required": ["@type", "node"], "additionalProperties": false,
+          "properties": { "@type": { "const": "Harness" },          "node": { "$ref": "#/$defs/Harness" } } },
+        { "type": "object", "required": ["@type", "node"], "additionalProperties": false,
+          "properties": { "@type": { "const": "Session" },          "node": { "$ref": "#/$defs/Session" } } },
+        { "type": "object", "required": ["@type", "node"], "additionalProperties": false,
+          "properties": { "@type": { "const": "SkillState" },       "node": { "$ref": "#/$defs/SkillState" } } },
+        { "type": "object", "required": ["@type", "node"], "additionalProperties": false,
+          "properties": { "@type": { "const": "TierTransition" },   "node": { "$ref": "#/$defs/TierTransition" } } },
+        { "type": "object", "required": ["@type", "node"], "additionalProperties": false,
+          "properties": { "@type": { "const": "EvidenceBundle" },   "node": { "$ref": "#/$defs/EvidenceBundle" } } },
+        { "type": "object", "required": ["@type", "node"], "additionalProperties": false,
+          "properties": { "@type": { "const": "AttestationChain" }, "node": { "$ref": "#/$defs/AttestationChain" } } },
+        { "type": "object", "required": ["@type", "node"], "additionalProperties": false,
+          "properties": { "@type": { "const": "PolicyGate" },       "node": { "$ref": "#/$defs/PolicyGate" } } }
+      ]
+    }
+  },
+
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "ckodex.org/stx/v1" },
+    "kind":       { "type": "string", "const": "StxDomain" },
+    "harness":     { "$ref": "#/$defs/Harness" },
+    "sessions":    { "type": "array", "items": { "$ref": "#/$defs/Session" } },
+    "skillStates": { "type": "array", "items": { "$ref": "#/$defs/SkillState" } },
+    "transitions": { "type": "array", "items": { "$ref": "#/$defs/TierTransition" } },
+    "evidence":    { "type": "array", "items": { "$ref": "#/$defs/EvidenceBundle" } },
+    "attestations":{ "type": "array", "items": { "$ref": "#/$defs/AttestationChain" } },
+    "policyGates": { "type": "array", "items": { "$ref": "#/$defs/PolicyGate" } }
+  }
+}

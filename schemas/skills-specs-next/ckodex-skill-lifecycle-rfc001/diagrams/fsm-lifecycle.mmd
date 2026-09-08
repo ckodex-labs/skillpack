@@ -1,0 +1,62 @@
+---
+ckodex:
+  framework: v16.0
+  designSystem: mcdesign-v1.3.0
+diagram:
+  type: T1-ckodex-native-fsm-lifecycle
+  tenant: ckodex-labs
+  slug: rfc001-fsm-lifecycle
+  title: "RFC-001 Skill Lifecycle FSM — Six Tiers · Promotion + Demotion + Emergency"
+  brand_status: tenant-applied
+  governance_status: draft-non-attested
+  themes:
+    supported: [light, dark, high-contrast, forced-colors]
+    testing_floor: [light, dark]
+  semantics:
+    node_count: 6
+    edge_count: 11
+    proof_nodes: 0
+    focal_accent_count: 1
+    promotion_arrows: 5
+    demotion_arrows: 5
+    emergency_arrows: 1
+references:
+  - "RFC-001 v0.2.0 §3.1 (state definitions)"
+  - "RFC-001 v0.2.0 §3.2 (transitions)"
+  - "RFC-001 v0.2.0 §5 (thresholds)"
+  - "RFC-001 v0.2.0 §6 (eviction triggers)"
+  - "RFC-001 v0.2.0 §3.2 emergency row (EP-001, EP-013, EP-014)"
+---
+%% Every state carries the mandated FSM triple: label + icon + color + token-cost claim.
+%% Every transition is labeled with the triggering threshold or event.
+%% Solid arrows = promotion. Dashed arrows = demotion. Red-bordered callout = emergency.
+
+stateDiagram-v2
+  direction LR
+
+  L0: L0 · 📋 registered<br/>~10t · cold storage
+  L1: L1 · 📝 metadata<br/>~80t · low risk
+  L2: L2 · 📄 synopsis<br/>~400t · low risk
+  L3: L3 · 📖 full SKILL.md<br/>~3000-5000t · medium risk
+  L4R: L4R · 🔍 resource read<br/>per-file · medium risk
+  L4X: L4X · ⚡ script execute<br/>per-tool · HIGH risk
+
+  [*] --> L0: registry seed
+
+  %% ─────────── PROMOTIONS ───────────
+  L0  --> L1:  registry scan + scope filter
+  L1  --> L2:  score ≥ τ_syn_load=0.45
+  L2  --> L3:  score ≥ τ_full_load=0.65 ∧ intent_to_invoke
+  L3  --> L4R: referenced resource needed
+  L3  --> L4X: executable needed ∧ capability_policy.admits(skill,tool)
+
+  %% ─────────── DEMOTIONS ───────────
+  L4X --> L3:  execution complete | policy revoked
+  L4R --> L3:  resource no longer needed
+  L3  --> L2:  idle≥N_full | score<τ_full_keep=0.40 | drift≥θ=0.35 | task_complete
+  L2  --> L1:  idle≥N_syn | drift≥θ=0.35 | score<τ_syn_keep=0.30
+  L1  --> L0:  registry_pressure ∧ rank_below_floor
+
+  %% ─────────── EMERGENCY (any → L1) ───────────
+  L3  --> L1: EP-001 · context_overflow ≥ 0.85
+  L4X --> L1: EP-013 · framework integrity breach

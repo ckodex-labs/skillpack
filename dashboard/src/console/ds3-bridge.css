@@ -1,0 +1,124 @@
+/* ============================================================
+ * SkillPack · DS-3 BRIDGE
+ * ------------------------------------------------------------
+ * Maps the retired CKODEX-DS-1 token names this app was built on
+ * onto the live CKODEX-DS-3 "Evidence Editorial" semantic budget.
+ * Load AFTER _ds/<folder>/styles.css.
+ *
+ * Why a bridge: DS-3 keeps the core token NAMES (--ck-bg-*, --ck-fg-*,
+ * --ck-accent, --ck-link …) but retired the DS-1 hue tokens
+ * (--ck-stroke, --ck-deep-blue, --ck-witness, --ck-text-role, --ck-deny).
+ * Every alias below resolves to a DS-3 *semantic* token, so it inherits
+ * the right value per theme (ledger / vault / hc / forced-colors)
+ * automatically — the html element carries the data-theme, and var()
+ * substitution reads the themed value off that same element.
+ *
+ * The semantic translation (DS-1 → DS-3 closed budget):
+ *   stroke (teal)        → hairline-strong   structural, never semantic
+ *   deep-blue            → accent-ink        ink that sits on an accent fill
+ *   witness (lavender)   → proof (violet)    the documented lavender→violet demotion
+ *   text-role (amber)    → proof (violet)    retired yellow folds into the proof hue
+ *   deny (rose)          → alarm (red)       containment / quarantine
+ *   accent (was yellow)  → rust              focal action  (DS-3 already remaps this)
+ * ============================================================ */
+
+:root {
+  /* structure */
+  --ck-stroke:        var(--ck-hairline-strong);
+  --ck-stroke-2c:     color-mix(in oklab, var(--ck-hairline-strong) 55%, transparent);
+  --ck-stroke-2:      var(--ck-stroke-seal);
+  --ck-rail:          var(--ck-structural);
+  --ck-bg-elev:       var(--ck-bg-1);
+  --ck-tick:          6px;
+  --ck-tick-half:     3px;
+
+  /* ink-on-accent */
+  --ck-deep-blue:     var(--ck-accent-ink);
+
+  /* the retired hue tier → DS-3 closed budget */
+  --ck-witness:       var(--ck-proof);
+  --ck-text-role:     var(--ck-proof);
+  --ck-deny:          var(--ck-alarm);
+
+  /* raw DS-1 names a few call-sites still reach for */
+  --ck-yellow:        var(--ck-accent);
+  --ck-lavender:      var(--ck-proof);
+  --ck-amber-deep:    var(--ck-accent);
+  --ck-deny-rose:     var(--ck-alarm);
+
+  /* type families */
+  --ck-ff-body:       var(--ck-ff-ui);
+  --ck-ff-head:       var(--ck-ff-display);
+
+  /* motion + rings */
+  --ck-ease-resolve:  var(--ck-ease);
+  --ck-ring-encaps:   inset 0 0 0 1px color-mix(in oklab, var(--ck-hairline-strong) 50%, transparent);
+  --ck-ring-deny:     0 0 0 2px var(--ck-alarm);
+  /* --ck-ring-focus, --ck-teal, --ck-chamfer, --ck-resolve, spacing: defined by DS-3 */
+}
+
+/* ============================================================
+ * A11Y essentials folded in from the retired a11y-themes.css
+ * (focus parity · skip link · sr-only · spin · reduced motion ·
+ *  forced-colors border restoration for the app's .ckr-* chrome)
+ * ============================================================ */
+
+:where(button, a, input, [tabindex], [role="button"], [role="tab"], [role="option"]):focus-visible {
+  outline: 2px solid var(--ck-accent);
+  outline-offset: 2px;
+}
+.ckr-focusring:focus-visible {
+  box-shadow: var(--ck-ring-focus);
+  outline: 2px solid var(--ck-accent);
+  outline-offset: 2px;
+}
+:focus:not(:focus-visible) { outline: none; }
+
+.ckr-skip {
+  position: absolute;
+  left: 8px; top: -48px;
+  z-index: 100;
+  padding: 8px 14px;
+  background: var(--ck-accent);
+  color: var(--ck-accent-ink);
+  font: 700 12px/1 var(--ck-ff-mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  border-bottom: none;
+  transition: top .12s var(--ck-ease);
+}
+.ckr-skip:focus { top: 8px; outline: 2px solid var(--ck-fg-1); }
+
+.ckr-sr {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+@keyframes ckr-spin { to { transform: rotate(360deg); } }
+.ckr-spin { animation: ckr-spin 1.1s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ckr-spin, .ckr-pulse, .ckr-stream-bar { animation: none !important; }
+  * { scroll-behavior: auto !important; }
+}
+
+/* Forced-colors: the app paints card/panel chrome with clip-path +
+   inset box-shadow rings, both stripped by a forced palette. Restore
+   real borders so nothing collapses into an unreadable shape. */
+@media (forced-colors: active) {
+  .ckr-bento, .ckr-panel, .ckr-row, .ckr-input, .ckr-chip, .ckr-seg {
+    border: 1px solid CanvasText;
+    box-shadow: none !important;
+  }
+  .ckr-badge { border: 1px solid CanvasText; }
+  .ckr-btn { border: 1px solid ButtonText; box-shadow: none !important; }
+  .ckr-btn--primary, .ckr-seg[aria-selected="true"], .ckr-chip[aria-pressed="true"] {
+    background: Highlight; color: HighlightText; border-color: Highlight;
+  }
+  .ckr-rail > i { border: 1px solid CanvasText; }
+  .ckr-rail > i.on { background: Highlight; }
+  a, .ckr-link { color: LinkText; }
+  :focus-visible { outline: 2px solid Highlight !important; outline-offset: 2px; }
+  .ckr-glyph { forced-color-adjust: auto; }
+}

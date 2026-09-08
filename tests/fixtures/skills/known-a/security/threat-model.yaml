@@ -1,0 +1,30 @@
+threats:
+  - id: T001
+    category: Spoofing
+    description: Unauthorized modification of skill metadata
+    likelihood: Low
+    impact: High
+    mitigation: Digitally sign all releases with Sigstore
+
+  - id: T002
+    category: Tampering
+    description: Malicious code injection in dependency chain
+    likelihood: Medium
+    impact: High
+    mitigation: Pin all dependencies; use SBOM for supply chain tracking
+
+  - id: T003
+    category: Information Disclosure
+    description: Secrets leaked in public repository
+    likelihood: Low
+    impact: Medium
+    mitigation: Pre-commit hooks scanning for secrets; CI secret detection
+
+mitigations:
+  - id: M001
+    description: All releases signed with Sigstore cosign
+    status: Implemented
+
+  - id: M002
+    description: SBOM generated for every release
+    status: Implemented

@@ -1,0 +1,101 @@
+{
+    "$id": "https://schemas.ckodex.org/evidence/v1/envelope.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "OpenEvidence Envelope v1",
+    "type": "object",
+    "required": [
+        "id",
+        "subject",
+        "statement",
+        "issuedAt",
+        "actor",
+        "signatures"
+    ],
+    "properties": {
+        "id": {
+            "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/Urn",
+            "description": "URN of this evidence envelope (immutable identifier)."
+        },
+        "subject": {
+            "type": "object",
+            "required": [
+                "urn",
+                "kind"
+            ],
+            "properties": {
+                "urn": {
+                    "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/Urn"
+                },
+                "kind": {
+                    "type": "string",
+                    "description": "Classifier for the subject (e.g. 'Model', 'Dataset', 'SkillBundle', 'AgentApp', 'Run')."
+                },
+                "labels": {
+                    "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/LabelMap"
+                }
+            },
+            "additionalProperties": false
+        },
+        "statement": {
+            "type": "object",
+            "required": [
+                "type",
+                "payload"
+            ],
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "Logical statement type (e.g. 'BuildProvenance', 'Inference', 'PolicyDecision', 'LifecycleTransition')."
+                },
+                "schema": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "Optional URI of a JSON Schema describing the payload structure."
+                },
+                "payload": {
+                    "type": "object",
+                    "description": "Evidence payload; structure depends on 'type' and optional 'schema'."
+                }
+            },
+            "additionalProperties": false
+        },
+        "issuedAt": {
+            "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/Timestamp"
+        },
+        "actor": {
+            "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/Actor"
+        },
+        "gal": {
+            "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/GAL",
+            "description": "Governance Autonomy Level at which this action/evidence occurred."
+        },
+        "asc": {
+            "type": "array",
+            "items": {
+                "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/ASC"
+            },
+            "description": "Atomic Security Controls active at the time of the action."
+        },
+        "chain": {
+            "type": "object",
+            "description": "Optional chain-of-custody information for linking envelopes.",
+            "properties": {
+                "previous": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/EvidenceRef"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "signatures": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/Signature"
+            }
+        }
+    },
+    "additionalProperties": false
+}

@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>STX v1 — Domain Graph</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root {
+    --paper:   #faf7f2;
+    --paper-2: #f2ede4;
+    --ink:     #1c1917;
+    --muted:   #57534e;
+    --accent:  #d46a3a;
+    --proof:   #7c3aed;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+  html, body { margin: 0; padding: 0; background: var(--paper); color: var(--ink);
+    font-family: "Geist", system-ui, -apple-system, "Helvetica Neue", sans-serif; }
+  .frame { max-width: 1080px; margin: 32px auto; padding: 0 24px; }
+  h1 { font-family: "Instrument Serif", Georgia, "Times New Roman", serif;
+       font-style: italic; font-weight: 400; font-size: 28px; margin: 0 0 4px; }
+  .sub { color: var(--muted); font-size: 14px; margin: 0 0 24px; }
+  .legend { display: flex; gap: 20px; margin: 16px 0 24px; font-size: 12px; color: var(--muted); }
+  .legend span { display: inline-block; width: 12px; height: 12px; vertical-align: middle;
+    margin-right: 6px; border-radius: 2px; }
+  .legend .ink   { background: var(--ink); }
+  .legend .acc   { background: var(--accent); }
+  .legend .proof { background: var(--proof); }
+  svg { width: 100%; height: auto; background:
+    radial-gradient(circle at 1px 1px, rgba(28,25,23,0.08) 1px, transparent 0) 0 0/16px 16px,
+    var(--paper); }
+  text { font-family: "Geist", system-ui, sans-serif; fill: var(--ink); }
+  .mono { font-family: "Geist Mono", ui-monospace, "SF Mono", Consolas, monospace; }
+  .label { font-size: 13px; font-weight: 500; }
+  .sub-label { font-size: 11px; fill: var(--muted); }
+  .edge { stroke: var(--ink); stroke-width: 1.5; fill: none; }
+  .edge-proof { stroke: var(--proof); stroke-width: 1.5; fill: none; }
+  .edge-accent { stroke: var(--accent); stroke-width: 1.5; fill: none; }
+  .edge-label { font-size: 11px; fill: var(--muted); }
+  .node-box { fill: var(--paper-2); stroke: var(--ink); stroke-width: 1.5; rx: 4; }
+  .node-box-proof { fill: var(--paper-2); stroke: var(--proof); stroke-width: 1.5; rx: 4; }
+  .node-box-accent { fill: var(--paper-2); stroke: var(--accent); stroke-width: 2; rx: 4; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <h1>STX v1 — Domain Graph</h1>
+  <p class="sub">Skills Transparency Exchange · one typed graph projected by three transports</p>
+  <div class="legend">
+    <div><span class="ink"></span> ink — structural node</div>
+    <div><span class="acc"></span> accent — handshake / focal</div>
+    <div><span class="proof"></span> proof-violet — cryptographic plane</div>
+  </div>
+
+  <svg viewBox="0 0 1040 720" role="img" aria-label="STX domain graph: Harness has CapabilityDescriptor and 1..n Sessions; each Session has 0..n SkillStates and 0..n PolicyGates; each SkillState has 0..n TierTransitions; at GAL three or higher, each TierTransition has an EvidenceBundle; at GAL four or higher, each EvidenceBundle has an AttestationChain.">
+    <defs>
+      <marker id="arrow" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+        <path d="M0 0 L12 6 L0 12 z" fill="#1c1917"/>
+      </marker>
+      <marker id="arrow-proof" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+        <path d="M0 0 L12 6 L0 12 z" fill="#7c3aed"/>
+      </marker>
+      <marker id="arrow-accent" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+        <path d="M0 0 L12 6 L0 12 z" fill="#d46a3a"/>
+      </marker>
+    </defs>
+
+    <!-- HARNESS (row 1) -->
+    <g aria-label="Harness — root node">
+      <rect class="node-box" x="120" y="40"  width="240" height="80"/>
+      <text class="label"     x="240" y="72"  text-anchor="middle">Harness</text>
+      <text class="sub-label mono" x="240" y="92"  text-anchor="middle">urn:ckodex:harness:*</text>
+      <text class="sub-label"     x="240" y="108" text-anchor="middle">root of the STX graph</text>
+    </g>
+
+    <!-- CAPABILITY (row 1, right) — FOCAL ACCENT -->
+    <g aria-label="CapabilityDescriptor — handshake artifact, focal node">
+      <rect class="node-box-accent" x="680" y="40"  width="240" height="80"/>
+      <text class="label"     x="800" y="68"  text-anchor="middle">CapabilityDescriptor</text>
+      <text class="sub-label mono" x="800" y="88" text-anchor="middle">stxVersion = "v1"</text>
+      <text class="sub-label mono" x="800" y="104" text-anchor="middle">defaultPrivacyMode = audit-private</text>
+    </g>
+
+    <!-- SESSION (row 2) -->
+    <g aria-label="Session">
+      <rect class="node-box" x="120" y="180" width="240" height="80"/>
+      <text class="label"     x="240" y="208" text-anchor="middle">Session</text>
+      <text class="sub-label mono" x="240" y="228" text-anchor="middle">currentGal · privacyMode</text>
+      <text class="sub-label"     x="240" y="244" text-anchor="middle">scopes a skill pool</text>
+    </g>
+
+    <!-- POLICYGATE (row 2, right) -->
+    <g aria-label="PolicyGate">
+      <rect class="node-box" x="680" y="180" width="240" height="80"/>
+      <text class="label"     x="800" y="208" text-anchor="middle">PolicyGate</text>
+      <text class="sub-label mono" x="800" y="228" text-anchor="middle">pre_exec | runtime | post_exec</text>
+      <text class="sub-label"     x="800" y="244" text-anchor="middle">allow | deny | warn</text>
+    </g>
+
+    <!-- SKILLSTATE (row 3) -->
+    <g aria-label="SkillState">
+      <rect class="node-box" x="120" y="320" width="240" height="80"/>
+      <text class="label"     x="240" y="348" text-anchor="middle">SkillState</text>
+      <text class="sub-label mono" x="240" y="368" text-anchor="middle">tier · score</text>
+      <text class="sub-label mono" x="240" y="384" text-anchor="middle">skillId = sha256(name+ns+iss)</text>
+    </g>
+
+    <!-- TIER TRANSITION (row 4) -->
+    <g aria-label="TierTransition">
+      <rect class="node-box" x="120" y="460" width="240" height="80"/>
+      <text class="label"     x="240" y="488" text-anchor="middle">TierTransition</text>
+      <text class="sub-label mono" x="240" y="508" text-anchor="middle">fromTier → toTier</text>
+      <text class="sub-label mono" x="240" y="524" text-anchor="middle">trigger · score</text>
+    </g>
+
+    <!-- EVIDENCEBUNDLE (row 4, center-right) — PROOF PLANE -->
+    <g aria-label="EvidenceBundle — cryptographic proof plane">
+      <rect class="node-box-proof" x="420" y="460" width="240" height="80"/>
+      <text class="label"     x="540" y="488" text-anchor="middle" fill="#7c3aed">EvidenceBundle</text>
+      <text class="sub-label mono" x="540" y="508" text-anchor="middle">predicate=ckodex/skill-lifecycle@v1</text>
+      <text class="sub-label mono" x="540" y="524" text-anchor="middle">digest = sha256:&hellip;</text>
+    </g>
+
+    <!-- ATTESTATIONCHAIN (row 4, far right) — PROOF PLANE -->
+    <g aria-label="AttestationChain — signing plane">
+      <rect class="node-box-proof" x="720" y="460" width="200" height="80"/>
+      <text class="label"     x="820" y="488" text-anchor="middle" fill="#7c3aed">AttestationChain</text>
+      <text class="sub-label mono" x="820" y="508" text-anchor="middle">cosign · dilithium3</text>
+      <text class="sub-label"     x="820" y="524" text-anchor="middle">required at GAL ≥ 4</text>
+    </g>
+
+    <!-- EDGES -->
+    <!-- Harness → Capability (accent, handshake focal) -->
+    <path class="edge-accent" d="M 360 80 L 680 80" marker-end="url(#arrow-accent)"/>
+    <text class="edge-label" x="520" y="72" text-anchor="middle">has_capability</text>
+
+    <!-- Harness → Session -->
+    <path class="edge" d="M 240 120 L 240 180" marker-end="url(#arrow)"/>
+    <text class="edge-label" x="252" y="154" text-anchor="start">hasSession 1..n</text>
+
+    <!-- Session → SkillState -->
+    <path class="edge" d="M 240 260 L 240 320" marker-end="url(#arrow)"/>
+    <text class="edge-label" x="252" y="294" text-anchor="start">hasSkillState 0..n</text>
+
+    <!-- Session → PolicyGate -->
+    <path class="edge" d="M 360 220 L 680 220" marker-end="url(#arrow)"/>
+    <text class="edge-label" x="520" y="212" text-anchor="middle">evaluatedBy 0..n</text>
+
+    <!-- SkillState → TierTransition -->
+    <path class="edge" d="M 240 400 L 240 460" marker-end="url(#arrow)"/>
+    <text class="edge-label" x="252" y="434" text-anchor="start">hasTransition 0..n</text>
+
+    <!-- TierTransition → EvidenceBundle (proof) -->
+    <path class="edge-proof" d="M 360 500 L 420 500" marker-end="url(#arrow-proof)"/>
+    <text class="edge-label" x="390" y="492" text-anchor="middle" fill="#7c3aed">GAL ≥ 3</text>
+
+    <!-- EvidenceBundle → AttestationChain (proof) -->
+    <path class="edge-proof" d="M 660 500 L 720 500" marker-end="url(#arrow-proof)"/>
+    <text class="edge-label" x="690" y="492" text-anchor="middle" fill="#7c3aed">GAL ≥ 4</text>
+
+    <!-- Caption strip -->
+    <text class="sub-label" x="520" y="620" text-anchor="middle">Schema source of truth: schemas/stx-domain.v1.schema.json</text>
+    <text class="sub-label" x="520" y="640" text-anchor="middle">Transports REST · gRPC · GraphQL project this graph identically</text>
+    <text class="sub-label" x="520" y="660" text-anchor="middle">When transport and schema disagree, the schema wins</text>
+  </svg>
+</div>
+</body>
+</html>

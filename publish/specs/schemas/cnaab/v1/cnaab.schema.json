@@ -1,0 +1,192 @@
+{
+    "$id": "https://schemas.ckodex.org/cnaab/v1/cnaab.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "CKODEX Agent App Bundle (CNAAB) v1",
+    "type": "object",
+    "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec"
+    ],
+    "properties": {
+        "apiVersion": {
+            "type": "string",
+            "const": "cnaab.ckodex.org/v1"
+        },
+        "kind": {
+            "type": "string",
+            "const": "AgentAppBundle"
+        },
+        "metadata": {
+            "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/ResourceMetadata"
+        },
+        "spec": {
+            "type": "object",
+            "required": [
+                "rootAgentId",
+                "agents"
+            ],
+            "properties": {
+                "rootAgentId": {
+                    "type": "string",
+                    "description": "ID of the primary/root agent for this app."
+                },
+                "agents": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": "#/$defs/Agent"
+                    }
+                },
+                "policiesRef": {
+                    "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/Urn",
+                    "description": "Prove PolicyBundle URN governing this app."
+                },
+                "environment": {
+                    "type": "object",
+                    "description": "Non-secret environment configuration. Secrets are referenced via URNs.",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "tenantConstraints": {
+                    "type": "object",
+                    "properties": {
+                        "allowedTenants": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/Urn"
+                            }
+                        },
+                        "forbiddenTenants": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/Urn"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "ui": {
+                    "type": "object",
+                    "description": "Optional UI hints for apps integrating this bundle.",
+                    "properties": {
+                        "preferredLayout": {
+                            "type": "string"
+                        },
+                        "tags": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "$defs": {
+        "SkillRef": {
+            "title": "SkillRef",
+            "type": "object",
+            "required": [
+                "bundleUrn",
+                "skillId"
+            ],
+            "properties": {
+                "bundleUrn": {
+                    "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/Urn"
+                },
+                "skillId": {
+                    "type": "string",
+                    "description": "ID of the skill within the referenced CNSB."
+                }
+            },
+            "additionalProperties": false
+        },
+        "RuntimeConfig": {
+            "title": "RuntimeConfig",
+            "type": "object",
+            "required": [
+                "provider"
+            ],
+            "properties": {
+                "provider": {
+                    "type": "string",
+                    "description": "e.g. 'openai', 'anthropic', 'mcp', 'custom-http', 'internal-rust'."
+                },
+                "model": {
+                    "type": "string",
+                    "description": "Model identifier if applicable (e.g. 'gpt-5.1', 'claude-3.7-opus')."
+                },
+                "endpoint": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "Custom endpoint for non-hosted runtimes."
+                },
+                "maxTokens": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "temperature": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 2
+                }
+            },
+            "additionalProperties": false
+        },
+        "Agent": {
+            "title": "Agent",
+            "type": "object",
+            "required": [
+                "id",
+                "role",
+                "galMin",
+                "galMax"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Agent identifier within this app."
+                },
+                "role": {
+                    "type": "string",
+                    "description": "Short description of the agent's purpose (e.g. 'Planner', 'Guardrail', 'Retriever')."
+                },
+                "description": {
+                    "type": "string"
+                },
+                "galMin": {
+                    "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/GAL"
+                },
+                "galMax": {
+                    "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/GAL"
+                },
+                "asc": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/ASC"
+                    }
+                },
+                "skills": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/SkillRef"
+                    }
+                },
+                "runtime": {
+                    "$ref": "#/$defs/RuntimeConfig"
+                },
+                "labels": {
+                    "$ref": "https://schemas.ckodex.org/common/types.schema.json#/$defs/LabelMap"
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false
+}

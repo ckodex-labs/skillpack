@@ -1,0 +1,1 @@
+{"mediaType":"application/vnd.dev.sigstore.bundle.v0.3+json","verificationMaterial":{"x509CertificateChain":{"certificates":[{"rawBytes":"MIIC..."}]},"tlogEntries":[{"logIndex":12345678}]},"messageSignature":{"messageDigest":{"algorithm":"SHA2_256","digest":"abc123"},"signature":"MEUCIQ..."}}

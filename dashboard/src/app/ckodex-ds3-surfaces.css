@@ -1,0 +1,429 @@
+/* ============================================================
+ * CKODEX-DS-3 v3.0.0 — vendored from the ckodex-design skill.
+ * Part 2 of 2 (sections 7–12). Part 1 (tokens, themes, type,
+ * reset) is ckodex-ds3-core.css. Split only to honor the repo's
+ * 500-line file ceiling; content is otherwise verbatim.
+ * ============================================================ */
+
+/* ============================================================
+ * 7 · SURFACES — quiet is square; the chamfer means sealed
+ * ============================================================ */
+
+/* Quiet card — the default container. Square, hairline, flat. */
+.ck-quiet {
+  position: relative;
+  background: var(--ck-bg-1);
+  border: 1px solid var(--ck-hairline);
+}
+
+/* Sealed surface — the ONLY chamfered thing in DS-3. Seeing the
+   cut corner must mean an attested / sealed state exists. */
+.ck-sealed {
+  position: relative;
+  background: var(--ck-bg-1);
+  clip-path: polygon(
+    var(--ck-chamfer) 0, calc(100% - var(--ck-chamfer)) 0,
+    100% var(--ck-chamfer), 100% calc(100% - var(--ck-chamfer)),
+    calc(100% - var(--ck-chamfer)) 100%, var(--ck-chamfer) 100%,
+    0 calc(100% - var(--ck-chamfer)), 0 var(--ck-chamfer)
+  );
+}
+.ck-sealed::after {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  clip-path: inherit;
+  box-shadow: inset 0 0 0 var(--ck-stroke-seal) var(--ck-seal);
+}
+
+/* ============================================================
+ * 8 · CONTROLS
+ * ============================================================ */
+
+/* Buttons — square (chamfer is sealed-only), mono labels.
+   primary = rust = the focal action, ≤2 per view.
+   emergency = red = requires an active emergency protocol. */
+.ck-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--ck-ff-mono);
+  font-weight: 600;
+  font-size: var(--ck-fs-micro);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-variant-ligatures: none;
+  padding: 10px 16px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  background: transparent;
+  color: var(--ck-fg-1);
+  transition: border-color var(--ck-t-micro) var(--ck-ease),
+              filter var(--ck-t-micro) var(--ck-ease),
+              color var(--ck-t-micro) var(--ck-ease);
+}
+.ck-btn:focus-visible { outline: none; box-shadow: var(--ck-ring-focus); }
+.ck-btn--primary { background: var(--ck-accent); border-color: var(--ck-accent); color: var(--ck-accent-ink); }
+.ck-btn--primary:hover { filter: brightness(1.07); }
+.ck-btn--quiet { border-color: var(--ck-hairline-strong); color: var(--ck-fg-1); }
+.ck-btn--quiet:hover { border-color: var(--ck-fg-1); }
+.ck-btn--ghost { color: var(--ck-fg-3); padding: 10px 12px; }
+.ck-btn--ghost:hover { color: var(--ck-fg-1); }
+.ck-btn--emergency { border-color: var(--ck-alarm); color: var(--ck-alarm); }
+.ck-btn--emergency:hover { background: color-mix(in oklab, var(--ck-alarm) 8%, transparent); }
+.ck-btn[disabled], .ck-btn--disabled { opacity: .45; cursor: not-allowed; }
+
+/* Fields — square, hairline, evidence-grade placeholder */
+.ck-field {
+  font-family: var(--ck-ff-ui);
+  font-size: var(--ck-fs-body-sm);
+  color: var(--ck-fg-1);
+  background: var(--ck-bg-1);
+  border: 1px solid var(--ck-hairline-strong);
+  padding: 9px 12px;
+}
+.ck-field::placeholder { color: var(--ck-fg-mute); }
+.ck-field:focus-visible { outline: none; box-shadow: var(--ck-ring-focus); border-color: transparent; }
+
+/* ============================================================
+ * 9 · EVIDENCE VOCABULARY
+ * ============================================================ */
+
+/* Digest — algorithm prefix required, middle-ellipsis truncation,
+   never below a 13px hit area. Operable, never inert grey text. */
+.ck-hash {
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-evidence);
+  letter-spacing: .02em;
+  font-variant-ligatures: none;
+  color: var(--ck-fg-3);
+  background: color-mix(in oklab, var(--ck-fg-1) 5%, transparent);
+  border: 1px solid var(--ck-hairline);
+  padding: 3px 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: color var(--ck-t-micro) var(--ck-ease), border-color var(--ck-t-micro) var(--ck-ease);
+}
+.ck-hash:hover { color: var(--ck-fg-1); border-color: var(--ck-hairline-strong); }
+.ck-hash:focus-visible { outline: none; box-shadow: var(--ck-ring-focus); }
+
+/* Claim chips — six epistemic states, closed set. Glyphs from the
+   CNDL safe-set. Only attested earns violet; only quarantined earns red. */
+.ck-chip {
+  font-family: var(--ck-ff-mono);
+  font-weight: 600;
+  font-size: var(--ck-fs-micro);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-variant-ligatures: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border: 1px solid var(--ck-hairline-strong);
+  color: var(--ck-fg-3);
+  background: transparent;
+}
+.ck-chip--observed     { border-color: var(--ck-fg-1); color: var(--ck-fg-1); }
+.ck-chip--inferred     { /* tone default */ }
+.ck-chip--claimed      { /* tone default */ }
+.ck-chip--attested     { border-color: var(--ck-proof); color: var(--ck-proof); }
+.ck-chip--contradicted { border-color: var(--ck-fg-1); color: var(--ck-fg-1); background: var(--ck-bg-2); }
+.ck-chip--quarantined  { border-color: var(--ck-alarm); color: var(--ck-alarm); }
+
+/* Receipt — one entry in the Evidence Margin. Every entry is one of:
+   generated · transformed · evaluated · rejected · approved · exported · signed. */
+.ck-receipt {
+  display: grid;
+  grid-template-columns: var(--ck-rule) 1fr;
+  gap: 0 10px;
+}
+.ck-receipt > .ck-receipt__rule { background: var(--ck-hairline); }
+.ck-receipt--proof > .ck-receipt__rule { background: var(--ck-proof); }
+.ck-receipt--alarm > .ck-receipt__rule { background: var(--ck-alarm); }
+.ck-receipt__time {
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-micro);
+  color: var(--ck-fg-mute);
+  font-variant-ligatures: none;
+}
+.ck-receipt__event { font-family: var(--ck-ff-ui); font-size: var(--ck-fs-caption); font-weight: 500; color: var(--ck-fg-1); }
+.ck-receipt--proof .ck-receipt__event { color: var(--ck-proof); }
+.ck-receipt--alarm .ck-receipt__event { color: var(--ck-alarm); }
+.ck-receipt__detail {
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-evidence);
+  color: var(--ck-fg-3);
+  font-variant-ligatures: none;
+}
+
+/* Provenance stamp — the ExportGate's signature. The artifact leaves
+   with an evidence envelope, or it does not leave. */
+.ck-stamp {
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-evidence);
+  font-weight: 500;
+  font-variant-ligatures: none;
+  color: var(--ck-proof);
+  border: 1px solid var(--ck-proof);
+  padding: 5px 9px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+/* ============================================================
+ * 10 · PAGE SHELLS — composition is semantic
+ * Landmarks are required: <header> <nav> <main> <aside> <footer>.
+ * The Evidence Margin is an <aside>, always rightmost, never a tab.
+ * ============================================================ */
+
+/* Console shell — operator surface: header / nav · main · margin / footer */
+.ck-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: var(--ck-nav-w) minmax(0, 1fr) var(--ck-margin-w);
+  grid-template-areas:
+    "header header header"
+    "nav    main   margin"
+    "footer footer footer";
+  background: var(--ck-bg-0);
+}
+/* Document shell — editorial surface: no nav rail, margin stays */
+.ck-shell--document {
+  grid-template-columns: minmax(0, 1fr) var(--ck-margin-w);
+  grid-template-areas:
+    "header header"
+    "main   margin"
+    "footer footer";
+}
+/* Reading shell — single measured column, margin collapses to footer receipts */
+.ck-shell--reading {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "header"
+    "main"
+    "footer";
+}
+
+.ck-shell__header {
+  grid-area: header;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ck-sp-4);
+  padding: 0 var(--ck-sp-5);
+  min-height: 52px;
+  border-bottom: 1px solid var(--ck-hairline);
+  background: var(--ck-bg-0);
+}
+.ck-shell__nav {
+  grid-area: nav;
+  border-right: 1px solid var(--ck-hairline);
+  padding: var(--ck-sp-4) 0;
+  min-width: 0;
+}
+.ck-shell__main {
+  grid-area: main;
+  padding: var(--ck-sp-6) var(--ck-sp-6) var(--ck-sp-10);
+  min-width: 0;
+}
+.ck-shell__main > .ck-measure, .ck-measure { max-width: var(--ck-measure); }
+.ck-shell__margin {
+  grid-area: margin;
+  border-left: 1px solid var(--ck-hairline);
+  padding: var(--ck-sp-4) var(--ck-sp-4) var(--ck-sp-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ck-sp-3);
+  min-width: 0;
+}
+.ck-shell__footer {
+  grid-area: footer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ck-sp-4);
+  padding: var(--ck-sp-2) var(--ck-sp-5);
+  border-top: 1px solid var(--ck-hairline);
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-micro);
+  color: var(--ck-fg-mute);
+  font-variant-ligatures: none;
+}
+
+/* Masthead — brand · crumb · urn, left side of the header */
+.ck-masthead { display: flex; align-items: baseline; gap: var(--ck-sp-3); min-width: 0; }
+.ck-masthead__brand {
+  font-family: var(--ck-ff-mono);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  color: var(--ck-fg-1);
+}
+.ck-masthead__crumb { font-family: var(--ck-ff-ui); font-size: var(--ck-fs-body-sm); color: var(--ck-fg-2); }
+.ck-masthead__urn {
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-micro);
+  color: var(--ck-fg-mute);
+  font-variant-ligatures: none;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* Nav rail items — square, quiet; rust only on the active intent */
+.ck-nav__item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px var(--ck-sp-5);
+  font-family: var(--ck-ff-ui);
+  font-size: var(--ck-fs-body-sm);
+  color: var(--ck-fg-3);
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  text-decoration: none; border-bottom: none;
+}
+.ck-nav__item:hover { color: var(--ck-fg-1); }
+.ck-nav__item[aria-current="page"], .ck-nav__item--active {
+  color: var(--ck-fg-1);
+  border-left-color: var(--ck-fg-1);
+  background: color-mix(in oklab, var(--ck-fg-1) 4%, transparent);
+}
+
+/* ------------------------------------------------------------
+ * 10b · AUTHORITY FOOTER — the handling band
+ * Borrows the classification-banner idea, bound to the budget:
+ * the LEVEL is an assertion. open / internal / restricted carry
+ * NO hue — presence comes from ink weight and inversion. Only
+ * `sealed` earns violet (a proof object exists) and only
+ * `contained` earns red (an active emergency protocol). The band
+ * states, left → center → right: controlling authority · handling
+ * level · environment + mode, with the verbatim invariant set
+ * beside the very mode it governs. Render it as the shell
+ * <footer>, or fixed + on-demand via the dock and peek handle.
+ * ------------------------------------------------------------ */
+.ck-authority {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--ck-sp-5);
+  padding: 8px var(--ck-sp-5);
+  min-height: 34px;
+  border-top: 1px solid var(--ck-hairline-strong);
+  background: var(--ck-bg-0);
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-micro);
+  letter-spacing: .04em;
+  font-variant-ligatures: none;
+  color: var(--ck-fg-3);
+}
+.ck-authority__zone { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ck-authority__zone--start { justify-self: start; align-items: flex-start; text-align: left; }
+.ck-authority__zone--end   { justify-self: end;   align-items: flex-end;   text-align: right; }
+.ck-authority__k { color: var(--ck-fg-mute); letter-spacing: .14em; text-transform: uppercase; }
+.ck-authority__v {
+  color: var(--ck-fg-2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 42ch;
+}
+.ck-authority__invariant { color: var(--ck-fg-mute); }
+
+/* center — the marking; the dominant element */
+.ck-authority__center { justify-self: center; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.ck-authority__level {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-weight: 600;
+  font-size: var(--ck-fs-evidence);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ck-fg-1);
+  white-space: nowrap;
+}
+.ck-authority__glyph { font-size: 13px; line-height: 1; }
+.ck-authority__handling { color: var(--ck-fg-mute); letter-spacing: .12em; text-transform: uppercase; }
+
+/* ---- levels: color is an assertion ---- */
+/* open — quietest; unrestricted, no hue */
+.ck-authority--open { border-top-color: var(--ck-hairline); }
+.ck-authority--open .ck-authority__level { color: var(--ck-fg-3); }
+
+/* internal — default controlled; ink, no hue */
+.ck-authority--internal .ck-authority__level { color: var(--ck-fg-1); }
+
+/* restricted — sensitive; INVERTED stamp, still no hue */
+.ck-authority--restricted {
+  background: var(--ck-fg-1);
+  border-top-color: var(--ck-fg-1);
+  color: color-mix(in oklab, var(--ck-bg-0) 76%, var(--ck-fg-1));
+}
+.ck-authority--restricted .ck-authority__k { color: color-mix(in oklab, var(--ck-bg-0) 58%, var(--ck-fg-1)); }
+.ck-authority--restricted .ck-authority__v,
+.ck-authority--restricted .ck-authority__level,
+.ck-authority--restricted .ck-authority__handling,
+.ck-authority--restricted .ck-authority__invariant { color: var(--ck-bg-0); }
+
+/* sealed — proof-bound; violet EARNS its place (a proof object) */
+.ck-authority--sealed { border-top: var(--ck-stroke-seal) solid var(--ck-proof); }
+.ck-authority--sealed .ck-authority__level,
+.ck-authority--sealed .ck-authority__glyph { color: var(--ck-proof); }
+
+/* contained — active emergency only; red is sacred */
+.ck-authority--contained {
+  border-top: var(--ck-stroke-3) solid var(--ck-alarm);
+  background: color-mix(in oklab, var(--ck-alarm) 8%, var(--ck-bg-0));
+}
+.ck-authority--contained .ck-authority__level,
+.ck-authority--contained .ck-authority__glyph { color: var(--ck-alarm); }
+
+/* ---- on-demand: fixed dock + peek handle ---- */
+.ck-authority-dock {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+  transform: translateY(0);
+  transition: transform var(--ck-t-state) var(--ck-ease);
+}
+.ck-authority-dock[data-revealed="true"]  { transform: translateY(0); }
+.ck-authority-dock[data-revealed="false"] { transform: translateY(110%); }
+.ck-authority-dock .ck-authority { box-shadow: 0 -1px 0 var(--ck-hairline); }
+.ck-authority__handle {
+  position: absolute; bottom: 100%; right: var(--ck-sp-5);
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 5px 12px;
+  font-family: var(--ck-ff-mono); font-weight: 600;
+  font-size: var(--ck-fs-micro); letter-spacing: .16em; text-transform: uppercase;
+  font-variant-ligatures: none;
+  color: var(--ck-fg-1);
+  background: var(--ck-bg-0);
+  border: 1px solid var(--ck-hairline-strong); border-bottom: none;
+  cursor: pointer;
+}
+.ck-authority__handle:focus-visible { outline: none; box-shadow: var(--ck-ring-focus); }
+.ck-authority__handle--sealed    { color: var(--ck-proof); border-color: var(--ck-proof); }
+.ck-authority__handle--contained { color: var(--ck-alarm); border-color: var(--ck-alarm); }
+@media (prefers-reduced-motion: reduce) { .ck-authority-dock { transition: none; } }
+
+/* ============================================================
+ * 11 · MOTION — Resolve survives as the single ceremony
+ * ============================================================ */
+@keyframes ck-resolve-outline { 0%,100%{opacity:0}   5%,25%{opacity:1} 25%,100%{opacity:1} }
+@keyframes ck-resolve-witness { 0%,25%{opacity:0}  30%,50%{opacity:1} 50%,100%{opacity:1} }
+@keyframes ck-resolve-nucleus { 0%,50%{opacity:0}  55%,75%{opacity:1} 75%,100%{opacity:1} }
+@keyframes ck-resolve-anchor  { 0%,75%{opacity:0}  80%,100%{opacity:1} }
+.ck-resolve-outline { animation: ck-resolve-outline var(--ck-resolve) var(--ck-ease) 1 both; }
+.ck-resolve-witness { animation: ck-resolve-witness var(--ck-resolve) var(--ck-ease) 1 both; }
+.ck-resolve-nucleus { animation: ck-resolve-nucleus var(--ck-resolve) var(--ck-ease) 1 both; }
+.ck-resolve-anchor  { animation: ck-resolve-anchor  var(--ck-resolve) var(--ck-ease) 1 both; }
+@media (prefers-reduced-motion: reduce) {
+  .ck-resolve-outline, .ck-resolve-witness, .ck-resolve-nucleus, .ck-resolve-anchor { animation: none; }
+  .ck-btn, .ck-hash { transition: none; }
+}
+
+/* ============================================================
+ * 12 · UTILITIES
+ * ============================================================ */
+.ck-stack-1 { display: flex; flex-direction: column; gap: var(--ck-sp-1); }
+.ck-stack-2 { display: flex; flex-direction: column; gap: var(--ck-sp-2); }
+.ck-stack-3 { display: flex; flex-direction: column; gap: var(--ck-sp-3); }
+.ck-stack-4 { display: flex; flex-direction: column; gap: var(--ck-sp-4); }
+.ck-row-2   { display: flex; align-items: center; gap: var(--ck-sp-2); }
+.ck-row-3   { display: flex; align-items: center; gap: var(--ck-sp-3); }
+.ck-row-4   { display: flex; align-items: center; gap: var(--ck-sp-4); }

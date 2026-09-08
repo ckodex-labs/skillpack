@@ -1,0 +1,330 @@
+// CKODEX Skills Transparency Exchange — gRPC transport.
+//
+// Projects the shared domain model (stx-domain.v1.schema.json) into
+// proto3. The schema is normative; this file is a rendering of it.
+// When the proto and the JSON Schema disagree, the JSON Schema wins.
+//
+// Default privacy mode: audit-private. Other modes are negotiated via
+// the GetCapability RPC at session start.
+
+syntax = "proto3";
+
+package ckodex.stx.v1;
+
+import "google/protobuf/timestamp.proto";
+
+// ──────────────────────────────────────────────────────────────────
+// Enums
+// ──────────────────────────────────────────────────────────────────
+
+enum Tier {
+  TIER_UNSPECIFIED = 0;
+  TIER_L0          = 1;
+  TIER_L1          = 2;
+  TIER_L2          = 3;
+  TIER_L3          = 4;
+  TIER_L4R         = 5;
+  TIER_L4X         = 6;
+}
+
+enum PrivacyMode {
+  PRIVACY_UNSPECIFIED      = 0;
+  PRIVACY_DEBUG_LOCAL      = 1;
+  PRIVACY_AUDIT_PRIVATE    = 2;  // default
+  PRIVACY_PUBLIC_ANCHOR    = 3;
+  PRIVACY_REGULATED_EXPORT = 4;
+}
+
+enum Transport {
+  TRANSPORT_UNSPECIFIED = 0;
+  TRANSPORT_REST        = 1;
+  TRANSPORT_GRPC        = 2;
+  TRANSPORT_GRAPHQL     = 3;
+}
+
+enum TriggerName {
+  TRIGGER_UNSPECIFIED      = 0;
+  TRIGGER_SCORE_THRESHOLD  = 1;
+  TRIGGER_POLICY_PREFILTER = 2;
+  TRIGGER_INTENT_TO_INVOKE = 3;
+  TRIGGER_TOPIC_DRIFT      = 4;
+  TRIGGER_IDLE_TIMEOUT     = 5;
+  TRIGGER_SCORE_DECAY      = 6;
+  TRIGGER_BUDGET_PRESSURE  = 7;
+  TRIGGER_TASK_COMPLETE    = 8;
+  TRIGGER_MUTEX            = 9;
+  TRIGGER_FRAMEWORK_BREAK  = 10;
+  TRIGGER_CAPABILITY_DENIED = 11;
+  TRIGGER_EMERGENCY_EVICT  = 12;
+  TRIGGER_EXPLICIT_USER_SIGNAL = 13;
+  TRIGGER_RESOURCE_LOAD    = 14;
+  TRIGGER_EXECUTION_COMPLETE = 15;
+  TRIGGER_POLICY_REVOKED   = 16;
+}
+
+enum EventType {
+  EVENT_UNSPECIFIED           = 0;
+  EVENT_SESSION_OPEN          = 1;
+  EVENT_SESSION_CLOSE         = 2;
+  EVENT_SKILL_REGISTERED      = 3;
+  EVENT_TIER_TRANSITION       = 4;
+  EVENT_EVIDENCE_EMITTED      = 5;
+  EVENT_ATTESTATION_SIGNED    = 6;
+  EVENT_POLICY_GATE_EVALUATED = 7;
+  EVENT_CAPABILITY_UPDATED    = 8;
+  EVENT_EMERGENCY_PROTOCOL    = 9;
+}
+
+// ──────────────────────────────────────────────────────────────────
+// Capability handshake
+// ──────────────────────────────────────────────────────────────────
+
+message CapabilityDescriptor {
+  string stx_version = 1;                 // must be "v1"
+  repeated Transport transports = 2;
+  repeated PrivacyMode privacy_modes_supported = 3;
+  PrivacyMode default_privacy_mode = 4;   // MUST be PRIVACY_AUDIT_PRIVATE for v1
+  int32 max_events_per_second = 5;
+  int32 max_query_depth = 6;              // GraphQL only; 0 if unsupported
+  string harness_id = 7;
+  string harness_version = 8;
+  string framework_version = 9;
+}
+
+// ──────────────────────────────────────────────────────────────────
+// Graph node types
+// ──────────────────────────────────────────────────────────────────
+
+message Signature {
+  enum Type {
+    SIGNATURE_UNSPECIFIED = 0;
+    SIGNATURE_COSIGN      = 1;
+    SIGNATURE_PGP         = 2;
+    SIGNATURE_X509        = 3;
+    SIGNATURE_DILITHIUM3  = 4;
+  }
+  Type   type = 1;
+  string ref  = 2;
+}
+
+message Harness {
+  string id = 1;
+  string framework_version = 2;
+  CapabilityDescriptor capability = 3;
+  repeated string session_ids = 4;
+}
+
+message Session {
+  string id = 1;
+  string harness_id = 2;
+  google.protobuf.Timestamp started_at = 3;
+  google.protobuf.Timestamp ended_at = 4;
+  int32 current_gal = 5;
+  PrivacyMode privacy_mode = 6;
+  int32 skill_pool_tokens_budget = 7;
+  int32 skill_pool_tokens_current = 8;
+  repeated string skill_state_ids = 9;
+}
+
+message SkillState {
+  string id = 1;
+  string session_id = 2;
+  string skill_id = 3;          // canonical sha256:<hex>
+  string skill_name = 4;        // redacted under public-anchor
+  string skill_version = 5;
+  Tier   tier = 6;
+  double score = 7;
+  int32  turns_since_last_reference = 8;
+  int32  token_cost = 9;
+  bool   locked = 10;
+  repeated string transition_ids = 11;
+}
+
+message TierTransition {
+  string id = 1;
+  string skill_state_id = 2;
+  google.protobuf.Timestamp timestamp = 3;
+  Tier   from_tier = 4;
+  Tier   to_tier = 5;
+  TriggerName trigger = 6;
+  double score = 7;
+  string evidence_bundle_id = 8;   // empty when GAL < 3 and debug-local
+}
+
+message EvidenceBundle {
+  string id = 1;
+  string predicate = 2;               // must be "ckodex/skill-lifecycle@v1"
+  string subject = 3;
+  google.protobuf.Timestamp timestamp = 4;
+  PrivacyMode privacy_mode = 5;
+  string policy_version = 6;
+  string digest = 7;
+  string rekor_anchor = 8;
+  repeated string transition_ids = 9;
+  string attestation_chain_id = 10;
+}
+
+message AttestationChain {
+  string id = 1;
+  string issuer = 2;
+  google.protobuf.Timestamp signed_at = 3;
+  repeated Signature signatures = 4;
+  repeated string evidence_bundle_ids = 5;
+}
+
+message PolicyGate {
+  enum Name {
+    POLICY_UNSPECIFIED = 0;
+    POLICY_PRE_EXEC    = 1;
+    POLICY_RUNTIME     = 2;
+    POLICY_POST_EXEC   = 3;
+    POLICY_PROMOTION   = 4;
+    POLICY_EMERGENCY   = 5;
+  }
+  enum Decision {
+    DECISION_UNSPECIFIED = 0;
+    DECISION_ALLOW       = 1;
+    DECISION_DENY        = 2;
+    DECISION_WARN        = 3;
+  }
+  string   id = 1;
+  Name     name = 2;
+  Decision decision = 3;
+  google.protobuf.Timestamp evaluated_at = 4;
+  string   reason = 5;
+  string   skill_state_id = 6;
+}
+
+// ──────────────────────────────────────────────────────────────────
+// Query envelope
+// ──────────────────────────────────────────────────────────────────
+
+message GraphNode {
+  oneof node {
+    Harness          harness = 1;
+    Session          session = 2;
+    SkillState       skill_state = 3;
+    TierTransition   transition = 4;
+    EvidenceBundle   evidence = 5;
+    AttestationChain attestation = 6;
+    PolicyGate       policy_gate = 7;
+  }
+}
+
+message PageInfo {
+  bool   has_next = 1;
+  string cursor = 2;
+  int32  total = 3;
+}
+
+message QueryError {
+  enum Code {
+    CODE_UNSPECIFIED       = 0;
+    CODE_NOT_FOUND         = 1;
+    CODE_DENIED            = 2;
+    CODE_RATE_LIMITED      = 3;
+    CODE_INVALID_REQUEST   = 4;
+    CODE_PRIVACY_VIOLATION = 5;
+    CODE_VERSION_MISMATCH  = 6;
+    CODE_INTERNAL_ERROR    = 7;
+  }
+  Code   code = 1;
+  string message = 2;
+  string path = 3;
+}
+
+message StxQueryResponse {
+  string api_version = 1;             // "ckodex.org/stx/v1"
+  string query_id = 2;
+  google.protobuf.Timestamp responded_at = 3;
+  PrivacyMode privacy_mode = 4;
+  repeated GraphNode nodes = 5;
+  PageInfo page_info = 6;
+  repeated QueryError errors = 7;
+  repeated string redacted = 8;
+}
+
+// ──────────────────────────────────────────────────────────────────
+// Event stream
+// ──────────────────────────────────────────────────────────────────
+
+message StxEvent {
+  string    api_version = 1;
+  string    session_id = 2;
+  int64     sequence = 3;
+  google.protobuf.Timestamp timestamp = 4;
+  EventType event_type = 5;
+  GraphNode payload = 6;
+  PrivacyMode privacy_mode = 7;
+  repeated string redacted = 8;
+}
+
+// ──────────────────────────────────────────────────────────────────
+// Requests
+// ──────────────────────────────────────────────────────────────────
+
+message GetCapabilityRequest {}
+
+message GetHarnessRequest {
+  PrivacyMode privacy_mode = 1;
+  string query_id = 2;
+}
+
+message ListSessionsRequest {
+  PrivacyMode privacy_mode = 1;
+  string query_id = 2;
+  string cursor = 3;
+  int32  limit = 4;
+}
+
+message GetSessionRequest {
+  string session_id = 1;
+  PrivacyMode privacy_mode = 2;
+  string query_id = 3;
+}
+
+message ListSkillStatesRequest {
+  string session_id = 1;
+  Tier   tier_filter = 2;            // TIER_UNSPECIFIED means no filter
+  PrivacyMode privacy_mode = 3;
+  string query_id = 4;
+}
+
+message ListTransitionsRequest {
+  string session_id = 1;
+  google.protobuf.Timestamp since = 2;
+  PrivacyMode privacy_mode = 3;
+  string query_id = 4;
+}
+
+message GetEvidenceRequest {
+  string evidence_id = 1;
+  PrivacyMode privacy_mode = 2;
+  string query_id = 3;
+}
+
+message StreamEventsRequest {
+  string session_id = 1;              // empty = all sessions
+  int64  since_sequence = 2;          // 0 = current
+  PrivacyMode privacy_mode = 3;
+}
+
+// ──────────────────────────────────────────────────────────────────
+// Service
+// ──────────────────────────────────────────────────────────────────
+
+service SkillsTransparencyExchange {
+  // Capability handshake — unauthenticated; reveals supported transports/modes.
+  rpc GetCapability    (GetCapabilityRequest)  returns (CapabilityDescriptor);
+
+  // Authenticated query endpoints.
+  rpc GetHarness       (GetHarnessRequest)      returns (StxQueryResponse);
+  rpc ListSessions     (ListSessionsRequest)    returns (StxQueryResponse);
+  rpc GetSession       (GetSessionRequest)      returns (StxQueryResponse);
+  rpc ListSkillStates  (ListSkillStatesRequest) returns (StxQueryResponse);
+  rpc ListTransitions  (ListTransitionsRequest) returns (StxQueryResponse);
+  rpc GetEvidence      (GetEvidenceRequest)     returns (StxQueryResponse);
+
+  // Publisher event stream. Server-side streaming RPC.
+  rpc StreamEvents     (StreamEventsRequest)    returns (stream StxEvent);
+}

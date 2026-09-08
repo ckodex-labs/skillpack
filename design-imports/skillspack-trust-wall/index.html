@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en" data-theme="ledger">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SkillPack · Design Surfaces</title>
+<link rel="stylesheet" href="_ds/ckodex-design-system-042c8d57-3097-4419-816e-b2ecd922d7db/styles.css">
+<style>
+  html, body { margin: 0; background: var(--ck-bg-0); color: var(--ck-fg-1); font-family: 'Geist', system-ui, sans-serif; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 56px 32px 80px; }
+  .eyebrow { font: 700 11px 'JetBrains Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--ck-fg-3); }
+  h1 { font: 400 46px var(--ck-ff-display, 'Instrument Serif'), serif; margin: 8px 0 10px; letter-spacing: 0; }
+  .lede { font-size: 15px; line-height: 1.6; color: var(--ck-fg-2); max-width: 68ch; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 36px; }
+  a.card { display: block; text-decoration: none; color: inherit; background: var(--ck-bg-1);
+    padding: 22px 24px; position: relative;
+    clip-path: polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+    box-shadow: inset 0 0 0 1.5px color-mix(in oklab, var(--ck-stroke) 34%, transparent);
+    transition: box-shadow .12s ease, transform .12s ease; }
+  a.card:hover { box-shadow: inset 0 0 0 2px var(--ck-stroke); transform: translateY(-1px); }
+  a.card.wide { grid-column: 1 / -1; }
+  .k { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .k .g { font: 500 16px 'JetBrains Mono', monospace; color: var(--ck-accent); }
+  .k .t { font: 700 17px 'Geist', sans-serif; }
+  .card p { margin: 0 0 12px; font-size: 13px; line-height: 1.55; color: var(--ck-fg-2); }
+  .tag { display:inline-flex; align-items:center; gap:5px; font: 700 9.5px 'JetBrains Mono', monospace;
+    letter-spacing: .07em; text-transform: uppercase; padding: 3px 8px;
+    clip-path: polygon(4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%,0 4px); }
+  .tag.live { background: var(--ck-accent); color: var(--ck-deep-blue, #0A1322); }
+  .tag.static { box-shadow: inset 0 0 0 1.2px color-mix(in oklab, var(--ck-fg-mute) 45%, transparent); color: var(--ck-fg-3); }
+  .tag.proof { box-shadow: inset 0 0 0 1.2px var(--ck-proof, #6D28D9); color: var(--ck-proof, #6D28D9); }
+  .note { margin-top: 40px; font: 500 12px 'JetBrains Mono', monospace; color: var(--ck-fg-3); line-height: 1.7; }
+  .note b { color: var(--ck-fg-1); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">CKODEX V16 · Design Surfaces</div>
+  <h1>SkillPack &mdash; every surface</h1>
+  <p class="lede">The imported design set is six self-contained apps, one design language (CKODEX-DS-3 &ldquo;Evidence Editorial&rdquo;). One is wired to the live server; the rest render from their own data. Open any of them.</p>
+
+  <div class="grid">
+    <a class="card wide" href="skillpack-registry/index.html">
+      <div class="k"><span class="g">&#8862;</span><span class="t">Registry Browser</span></div>
+      <p>The skill-management console: overview, registry browse with live grades, discovery, migration, my skills, sync &amp; status. Wired to the running daemon &mdash; 195 canonical skills, real 9-dimension assessments, live health.</p>
+      <span class="tag live">&#8866; Live-wired</span>
+    </a>
+
+    <a class="card" href="skillpack-hero/index.html">
+      <div class="k"><span class="g">&#9670;</span><span class="t">Hero &mdash; the heroes</span></div>
+      <p>&ldquo;A skill earns trust by being <i>proved</i>, never by being popular.&rdquo; Marketing hero surfaces: sealed-artifact stats, provenance coverage, console + VSCode showcases.</p>
+      <span class="tag static">Static design</span>
+    </a>
+
+    <a class="card" href="skillpack-transparency/index.html">
+      <div class="k"><span class="g">&#8859;</span><span class="t">Transparency Fabric &mdash; evidence / QA</span></div>
+      <p>Six components, one guarantee: nothing crosses a boundary without proof. Fabric kernel, the append-only provenance graph, exchange, TrustWall admission gate, transition station.</p>
+      <span class="tag proof">&#8859; Provenance</span>
+    </a>
+
+    <a class="card" href="skillpack-surfaces/index.html">
+      <div class="k"><span class="g">&#8801;</span><span class="t">Surfaces</span></div>
+      <p>The same governance rendered across every client: CLI, MCP server, VSCode, mobile, and the macOS menu-bar surface.</p>
+      <span class="tag static">Static design</span>
+    </a>
+
+    <a class="card" href="skillpack-error-taxonomy/index.html">
+      <div class="k"><span class="g">&#8856;</span><span class="t">Error Taxonomy</span></div>
+      <p>The closed set of governed error codes and how each surfaces &mdash; deny, quarantine, review &mdash; across the fabric.</p>
+      <span class="tag static">Static design</span>
+    </a>
+
+    <a class="card" href="../skill-control-plane/Skill%20Control%20Plane.dc.html">
+      <div class="k"><span class="g">&#9673;</span><span class="t">Control Plane</span></div>
+      <p>The operator control-plane layout (design-canvas export).</p>
+      <span class="tag static">Static design</span>
+    </a>
+  </div>
+
+  <div class="note">
+    <b>On &ldquo;timeline&rdquo; and &ldquo;QA&rdquo;:</b> there is no separate timeline or QA <i>app</i> in the import.<br>
+    &middot; <b>Timeline</b> lives inside the Registry as <b>Overview &rarr; Recent Lifecycle Activity</b> (the LifecycleEventStream: promoted / migrated / installed / denied / superseded).<br>
+    &middot; <b>QA / assurance</b> is the <b>9-dimension assessment</b> (Registry, live) plus the <b>Transparency Fabric</b> provenance graph above.<br>
+    If you meant a dedicated timeline or QA page that should exist and doesn't, tell me and I'll build it.
+  </div>
+</div>
+</body>
+</html>

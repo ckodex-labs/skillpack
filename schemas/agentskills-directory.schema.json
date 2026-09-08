@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentskills.io/schema/skill-directory.json",
+  "title": "Agent Skills Directory Structure Schema",
+  "description": "Validates the complete structure of an Agent Skills directory",
+  "type": "object",
+  "required": ["SKILL.md"],
+  "properties": {
+    "SKILL.md": {
+      "type": "object",
+      "description": "Required SKILL.md file with frontmatter and body",
+      "required": ["frontmatter", "body"],
+      "properties": {
+        "frontmatter": {
+          "$ref": "agentskills.schema.json"
+        },
+        "body": {
+          "type": "string",
+          "description": "Markdown body content (recommended < 500 lines)"
+        }
+      }
+    },
+    "scripts": {
+      "type": "object",
+      "description": "Optional scripts/ directory with executable code",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "executable": { "type": "boolean" }
+        }
+      }
+    },
+    "references": {
+      "type": "object",
+      "description": "Optional references/ directory with documentation",
+      "additionalProperties": {
+        "type": "string",
+        "description": "Markdown or text file content"
+      }
+    },
+    "assets": {
+      "type": "object",
+      "description": "Optional assets/ directory with static resources",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

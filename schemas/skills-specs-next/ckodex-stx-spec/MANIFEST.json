@@ -1,0 +1,174 @@
+{
+  "apiVersion": "ckodex.org/manifest/v1",
+  "kind": "PackManifest",
+  "pack": "ckodex-stx-spec",
+  "version": "0.1.0",
+  "fileCount": 33,
+  "files": [
+    {
+      "path": "CHANGELOG.md",
+      "size": 3053,
+      "sha256": "29799722313878b342456895760878b2f57ef95094a99654a950ef8e9c8fe87d"
+    },
+    {
+      "path": "README.md",
+      "size": 3801,
+      "sha256": "28baee838db1f7534f23b209f114c0cc3ddacbc48a59c5ccc2e6ed7e30c579ea"
+    },
+    {
+      "path": "SKILL.md",
+      "size": 5311,
+      "sha256": "9efc6a9d73ab09f3aa577cae42b2d49b3e27fa3a9c68bbec7dfc50f4ecf37d90"
+    },
+    {
+      "path": "conformance/run.py",
+      "size": 13277,
+      "sha256": "9bd0b93651c42dfeb76baeb00d0669026ad2ef512f02d8148df305c34773d322"
+    },
+    {
+      "path": "conformance/vectors.json",
+      "size": 6843,
+      "sha256": "6923c6d674d7790bbb65d8e09885e0478b573082aea25d2fb8d25a0326856321"
+    },
+    {
+      "path": "diagrams/domain-graph.html",
+      "size": 9397,
+      "sha256": "fbe6b42673ff3cfcf6276c2f33a64873c514d012fca73fa0f88f98c1e84e615c"
+    },
+    {
+      "path": "diagrams/domain-graph.mmd",
+      "size": 1586,
+      "sha256": "fae0717cbfab956acc00df7cef045c7f3b2bbccec5a4696e2bd0c9151250b0cc"
+    },
+    {
+      "path": "diagrams/domain-graph.render-manifest.json",
+      "size": 1232,
+      "sha256": "a404a82723ad55ab4212d35e5e64d9240e03c6e56ca7c1bdb9d8edd359e4cb20"
+    },
+    {
+      "path": "diagrams/publish-subscribe.html",
+      "size": 9150,
+      "sha256": "3ffa5faad33566c7c589894c94836b07b618598a1ec8339f2ef511d4c6cfe12a"
+    },
+    {
+      "path": "diagrams/publish-subscribe.mmd",
+      "size": 1032,
+      "sha256": "a52eb8912c2770f1c5ae05977e6bbaeef1522995d75065a9e844cba6ee22bcfb"
+    },
+    {
+      "path": "diagrams/publish-subscribe.render-manifest.json",
+      "size": 1312,
+      "sha256": "812b998b1a894b87eb04c9ece9e42a0a04f2d59d1c87d45f2e0ceb1951add7c8"
+    },
+    {
+      "path": "examples/event-evidence-emit.json",
+      "size": 553,
+      "sha256": "30c283b4c664f9f249c1832cc7f971d40d2efa4e302528c10dc5ebb150425545"
+    },
+    {
+      "path": "examples/event-tier-promotion.json",
+      "size": 504,
+      "sha256": "57a4a39ee3dd9ae429b07c3dbd6b7346eda470cd9ef2eeb6d48a3dc03e83af7a"
+    },
+    {
+      "path": "examples/handshake-request.json",
+      "size": 267,
+      "sha256": "9bc6d68596961e2d7f227fc92985fa56ec8f8561b648f497adba15f664265027"
+    },
+    {
+      "path": "examples/handshake-response.json",
+      "size": 362,
+      "sha256": "f1864ea7ecb31ed5e571be2a0bc44685c41d67a25f6f4f1fbcdc1aa689b84a3f"
+    },
+    {
+      "path": "examples/query-skill-pool-response.json",
+      "size": 900,
+      "sha256": "f4507d8b8fd408e5003a994cfb8ea385ea65497cb2c934742eadb1645ce2c0d0"
+    },
+    {
+      "path": "examples/query-skill-pool.json",
+      "size": 674,
+      "sha256": "e15b8676853b2df8034c563dbab94f925d1f63df2891d974b45b11a4b8497c37"
+    },
+    {
+      "path": "protocols/openapi.yaml",
+      "size": 7511,
+      "sha256": "d76eec573e99b22da561cea52456b72c04b16658d3ea367a10f67984ff3bdf30"
+    },
+    {
+      "path": "protocols/schema.graphql",
+      "size": 7069,
+      "sha256": "bc9ab302ebf8947e492fbea144497b92349ae4232c45c29f5f67f06f535bb816"
+    },
+    {
+      "path": "protocols/stx.proto",
+      "size": 10929,
+      "sha256": "2723a9c8e7d9a419febe95851200056e80a22247e08ccd050bf526a6d5176d65"
+    },
+    {
+      "path": "reference/__init__.py",
+      "size": 979,
+      "sha256": "00595e8e839c3b608de4501fcb5a4da28533407602b4fe4e7d8ede1867ada5bf"
+    },
+    {
+      "path": "reference/consumer.py",
+      "size": 11321,
+      "sha256": "91423a7b2eefc5175bbe8bab12307b3aaca814a27b52f5d367cad4aa32056472"
+    },
+    {
+      "path": "reference/publisher.py",
+      "size": 16652,
+      "sha256": "c3fad5a36dcd09396bbdf54663e48424272800334b89444fd04e0b31ec7931fd"
+    },
+    {
+      "path": "references/SPEC.md",
+      "size": 10174,
+      "sha256": "31c7ba9f1e2fe225f1248f3dd9b1a51a65ee90e10d24fcbe4c2e5b685af17047"
+    },
+    {
+      "path": "references/consumer.md",
+      "size": 5272,
+      "sha256": "6f4bd1c6e40ede09d2a82c4c3ad6bc3b828043c8685ddb96cf3fdda2313fb895"
+    },
+    {
+      "path": "references/publisher.md",
+      "size": 5743,
+      "sha256": "81cc1e35ffb921dffd5dc5040b583e83dc93b35895d6028565439aa94d055582"
+    },
+    {
+      "path": "references/transports.md",
+      "size": 5585,
+      "sha256": "5b555f5c5a0f95676ce4ab7fbad31d7fed29c34bb516d2a908d4bb991c88f818"
+    },
+    {
+      "path": "schemas/stx-context-v1.jsonld",
+      "size": 1758,
+      "sha256": "89c508edeede6275e1c737b421d9e01088c04cf4d30a11985a83d47adb692886"
+    },
+    {
+      "path": "schemas/stx-domain.v1.schema.json",
+      "size": 11518,
+      "sha256": "5eff6533567077f5091edfb5f5c2f546918c47b4b1aa2f9631136a9e76719fc9"
+    },
+    {
+      "path": "schemas/stx-event.v1.schema.json",
+      "size": 1890,
+      "sha256": "8765fd00bbb3dfe3663c37f5685d92c35df1ff43a80a15489416d10773d47046"
+    },
+    {
+      "path": "schemas/stx-query-response.v1.schema.json",
+      "size": 2323,
+      "sha256": "58382cc4cc667851f9bcf7d517410e21e71c66308b527bf6c4ac41f212a3d227"
+    },
+    {
+      "path": "scripts/validate.sh",
+      "size": 10929,
+      "sha256": "9722b1146a590df093d5b68859d831f4d303d0c1f027c723447054eb4a4d7ef9"
+    },
+    {
+      "path": "skill.json",
+      "size": 3257,
+      "sha256": "de1baee4681db0e6af5e7db26380cebbd95e46350c58619dfb4f0dc4d00459a9"
+    }
+  ]
+}

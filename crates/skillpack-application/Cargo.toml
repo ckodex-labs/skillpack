@@ -1,0 +1,21 @@
+[package]
+name = "skillpack-application"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "SkillPack Application Layer - Use Cases"
+keywords = ["skillpack", "ckodex", "ai-agent", "quality", "assessment"]
+categories = ["development-tools"]
+
+[dependencies]
+skillpack-domain = { path = "../skillpack-domain" }
+anyhow.workspace = true
+async-trait.workspace = true
+tracing.workspace = true
+uuid.workspace = true
+chrono.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml.workspace = true
+rayon.workspace = true

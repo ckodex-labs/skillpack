@@ -1,0 +1,354 @@
+/* ==========================================================================
+   Fable Skills Fleet — data panels on CKODEX-DS-3
+   Continuation of globals.css (kept under the 500-line ceiling):
+   scorecard, dimension bars, issues, dashboard, QR, topology, guide.
+   Same laws: --ck-* tokens only, square surfaces, hairlines, governed motion.
+   ========================================================================== */
+
+/* ---------- Scorecard — rank is ink weight and fill density ---------- */
+
+.scorecard {
+  border: 1px solid var(--ck-hairline);
+  padding: var(--ck-sp-5);
+  background: var(--ck-bg-1);
+}
+
+.scorecard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--ck-sp-3);
+}
+
+.scorecard-metric {
+  text-align: left;
+  padding: var(--ck-sp-4);
+  background: var(--ck-bg-0);
+  border: 1px solid var(--ck-hairline);
+}
+
+.scorecard-metric-value {
+  font-size: var(--ck-fs-h2);
+  font-weight: 600;
+  color: var(--ck-fg-1);
+  font-family: var(--ck-ff-mono);
+  font-variant-ligatures: none;
+}
+
+.scorecard-metric-label {
+  margin-top: var(--ck-sp-1);
+}
+
+/* Grade stamp — square; higher rank carries heavier ink */
+.grade-stamp {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-h2);
+  font-weight: 600;
+  font-variant-ligatures: none;
+}
+
+.grade-stamp--top {
+  background: var(--ck-fg-1);
+  color: var(--ck-bg-0);
+  border: 1px solid var(--ck-fg-1);
+}
+
+.grade-stamp--mid {
+  background: transparent;
+  color: var(--ck-fg-1);
+  border: var(--ck-stroke-seal) solid var(--ck-fg-1);
+}
+
+.grade-stamp--low {
+  background: transparent;
+  color: var(--ck-fg-3);
+  border: 1px solid var(--ck-hairline-strong);
+}
+
+.grade-stamp--fail {
+  background: var(--ck-bg-2);
+  color: var(--ck-fg-1);
+  border: 1px solid var(--ck-fg-1);
+}
+
+/* ---------- Dimension bars — ink is data ---------- */
+
+.dim-bar-row {
+  margin-bottom: var(--ck-sp-3);
+}
+
+.dim-bar-head {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ck-sp-2);
+  font-size: var(--ck-fs-body-sm);
+  color: var(--ck-fg-2);
+}
+
+.dim-bar-head .dim-bar-score {
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-caption);
+  color: var(--ck-fg-3);
+  font-variant-ligatures: none;
+}
+
+.dim-bar-track {
+  margin-top: var(--ck-sp-1);
+  height: 8px;
+  background: var(--ck-bg-2);
+  border: 1px solid var(--ck-hairline);
+  overflow: hidden;
+}
+
+.dim-bar-fill {
+  height: 100%;
+  background: var(--ck-fg-1);
+  transition: width var(--ck-t-state) var(--ck-ease);
+}
+
+.dim-bar-fill--low {
+  background: var(--ck-fg-3);
+}
+
+/* ---------- Issues ---------- */
+
+.issues-list {
+  margin-top: var(--ck-sp-8);
+  background: var(--ck-bg-1);
+  padding: var(--ck-sp-5);
+  border: 1px solid var(--ck-hairline);
+}
+
+.issues-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.issue {
+  display: flex;
+  gap: var(--ck-sp-3);
+  padding: var(--ck-sp-3);
+  margin-bottom: var(--ck-sp-2);
+  background: var(--ck-bg-0);
+  border: 1px solid var(--ck-hairline);
+  border-left: var(--ck-rule) solid var(--ck-fg-3);
+}
+
+.issue-error {
+  border-left-color: var(--ck-fg-1);
+}
+
+.severity-glyph {
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-body-sm);
+  line-height: 1.4;
+  color: var(--ck-fg-3);
+}
+
+.issue-error .severity-glyph {
+  color: var(--ck-fg-1);
+}
+
+.issue-content {
+  flex: 1;
+}
+
+.issue-message {
+  margin: 0 0 var(--ck-sp-1);
+  font-size: var(--ck-fs-body-sm);
+  color: var(--ck-fg-1);
+}
+
+.issue-location {
+  font-size: var(--ck-fs-caption);
+  color: var(--ck-fg-3);
+  font-family: var(--ck-ff-mono);
+  margin-right: var(--ck-sp-2);
+  font-variant-ligatures: none;
+}
+
+.issue-dimension {
+  font-size: var(--ck-fs-micro);
+  padding: 2px 6px;
+  border: 1px solid var(--ck-hairline);
+  color: var(--ck-fg-3);
+  text-transform: uppercase;
+  font-family: var(--ck-ff-mono);
+  font-variant-ligatures: none;
+}
+
+.issues-empty {
+  padding: var(--ck-sp-6);
+  color: var(--ck-fg-3);
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-body-sm);
+  font-variant-ligatures: none;
+}
+
+/* ---------- Dashboard / assessment ---------- */
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--ck-sp-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--ck-sp-6);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--ck-sp-4);
+}
+
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chart-panel {
+  background: var(--ck-bg-1);
+  padding: var(--ck-sp-5);
+  border: 1px solid var(--ck-hairline);
+}
+
+/* Loading & empty states — textual, no rotation */
+.loading-state,
+.empty-state {
+  padding: var(--ck-sp-16) var(--ck-sp-8);
+  color: var(--ck-fg-3);
+}
+
+.progress-indicator {
+  display: inline-block;
+  font-family: var(--ck-ff-mono);
+  font-weight: 600;
+  font-size: var(--ck-fs-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ck-fg-mute);
+  border: 1px solid var(--ck-hairline-strong);
+  padding: 5px 12px;
+  margin-bottom: var(--ck-sp-4);
+  font-variant-ligatures: none;
+}
+
+/* ---------- QR ---------- */
+
+.qr-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--ck-sp-3);
+  padding: var(--ck-sp-5);
+  background: var(--ck-bg-1);
+  border: 1px solid var(--ck-hairline);
+}
+
+.qr-canvas {
+  border: 1px solid var(--ck-hairline-strong);
+  padding: var(--ck-sp-3);
+  background: #ffffff; /* QR quiet zone must stay white to scan */
+}
+
+.qr-label {
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-micro);
+  color: var(--ck-fg-3);
+  font-variant-ligatures: none;
+}
+
+/* ---------- Topology — diagrams sit on DotBg ---------- */
+
+.topology-container {
+  position: relative;
+  border: 1px solid var(--ck-hairline);
+  padding: var(--ck-sp-5);
+  overflow-x: auto;
+}
+
+.topology-svg {
+  position: relative;
+  width: 100%;
+  min-height: 200px;
+}
+
+/* ---------- Guide (reading shell) ---------- */
+
+.guide-section {
+  margin-bottom: var(--ck-sp-10);
+}
+
+.guide-section h2 {
+  margin: 0 0 var(--ck-sp-4);
+  padding-bottom: var(--ck-sp-3);
+  border-bottom: 1px solid var(--ck-hairline);
+}
+
+.guide-section h3 {
+  margin: var(--ck-sp-5) 0 var(--ck-sp-3);
+}
+
+.guide-section p {
+  margin: 0 0 var(--ck-sp-4);
+}
+
+.guide-section ul {
+  margin: 0 0 var(--ck-sp-4);
+  padding-left: var(--ck-sp-6);
+}
+
+.guide-section li {
+  margin-bottom: var(--ck-sp-2);
+  font-size: var(--ck-fs-body);
+  line-height: var(--ck-lh-body);
+  color: var(--ck-fg-2);
+}
+
+.guide-code {
+  display: block;
+  padding: var(--ck-sp-4) var(--ck-sp-5);
+  background: var(--ck-bg-1);
+  border: 1px solid var(--ck-hairline);
+  overflow-x: auto;
+  margin-bottom: var(--ck-sp-4);
+  white-space: pre;
+}
+
+.guide-callout {
+  padding: var(--ck-sp-4) var(--ck-sp-5);
+  background: var(--ck-bg-1);
+  border: 1px solid var(--ck-hairline);
+  border-left: var(--ck-rule) solid var(--ck-fg-3);
+  margin-bottom: var(--ck-sp-4);
+  font-size: var(--ck-fs-body-sm);
+}
+
+.guide-callout-warning {
+  border-left-color: var(--ck-fg-1);
+}
+
+/* ---------- Back link ---------- */
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ck-sp-2);
+  font-family: var(--ck-ff-mono);
+  font-size: var(--ck-fs-code);
+  color: var(--ck-fg-3);
+  margin-bottom: var(--ck-sp-5);
+  border-bottom: none;
+  font-variant-ligatures: none;
+}
+
+.back-link:hover {
+  color: var(--ck-fg-1);
+}

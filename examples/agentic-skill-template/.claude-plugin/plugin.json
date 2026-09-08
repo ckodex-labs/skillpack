@@ -1,0 +1,18 @@
+{
+  "name": "agentic-skill-template",
+  "version": "0.1.0",
+  "description": "Working template that exercises every pattern from docs/agentic-authoring-patterns.md: deterministic JSON envelope, dual-channel exit-code contract, anchor-term routing, single orchestrator agent, three test gates, safety defaults (dry-run, token masking, HTTPS-only), and 2026 Claude Code surfaces (${CLAUDE_SKILL_DIR}, $ARGUMENTS). Adapt by renaming and replacing the hello script with domain scripts.",
+  "author": {
+    "name": "ckodex-skill-pack"
+  },
+  "license": "MIT",
+  "keywords": [
+    "template",
+    "agent-skills",
+    "claude-code",
+    "envelope-contract",
+    "dual-channel",
+    "orchestrator-agent",
+    "skill-authoring"
+  ]
+}

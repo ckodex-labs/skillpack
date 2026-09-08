@@ -1,0 +1,6 @@
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "predicateType": "https://slsa.dev/provenance/v1",
+  "subject": [{"name": "known-a", "digest": {"sha256": "0000000000000000000000000000000000000000000000000000000000000000"}}],
+  "predicate": {"buildDefinition": {"buildType": "https://slsa.dev/test/v1"}, "runDetails": {"builder": {"id": "fixture://known-a"}}}
+}

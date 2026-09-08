@@ -1,0 +1,20 @@
+{
+  "skills": [
+    {
+      "name": "agentic-skill-template",
+      "description": "Working template for Claude Code Agent Skills — exercises deterministic JSON envelope, dual-channel exit contract, anchor-term routing, single orchestrator agent, three test gates, and 2026 runtime surfaces. Adapt by renaming and replacing scripts with your domain logic.",
+      "category": "templates",
+      "license": "MIT",
+      "path": "skills/agentic-skill-template/SKILL.md"
+    }
+  ],
+  "agents": [
+    {
+      "name": "agentic-engineer",
+      "description": "Orchestrator template — routes user signals into deterministic envelope-returning scripts under skills/agentic-skill-template/scripts/. Parses the JSON envelope; respects the dual-channel contract (stdout exit 0 = success or retriable; stderr exit 1 = fatal config). Defaults write-path calls to --dry-run and masks tokens in all error paths.",
+      "model": "sonnet",
+      "license": "MIT",
+      "path": "agents/agentic-engineer.md"
+    }
+  ]
+}

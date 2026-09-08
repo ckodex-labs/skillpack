@@ -1,0 +1,57 @@
+[package]
+name = "skillpack-api"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "SkillPack gRPC API - Presentation Space"
+keywords = ["skillpack", "ckodex", "ai-agent", "quality", "assessment"]
+categories = ["development-tools"]
+
+[[bin]]
+name = "skillpack-server"
+path = "src/bin/server.rs"
+
+[dependencies]
+skillpack-domain = { path = "../skillpack-domain" }
+skillpack-application = { path = "../skillpack-application" }
+skillpack-adapters = { path = "../skillpack-adapters" }
+skillpack-proto = { path = "../skillpack-proto" }
+anyhow.workspace = true
+tokio.workspace = true
+tonic.workspace = true
+prost.workspace = true
+tracing.workspace = true
+tokio-stream.workspace = true
+serde_json.workspace = true
+tracing-subscriber.workspace = true
+clap.workspace = true
+colored.workspace = true
+chrono.workspace = true
+sha2.workspace = true
+dirs = "5.0"
+notify.workspace = true
+
+# tonic-prost runtime (required by generated code)
+tonic-prost.workspace = true
+
+# HTTP server
+axum.workspace = true
+serde.workspace = true
+tower-http.workspace = true
+
+# Observability
+opentelemetry.workspace = true
+opentelemetry_sdk.workspace = true
+opentelemetry-otlp.workspace = true
+tracing-opentelemetry.workspace = true
+metrics.workspace = true
+metrics-exporter-prometheus.workspace = true
+
+[dev-dependencies]
+skillpack-proto = { path = "../skillpack-proto" }
+tower = { version = "0.5", features = ["util"] }
+
+[build-dependencies]
+tonic-build.workspace = true
+tonic-prost-build.workspace = true

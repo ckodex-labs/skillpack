@@ -1,0 +1,22 @@
+{
+  "apiVersion": "cnsb.ckodex.org/v1",
+  "kind": "SkillBundle",
+  "metadata": {
+    "name": "known-d",
+    "urn": "urn:cnsb:known-d:1.0.0",
+    "version": "1.0.0"
+  },
+  "spec": {
+    "skills": [{
+      "name": "known-d",
+      "description": "D-grade fixture with empty asc and no license.",
+      "asc": [],
+      "galMin": 2,
+      "galMax": 4,
+      "lifecycle": {
+        "install":     {"command": "echo installing known-d"},
+        "uninstall":   {"command": "echo uninstalling known-d"}
+      }
+    }]
+  }
+}

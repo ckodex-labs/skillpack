@@ -1,0 +1,8 @@
+/* Console runtime styles (ported from the registry index.html inline block). */
+@keyframes ckr-spin { to { transform: rotate(360deg); } }
+.ckr-spin { animation: ckr-spin 1.1s linear infinite; display: inline-block; }
+.ckr-panel::-webkit-scrollbar { width: 10px; }
+.ckr-panel::-webkit-scrollbar-thumb { background: color-mix(in oklab, var(--ck-stroke) 35%, transparent); }
+.ckr-skip { position: absolute; left: -9999px; }
+.ckr-skip:focus { left: 8px; top: 8px; z-index: 200; background: var(--ck-bg-1); color: var(--ck-fg-1); padding: 8px 12px; }
+html, body { background: var(--ck-bg-0); margin: 0; }

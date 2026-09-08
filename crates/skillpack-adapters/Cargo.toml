@@ -1,0 +1,68 @@
+[package]
+name = "skillpack-adapters"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "SkillPack Adapters - Hexagonal Infrastructure Layer"
+keywords = ["skillpack", "ckodex", "ai-agent", "quality", "assessment"]
+categories = ["development-tools"]
+
+[[bin]]
+name = "skillpack"
+path = "src/cli/main.rs"
+
+[dependencies]
+skillpack-domain = { path = "../skillpack-domain" }
+skillpack-application = { path = "../skillpack-application" }
+skillpack-proto = { path = "../skillpack-proto" }
+tonic = { workspace = true }
+anyhow.workspace = true
+clap.workspace = true
+colored.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+walkdir.workspace = true
+tar.workspace = true
+flate2.workspace = true
+bzip2.workspace = true
+brotli.workspace = true
+zstd.workspace = true
+sigstore.workspace = true
+zip.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml.workspace = true
+regex.workspace = true
+
+# Remote source adapters
+oci-client.workspace = true
+sha2.workspace = true
+hex.workspace = true
+data-encoding.workspace = true
+
+# Persistence layer
+duckdb.workspace = true
+futures.workspace = true
+async-trait.workspace = true
+chrono.workspace = true
+uuid.workspace = true
+thiserror.workspace = true
+
+# Config file serialization
+toml = "0.8"
+
+# HTTP client for remote registries
+dirs = "5.0"
+reqwest = { version = "0.12", features = [
+    "json",
+    "rustls-tls",
+], default-features = false }
+
+# Throwaway workspaces for Tier-3 behavioral evals
+tempfile = "3"
+
+[dev-dependencies]
+tempfile = "3"
+serial_test = "3"

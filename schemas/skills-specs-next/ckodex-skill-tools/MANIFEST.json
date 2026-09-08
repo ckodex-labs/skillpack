@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "ckodex.org/pack-manifest/v1",
+  "pack": "ckodex-skill-tools",
+  "version": "0.1.0",
+  "framework": "CKODEX v16.0",
+  "files": [
+    {
+      "path": "SKILL.md",
+      "sha256": "sha256:b09ab34f54e4cac223219b0d72e357c429d12758d17fd85008412123796c8493",
+      "bytes": 4156
+    },
+    {
+      "path": "assets/templates/SKILL.md.tmpl",
+      "sha256": "sha256:3cc08075c1dce433f78407f4444b2c6fbaca8f644aafee3cbc488166a02967a3",
+      "bytes": 866
+    },
+    {
+      "path": "assets/templates/skill.json.tmpl",
+      "sha256": "sha256:186bb25cf0f87fcc077252dc968c701f8643868771ca8fd9c9504e57be33d740",
+      "bytes": 1349
+    },
+    {
+      "path": "assets/templates/usage.md.tmpl",
+      "sha256": "sha256:15dcb649034ea6c8fd919761445eb38ee593a3c187a221073ca614c52fe0de23",
+      "bytes": 634
+    },
+    {
+      "path": "assets/templates/validate.sh.tmpl",
+      "sha256": "sha256:b4c2ec046e8ef68d0e0ba973596e49fbaa12baa024dc3400938c392fe0151286",
+      "bytes": 6518
+    },
+    {
+      "path": "examples/after/SKILL.md",
+      "sha256": "sha256:97563a97aaa04a5ae224422036ffaeca423458b7ca9aea1a3cfb6bd5658a158f",
+      "bytes": 1115
+    },
+    {
+      "path": "examples/after/skill.json",
+      "sha256": "sha256:987f66935048b04397ac12cea6950441ddcf2e4fc58570954d0023e37c828969",
+      "bytes": 1738
+    },
+    {
+      "path": "examples/before/SKILL.md",
+      "sha256": "sha256:97563a97aaa04a5ae224422036ffaeca423458b7ca9aea1a3cfb6bd5658a158f",
+      "bytes": 1115
+    },
+    {
+      "path": "references/conformance.md",
+      "sha256": "sha256:5fa31a219b06497d0cc19cddd966d1ed7f324a0e040d8acce0bd7f9ef571c099",
+      "bytes": 4878
+    },
+    {
+      "path": "references/migrator.md",
+      "sha256": "sha256:356dae92f0c21ce0a26ba316b73e4006e14f5e0b3665857c43c3146df49b600f",
+      "bytes": 5743
+    },
+    {
+      "path": "references/scaffolder.md",
+      "sha256": "sha256:f32e23158e4840afebafbb4bd1948e4d217a6590720fc3aefee23cc690db69ff",
+      "bytes": 4594
+    },
+    {
+      "path": "scripts/migrate.py",
+      "sha256": "sha256:6d555c46440c24008994ecf8abdbf3510823eabfccc8a3311ecc7c1cd90c2258",
+      "bytes": 15197
+    },
+    {
+      "path": "scripts/scaffold.py",
+      "sha256": "sha256:0521bd263faca0ac326f933f86673c74cb5e1063f06bca3f3f9dac23da730db5",
+      "bytes": 8477
+    },
+    {
+      "path": "scripts/validate.sh",
+      "sha256": "sha256:721ca76d10741a5bf5ab559a51933eed0367aa8b3166442febc8b9a4536cb96c",
+      "bytes": 9566
+    },
+    {
+      "path": "skill.json",
+      "sha256": "sha256:c52302b51abb59da0a32ed2f5e8f2b7a6f43ffea0adffb2aa75f0d5b09371fa1",
+      "bytes": 3168
+    }
+  ],
+  "fileCount": 15
+}

@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ckodex.org/skill.v1.schema.json",
+  "title": "CKODEX Skill Manifest v1",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "entrypoints"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "type": "string", "const": "ckodex.org/skill/v1" },
+    "kind":       { "type": "string", "const": "Skill" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "name":        { "type": "string", "maxLength": 64, "pattern": "^(?!-)(?!.*--)[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "description": { "type": "string", "minLength": 1, "maxLength": 1024 },
+        "version":     { "type": "string" },
+        "license":     { "type": "string", "maxLength": 256 },
+        "authors":     { "type": "array", "items": { "type": "string", "maxLength": 256 } },
+        "keywords":    { "type": "array", "items": { "type": "string", "maxLength": 64 } },
+        "labels":      { "type": "object", "additionalProperties": { "type": "string", "maxLength": 256 } },
+        "annotations": { "type": "object", "additionalProperties": { "type": "string", "maxLength": 2048 } }
+      }
+    },
+    "entrypoints": {
+      "type": "object",
+      "required": ["skillMd"],
+      "additionalProperties": false,
+      "properties": {
+        "skillMd": { "type": "string", "const": "SKILL.md" },
+        "readme":  { "type": "string" }
+      }
+    },
+    "agentSkillsFrontmatter": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "compatibility":   { "type": "string", "maxLength": 500 },
+        "metadata":        { "type": "object", "additionalProperties": { "type": "string", "maxLength": 1024 } },
+        "allowedToolsRaw": { "type": "string", "maxLength": 2048 }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "requiresNetwork":    { "type": "boolean", "default": false },
+        "requiresFilesystem": { "type": "boolean", "default": true },
+        "requiresGpu":        { "type": "boolean", "default": false },
+        "os":   { "type": "array", "items": { "type": "string", "maxLength": 32 } },
+        "arch": { "type": "array", "items": { "type": "string", "maxLength": 32 } },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "additionalProperties": false,
+            "properties": {
+              "name":  { "type": "string", "maxLength": 128 },
+              "scope": { "type": "string", "maxLength": 256 },
+              "risk":  { "type": "string", "enum": ["low", "medium", "high"], "default": "medium" }
+            }
+          }
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scripts":    { "type": "array", "items": { "type": "string", "pattern": "^scripts/[^\\s]+$" } },
+        "references": { "type": "array", "items": { "type": "string", "pattern": "^references/[^\\s]+$" } },
+        "assets":     { "type": "array", "items": { "type": "string", "pattern": "^assets/[^\\s]+$" } }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sandbox":          { "type": "string", "enum": ["required", "recommended", "none"], "default": "recommended" },
+        "userConfirmation": { "type": "string", "enum": ["always", "dangerous-only", "never"], "default": "dangerous-only" },
+        "dataHandling": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "pii":             { "type": "boolean", "default": false },
+            "secrets":         { "type": "boolean", "default": true },
+            "allowedOutputs":  { "type": "array", "items": { "type": "string", "maxLength": 64 } }
+          }
+        }
+      }
+    },
+    "supplyChain": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "repo":     { "type": "string", "maxLength": 2048 },
+            "path":     { "type": "string", "maxLength": 2048 },
+            "revision": { "type": "string", "maxLength": 256 }
+          }
+        },
+        "digest":    { "type": "string", "maxLength": 256 },
+        "sbom": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "spdx":       { "type": "string", "maxLength": 2048 },
+            "cyclonedx":  { "type": "string", "maxLength": 2048 }
+          }
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "inToto":    { "type": "string", "maxLength": 2048 },
+            "slsaLevel": { "type": "integer", "minimum": 0, "maximum": 4 }
+          }
+        },
+        "signatures": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["type", "ref"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "type": "string", "enum": ["cosign", "pgp", "x509"] },
+              "ref":  { "type": "string", "maxLength": 2048 }
+            }
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "galMinimum":    { "type": "integer", "minimum": 0, "maximum": 5 },
+        "proofRequired": { "type": "boolean" },
+        "proofTypes": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["PCA", "UCA", "TIP", "ZKP", "DCA", "TKP", "WCAG", "CLP", "UFP"] },
+          "uniqueItems": true
+        },
+        "enforcementPoints": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["pre_exec", "runtime", "post_exec", "promotion", "emergency"] },
+          "uniqueItems": true
+        },
+        "emergencyProtocols": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^EP-\\d{3}$" },
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

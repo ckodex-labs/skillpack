@@ -1,0 +1,281 @@
+{
+    "$id": "https://schemas.ckodex.org/cnsb/v1/cnsb-standalone.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Cloud-Native Skills Bundle (CNSB) v1 - Standalone",
+    "description": "Self-contained schema with embedded common types for offline validation",
+    "type": "object",
+    "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "skills"
+    ],
+    "properties": {
+        "apiVersion": {
+            "type": "string",
+            "const": "cnsb.ckodex.org/v1"
+        },
+        "kind": {
+            "type": "string",
+            "const": "SkillBundle"
+        },
+        "metadata": {
+            "$ref": "#/$defs/ResourceMetadata"
+        },
+        "skills": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "$ref": "#/$defs/Skill"
+            }
+        },
+        "dependencies": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/Urn"
+            },
+            "description": "Other CNSBs or artifacts this bundle depends on."
+        },
+        "lifecycle": {
+            "$ref": "#/$defs/Lifecycle",
+            "description": "Lifecycle operations for bundle management."
+        }
+    },
+    "$defs": {
+        "Urn": {
+            "title": "URN",
+            "type": "string",
+            "pattern": "^urn:",
+            "minLength": 4,
+            "description": "CKODEX URN. Must start with 'urn:'."
+        },
+        "LabelMap": {
+            "title": "LabelMap",
+            "type": "object",
+            "additionalProperties": {
+                "type": "string"
+            },
+            "description": "Arbitrary key/value labels for selection and grouping."
+        },
+        "GAL": {
+            "title": "Governance Autonomy Level",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5,
+            "description": "Governance Autonomy Level (0-5)"
+        },
+        "ASC": {
+            "title": "Atomic Security Control",
+            "type": "string",
+            "description": "Symbolic identifier for an atomic security control."
+        },
+        "LifecycleHook": {
+            "title": "LifecycleHook",
+            "type": "object",
+            "properties": {
+                "command": {
+                    "type": "string",
+                    "description": "Command to execute for this lifecycle operation."
+                },
+                "script": {
+                    "type": "string",
+                    "description": "Inline script for this lifecycle operation."
+                },
+                "timeout": {
+                    "type": "string",
+                    "pattern": "^[0-9]+(s|m|h)$",
+                    "default": "5m",
+                    "description": "Timeout for hook execution (e.g. '30s', '5m', '1h')."
+                },
+                "retries": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 5,
+                    "default": 0,
+                    "description": "Number of retry attempts on failure."
+                },
+                "env": {
+                    "$ref": "#/$defs/LabelMap",
+                    "description": "Environment variables for the hook."
+                }
+            },
+            "additionalProperties": false
+        },
+        "Lifecycle": {
+            "title": "Lifecycle",
+            "type": "object",
+            "description": "Lifecycle operations for bundle management.",
+            "properties": {
+                "pack": {
+                    "$ref": "#/$defs/LifecycleHook",
+                    "description": "Package the skill for distribution."
+                },
+                "unpack": {
+                    "$ref": "#/$defs/LifecycleHook",
+                    "description": "Unpack/extract a distributed skill."
+                },
+                "install": {
+                    "$ref": "#/$defs/LifecycleHook",
+                    "description": "Install the skill in the target environment."
+                },
+                "upgrade": {
+                    "$ref": "#/$defs/LifecycleHook",
+                    "description": "Upgrade from a previous version."
+                },
+                "uninstall": {
+                    "$ref": "#/$defs/LifecycleHook",
+                    "description": "Remove the skill from the environment."
+                },
+                "verify": {
+                    "$ref": "#/$defs/LifecycleHook",
+                    "description": "Verify skill installation/integrity."
+                },
+                "preInstall": {
+                    "$ref": "#/$defs/LifecycleHook",
+                    "description": "Pre-install checks and preparations."
+                },
+                "postInstall": {
+                    "$ref": "#/$defs/LifecycleHook",
+                    "description": "Post-install setup and configuration."
+                }
+            },
+            "additionalProperties": false
+        },
+        "ResourceMetadata": {
+            "title": "ResourceMetadata",
+            "type": "object",
+            "required": [
+                "name",
+                "version"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "urn": {
+                    "$ref": "#/$defs/Urn"
+                },
+                "version": {
+                    "type": "string",
+                    "description": "Semantic version, git SHA, or other version identifier."
+                },
+                "description": {
+                    "type": "string"
+                },
+                "labels": {
+                    "$ref": "#/$defs/LabelMap"
+                },
+                "annotations": {
+                    "$ref": "#/$defs/LabelMap"
+                }
+            },
+            "additionalProperties": false
+        },
+        "SkillParam": {
+            "title": "SkillParam",
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "description": "Logical type (e.g. 'string', 'number', 'json', 'uri', 'file')."
+                },
+                "description": {
+                    "type": "string"
+                },
+                "required": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "schemaRef": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "Optional JSON Schema URI describing this parameter's structure."
+                }
+            },
+            "additionalProperties": false
+        },
+        "Skill": {
+            "title": "Skill",
+            "type": "object",
+            "required": [
+                "id",
+                "entry",
+                "galMin",
+                "galMax"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Stable skill identifier within this bundle."
+                },
+                "entry": {
+                    "type": "string",
+                    "description": "Entrypoint reference (e.g. CLI subcommand, function path, tool name)."
+                },
+                "description": {
+                    "type": "string"
+                },
+                "galMin": {
+                    "$ref": "#/$defs/GAL"
+                },
+                "galMax": {
+                    "$ref": "#/$defs/GAL"
+                },
+                "asc": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/ASC"
+                    },
+                    "description": "Atomic Security Controls required/enforced by this skill."
+                },
+                "inputs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/SkillParam"
+                    }
+                },
+                "outputs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/SkillParam"
+                    }
+                },
+                "examples": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "name"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "input": {
+                                "type": "object"
+                            },
+                            "expectedOutput": {
+                                "type": "object"
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                },
+                "labels": {
+                    "$ref": "#/$defs/LabelMap"
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false
+}

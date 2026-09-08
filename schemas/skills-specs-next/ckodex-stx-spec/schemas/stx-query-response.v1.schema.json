@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ckodex.org/stx-query-response.v1.schema.json",
+  "title": "CKODEX STX Query Response v1",
+  "description": "Envelope for consumer-side query responses across all three transports. The REST handler, gRPC method, and GraphQL resolver all return this shape (modulo their native serialization).",
+  "type": "object",
+  "required": ["apiVersion", "kind", "queryId", "respondedAt", "result"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "type": "string", "const": "ckodex.org/stx/v1" },
+    "kind":       { "type": "string", "const": "StxQueryResponse" },
+    "queryId": {
+      "type": "string",
+      "description": "Echoed from the request for correlation. Required even when transport carries its own request ID."
+    },
+    "respondedAt": { "type": "string", "format": "date-time" },
+    "privacyMode": {
+      "type": "string",
+      "enum": ["debug-local", "audit-private", "public-anchor", "regulated-export"]
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "items": { "$ref": "https://schemas.ckodex.org/stx-domain.v1.schema.json#/$defs/GraphNode" }
+        },
+        "pageInfo": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "hasNext":  { "type": "boolean" },
+            "cursor":   { "type": "string", "maxLength": 512 },
+            "total":    { "type": "integer", "minimum": 0 }
+          }
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["code", "message"],
+            "additionalProperties": false,
+            "properties": {
+              "code":    { "type": "string", "enum": [
+                "not_found", "denied", "rate_limited", "invalid_request",
+                "privacy_violation", "version_mismatch", "internal_error"
+              ] },
+              "message": { "type": "string", "maxLength": 1024 },
+              "path":    { "type": "string", "maxLength": 512 }
+            }
+          }
+        }
+      }
+    },
+    "redacted": {
+      "type": "array", "items": { "type": "string", "maxLength": 128 }
+    }
+  }
+}

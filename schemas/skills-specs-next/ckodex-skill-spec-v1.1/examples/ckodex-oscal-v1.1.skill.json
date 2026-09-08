@@ -1,0 +1,60 @@
+{
+  "apiVersion": "ckodex.org/skill/v1.1",
+  "kind": "Skill",
+  "metadata": {
+    "name": "ckodex-oscal",
+    "description": "Author, read, validate, convert, or reason about OSCAL (Open Security Controls Assessment Language) — NIST's machine-readable compliance format. Use whenever the user mentions OSCAL, NIST 800-53/171, FedRAMP, SSP, POA&M, control catalogs, profiles, baselines, component definitions, or compliance-as-code.",
+    "synopsis": "When the user mentions OSCAL, NIST 800-53/171, FedRAMP, SSP, POA&M, control catalogs, profiles, baselines, component definitions, or compliance-as-code: this skill resolves OSCAL profiles, validates catalog/profile/SSP documents against NIST schemas, converts between XML/JSON/YAML, and emits UCA attestations for downstream proof pipelines. NOT a substitute for cortaix-csr (factory baseline) or framework-specific ISO/PCI/HIPAA skills. Triggers: explicit OSCAL document references, profile resolution requests, control-mapping tasks. Exclusions: regulatory advice, legal interpretation, organization-specific policy drafting.",
+    "version": "1.0.0",
+    "license": "Apache-2.0",
+    "authors": ["ckodex-labs"],
+    "keywords": ["oscal", "nist", "compliance", "fedramp"]
+  },
+  "entrypoints": { "skillMd": "SKILL.md" },
+  "agentSkillsFrontmatter": {
+    "compatibility": "Filesystem-based agents; requires Python 3.11+",
+    "allowedToolsRaw": "Read Bash(oscal-cli:*) Bash(jq:*)"
+  },
+  "capabilities": {
+    "requiresNetwork": false,
+    "requiresFilesystem": true,
+    "tools": [
+      { "name": "Read", "risk": "low" },
+      { "name": "Bash", "scope": "oscal-cli:*", "risk": "medium" }
+    ]
+  },
+  "resources": {
+    "scripts":    ["scripts/validate.sh", "scripts/gen_bundle.py"],
+    "references": ["references/catalog.md", "references/profile.md", "references/ssp.md"],
+    "assets":     ["assets/catalog.oscal.json"]
+  },
+  "policy": {
+    "sandbox": "recommended",
+    "userConfirmation": "dangerous-only",
+    "dataHandling": { "pii": false, "secrets": true }
+  },
+  "governance": {
+    "galMinimum": 2,
+    "proofRequired": true,
+    "proofTypes": ["UCA"],
+    "enforcementPoints": ["pre_exec", "post_exec"],
+    "emergencyProtocols": ["EP-013"]
+  },
+  "ontology": {
+    "@context": "https://ckodex.org/skill-context/v1",
+    "subjects":    ["oscal", "nist:800-53", "compliance", "fedramp"],
+    "produces":    ["UCA"],
+    "consumes":    ["oscal:catalog", "oscal:profile"],
+    "related":     ["cortaix-csr", "ckodex-announcements"],
+    "exclusiveOf": [],
+    "triggers":    ["OSCAL", "SSP", "POA&M", "FedRAMP", "control catalog", "NIST 800-53"],
+    "galMinimum":  2,
+    "proofTypes":  ["UCA"]
+  },
+  "runtime": {
+    "implicitInvocation": true,
+    "minTier": "L1",
+    "maxTier": "L4R",
+    "l4xAllowed": false
+  }
+}

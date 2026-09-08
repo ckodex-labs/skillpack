@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ckodex.org/schema/cnsb.json",
+  "title": "CKODEX Canonical Skill Bundle (CNSB) Schema",
+  "description": "JSON Schema for validating CKODEX CNSB skill bundle manifests",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "skills"],
+  "properties": {
+    "apiVersion": {
+      "type": "string",
+      "const": "cnsb.ckodex.org/v1",
+      "description": "API version for the CNSB manifest"
+    },
+    "kind": {
+      "type": "string",
+      "const": "SkillBundle",
+      "description": "Resource kind"
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Bundle name"
+        },
+        "urn": {
+          "type": "string",
+          "pattern": "^urn:ckodex:cnsb:[a-z0-9-]+:[0-9]+\\.[0-9]+\\.[0-9]+$",
+          "description": "Unique resource name"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+          "description": "Semantic version"
+        },
+        "description": {
+          "type": "string",
+          "description": "Bundle description"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/skill"
+      },
+      "minItems": 1
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^urn:ckodex:"
+      }
+    }
+  },
+  "$defs": {
+    "skill": {
+      "type": "object",
+      "required": ["id", "entry", "description", "galMin", "galMax"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z]+\\.[a-z]+\\.[a-z-]+$",
+          "description": "Skill identifier (e.g., frontend.component.generate)"
+        },
+        "entry": {
+          "type": "string",
+          "pattern": "^skills://[a-z-]+#[a-z-]+$",
+          "description": "Entry point URI"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Skill description"
+        },
+        "galMin": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Minimum Governance Autonomy Level"
+        },
+        "galMax": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Maximum Governance Autonomy Level"
+        },
+        "asc": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^ASC_[A-Z0-9_]+$"
+          },
+          "description": "Assurance Standard Codes"
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/parameter"
+          }
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/parameter"
+          }
+        },
+        "examples": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "input"],
+            "properties": {
+              "name": { "type": "string" },
+              "input": { "type": "object" }
+            }
+          }
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "parameter": {
+      "type": "object",
+      "required": ["name", "type", "required"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Parameter name"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["string", "boolean", "json", "code", "uri", "number"],
+          "description": "Parameter type"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether parameter is required"
+        },
+        "description": {
+          "type": "string",
+          "description": "Parameter description"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,133 @@
+{
+    "$id": "https://schemas.ckodex.org/cnaab/v1/cnaab-standalone.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "CKODEX Agent App Bundle (CNAAB) v1 - Standalone",
+    "description": "Self-contained schema with embedded common types for offline validation",
+    "type": "object",
+    "required": ["apiVersion", "kind", "metadata", "spec"],
+    "properties": {
+        "apiVersion": { "type": "string", "const": "cnaab.ckodex.org/v1" },
+        "kind": { "type": "string", "const": "AgentAppBundle" },
+        "metadata": { "$ref": "#/$defs/ResourceMetadata" },
+        "spec": {
+            "type": "object",
+            "required": ["rootAgentId", "agents"],
+            "properties": {
+                "rootAgentId": { "type": "string" },
+                "agents": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": { "$ref": "#/$defs/Agent" }
+                },
+                "policiesRef": { "$ref": "#/$defs/Urn" },
+                "environment": {
+                    "type": "object",
+                    "additionalProperties": { "type": "string" }
+                },
+                "tenantConstraints": {
+                    "type": "object",
+                    "properties": {
+                        "allowedTenants": { "type": "array", "items": { "$ref": "#/$defs/Urn" } },
+                        "forbiddenTenants": { "type": "array", "items": { "$ref": "#/$defs/Urn" } }
+                    },
+                    "additionalProperties": false
+                },
+                "ui": {
+                    "type": "object",
+                    "properties": {
+                        "preferredLayout": { "type": "string" },
+                        "tags": { "type": "array", "items": { "type": "string" } }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
+        },
+        "lifecycle": {
+            "$ref": "#/$defs/Lifecycle",
+            "description": "Lifecycle operations for agent app bundle management."
+        }
+    },
+    "$defs": {
+        "Urn": { "type": "string", "pattern": "^urn:", "minLength": 4 },
+        "LabelMap": { "type": "object", "additionalProperties": { "type": "string" } },
+        "GAL": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "ASC": { "type": "string" },
+        "LifecycleHook": {
+            "type": "object",
+            "properties": {
+                "command": { "type": "string", "description": "Command to execute." },
+                "script": { "type": "string", "description": "Inline script." },
+                "timeout": { "type": "string", "pattern": "^[0-9]+(s|m|h)$", "default": "5m" },
+                "retries": { "type": "integer", "minimum": 0, "maximum": 5, "default": 0 },
+                "env": { "$ref": "#/$defs/LabelMap" }
+            },
+            "additionalProperties": false
+        },
+        "Lifecycle": {
+            "type": "object",
+            "properties": {
+                "pack": { "$ref": "#/$defs/LifecycleHook" },
+                "unpack": { "$ref": "#/$defs/LifecycleHook" },
+                "install": { "$ref": "#/$defs/LifecycleHook" },
+                "upgrade": { "$ref": "#/$defs/LifecycleHook" },
+                "uninstall": { "$ref": "#/$defs/LifecycleHook" },
+                "verify": { "$ref": "#/$defs/LifecycleHook" },
+                "preInstall": { "$ref": "#/$defs/LifecycleHook" },
+                "postInstall": { "$ref": "#/$defs/LifecycleHook" }
+            },
+            "additionalProperties": false
+        },
+        "ResourceMetadata": {
+            "type": "object",
+            "required": ["name", "version"],
+            "properties": {
+                "name": { "type": "string" },
+                "urn": { "$ref": "#/$defs/Urn" },
+                "version": { "type": "string" },
+                "description": { "type": "string" },
+                "labels": { "$ref": "#/$defs/LabelMap" },
+                "annotations": { "$ref": "#/$defs/LabelMap" }
+            },
+            "additionalProperties": false
+        },
+        "SkillRef": {
+            "type": "object",
+            "required": ["bundleUrn", "skillId"],
+            "properties": {
+                "bundleUrn": { "$ref": "#/$defs/Urn" },
+                "skillId": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "RuntimeConfig": {
+            "type": "object",
+            "required": ["provider"],
+            "properties": {
+                "provider": { "type": "string" },
+                "model": { "type": "string" },
+                "endpoint": { "type": "string", "format": "uri" },
+                "maxTokens": { "type": "integer", "minimum": 1 },
+                "temperature": { "type": "number", "minimum": 0, "maximum": 2 }
+            },
+            "additionalProperties": false
+        },
+        "Agent": {
+            "type": "object",
+            "required": ["id", "role", "galMin", "galMax"],
+            "properties": {
+                "id": { "type": "string" },
+                "role": { "type": "string" },
+                "description": { "type": "string" },
+                "galMin": { "$ref": "#/$defs/GAL" },
+                "galMax": { "$ref": "#/$defs/GAL" },
+                "asc": { "type": "array", "items": { "$ref": "#/$defs/ASC" } },
+                "skills": { "type": "array", "items": { "$ref": "#/$defs/SkillRef" } },
+                "runtime": { "$ref": "#/$defs/RuntimeConfig" },
+                "labels": { "$ref": "#/$defs/LabelMap" }
+            },
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false
+}

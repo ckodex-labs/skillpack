@@ -1,0 +1,25 @@
+{
+  "apiVersion": "cnsb.ckodex.org/v1",
+  "kind": "SkillBundle",
+  "metadata": {
+    "name": "simple-tool",
+    "version": "1.0.0",
+    "urn": "urn:ckodex:skill:acme:dev:platform:core:simple-tool",
+    "description": "A simple stateless tool with no lifecycle hooks"
+  },
+  "skills": [
+    {
+      "id": "simple-tool",
+      "entry": "simple-tool run",
+      "description": "Process a query and return a result",
+      "galMin": 0,
+      "galMax": 1,
+      "inputs": [
+        { "name": "query", "type": "string", "description": "Input query", "required": true }
+      ],
+      "outputs": [
+        { "name": "result", "type": "string", "description": "Processed result" }
+      ]
+    }
+  ]
+}

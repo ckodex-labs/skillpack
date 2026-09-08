@@ -1,97 +1,128 @@
+<div align="center">
+
 # SkillPack
 
-> **Private Beta Release** — `1.0.0-beta.1`  
-> This is an early release for trusted, local/private evaluation. See [KNOWN-ISSUES.md](KNOWN-ISSUES.md) and [evidence/ALPHA-READINESS.md](evidence/ALPHA-READINESS.md) for current limitations and risks.
+[![Status: Private Beta](https://img.shields.io/badge/status-private_beta-orange)](KNOWN-ISSUES.md)
+[![Version](https://img.shields.io/badge/version-1.0.0--beta.2-blue)](CHANGELOG.md)
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
+[![MSRV](https://img.shields.io/badge/MSRV-1.95-purple)](rust-toolchain.toml)
 
-**AI Agent Skill Quality Assessment Framework**
+**Quality grading for AI agent skills — the SonarQube of the skills ecosystem.**
 
-SkillPack is a production-grade tool for assessing, validating, and publishing AI agent skill packs. It provides multi-dimensional quality scoring equivalent to SonarQube for traditional codebases.
+Assess, grade, and publish AI agent skill packs with an evidence-backed **S+ → F** letter grade across nine quality dimensions — provenance-tracked, OCI-distributable, signature-verifiable.
 
-## Features
+![Hero — SkillPack quality assessment](docs/assets/screenshots/hero.png)
 
-- **Multi-Dimension Assessment** - Identity & Manifest, Security, Provenance, Documentation, Testing, Compatibility, Lifecycle, Governance, Evals & HITL
-- **Grade System** - S+/S/A/B/C/D/F with configurable thresholds
-- **CLI Tool** - `skillpack check`, `init`, `package`, `publish`, `install`, `eval`, `discover`, `lock`, `migrate`, `store sync/migrate/status`
-- **VS Code Extension** - Inline diagnostics, AI assistant, skill creation wizard
-- **gRPC API** - High-performance server for registry integration
-- **OCI Distribution** - Push/pull skills via ORAS-compatible registries
+Real grade badge emitted by `skillpack report --format badge` from the `known-a` test fixture — every skill can ship one next to its README:
 
-## Quick Start
+![Grade badge sample: skillpack: known-a — S, 110.5/150](docs/assets/badge-sample.svg)
+
+</div>
+
+## Why SkillPack
+
+The agent-skills ecosystem has thousands of skills in circulation — and no standard way to answer *"is this one any good?"* SkillPack grades any skill pack across nine weighted dimensions — Security, Identity & Manifest, Provenance, Documentation, Testing, Compatibility, Lifecycle, Governance, and Evals/HITL — and issues a letter grade with the evidence behind every point.
+
+- **Grade anything, in seconds.** `skillpack check` runs the full rubric; `skillpack grade` gives the one-letter answer for gates and CI.
+- **Publish with a supply chain.** Push graded skills to any OCI registry (ORAS-compatible), with SBOM generation, SLSA provenance, and cosign signing wired into the pipeline.
+- **Wire it into your agents.** gRPC + HTTP APIs, an MCP server for direct agent integration, and a VS Code extension for inline diagnostics.
+
+## Quick start
 
 ```bash
-# Install CLI
+# Install the CLI
 cargo install --path . --bin skillpack
 
-# Create new skill
+# Scaffold a new skill from a template
 skillpack init my-skill --template mcp
 
-# Assess skill quality
-cd my-skill
-skillpack check
+# Run the full quality assessment
+cd my-skill && skillpack check
 
-# Generate lock file
-skillpack lock
-
-# Package skill (supports tar.gz, tar.bz2, tar.br, tar.zst, zip)
-skillpack package --format zip
-
-# Publish to OCI registry
-skillpack publish --registry ghcr.io/ckodex/my-skill:0.1.0
-
-# Install from registry
-skillpack install ghcr.io/ckodex/my-skill:0.1.0 --output ./skills
-
-# Run evaluation suite
-skillpack eval --suite smoke
-
-# Discover skills in a directory
-skillpack discover --limit 10
+# Just the letter grade (exits non-zero if below minimum — CI-friendly)
+skillpack grade . --minimum B
 ```
 
-## CLI Commands
+## What you get
 
-| Command                                 | Description                                  |
-| --------------------------------------- | -------------------------------------------- |
-| `skillpack check [path]`                | Run full quality assessment                  |
-| `skillpack grade [path]`                | Show letter grade only                       |
-| `skillpack report [path]`               | Generate JSON/SARIF/Markdown report          |
-| `skillpack validate <file>`             | Validate schema (CNSB/CNAAB/Evidence/Policy) |
-| `skillpack init <name>`                 | Scaffold new skill project                   |
-| `skillpack package [path]`              | Create archive (tar.gz/bz2/br/zst/zip)       |
-| `skillpack publish [path]`              | Push skill to OCI registry                   |
-| `skillpack install <ref>`               | Pull skill from OCI registry                 |
-| `skillpack eval [path]`                 | Run evaluation suites (smoke/compliance)     |
-| `skillpack discover [path]`             | Discover skills in directory                 |
-| `skillpack lock [path]`                 | Generate skill.lock with integrity hashes    |
-| `skillpack migrate [path]`              | Migrate manifest to latest schema version    |
-| `skillpack store sync`                  | Sync agent directories with canonical store  |
-| `skillpack store migrate`               | Migrate physical skills to canonical store   |
-| `skillpack store status`                | Show canonical store health & agent status   |
-| `skillpack store check-boundary <path>` | Check IP boundary violations                 |
+`skillpack check` produces a multi-dimensional assessment; `skillpack report` renders it as JSON, SARIF, Markdown, or a shareable SVG badge:
 
-## VS Code Extension
+![Live assessment view](docs/assets/screenshots/assessment-live.png)
 
-Install from `vscode-extension/` for:
-- Real-time quality diagnostics
-- AI-assisted skill improvement
-- Skill creation wizard
-- Registry browser and installation
+Every point of the grade is traceable: checkers emit per-dimension scores, findings are classified by severity, and optional evidence envelopes can be signed (keyless cosign) and archived for the audit trail.
 
-## Environment Variables
+## Feature tour
 
-| Variable                         | Default       | Description                                                |
-| -------------------------------- | ------------- | ---------------------------------------------------------- |
-| `SKILLPACK_PORT`                 | `50051`       | gRPC server port                                           |
-| `SKILLPACK_HTTP_PORT`            | `50052`       | HTTP server port                                           |
-| `SKILLPACK_BIND_ALL`             | `false`       | Bind to `0.0.0.0` instead of `127.0.0.1`                   |
-| `SKILLPACK_API_TOKEN`            | *(none)*      | Bearer token for mutation endpoints; unset = unprotected   |
-| `SKILLPACK_CORS_ORIGINS`         | *(none)*      | Comma-separated allowed origins; unset = deny cross-origin |
-| `SKILLPACK_REQUEST_TIMEOUT_SECS` | `30`          | HTTP request timeout (DoS protection)                      |
-| `SKILLPACK_MAX_BODY_SIZE_MB`     | `10`          | Max HTTP request body size in MiB (DoS protection)         |
-| `SKILLPACK_DB_PATH`              | *(in-memory)* | File path for DuckDB persistence                           |
-| `SKILLPACK_OCI_AUTH`             | *(none)*      | OCI registry auth in `user:pass` format                    |
+| Surface | What it does |
+| --- | --- |
+| **Grade system** | S+/S/A/B/C/D/F with configurable thresholds and dimension weights |
+| **9 assessment dimensions** | Security, Identity & Manifest, Provenance, Documentation, Testing, Compatibility, Lifecycle, Governance, Evals & HITL |
+| **Reports** | JSON, SARIF, Markdown, and SVG grade badges — all from one assessment |
+| **OCI distribution** | `publish`/`install` to ORAS-compatible registries (tar.gz/bz2/br/zst/zip packaging) |
+| **gRPC + HTTP APIs** | Registry-integration service with bearer-token auth, rate-limit-ready CORS, and body-size limits |
+| **MCP server** | Integrates as a tool provider for AI agents (assess/grade/report/closest-match) |
+| **VS Code extension** | Inline quality diagnostics, AI assistant, skill-creation wizard, registry browser |
+| **Canonical store** | Multi-agent skill sync (`store sync/migrate/status`) with IP boundary checks |
 
-**Security note:** Always set `SKILLPACK_API_TOKEN` before exposing the server to any network. `SKILLPACK_BIND_ALL=1` without a token is a critical security risk.
+<details>
+<summary>Full CLI command reference</summary>
+
+| Command | Description |
+| --- | --- |
+| `skillpack check [path]` | Run full quality assessment |
+| `skillpack grade [path]` | Show letter grade only |
+| `skillpack report [path]` | Generate JSON/SARIF/Markdown/badge report |
+| `skillpack validate <file>` | Validate schema (CNSB/CNAAB/Evidence/Policy) |
+| `skillpack init <name>` | Scaffold new skill project |
+| `skillpack package [path]` | Create archive (tar.gz/bz2/br/zst/zip) |
+| `skillpack publish [path]` | Push skill to OCI registry |
+| `skillpack install <ref>` | Pull skill from OCI registry |
+| `skillpack eval [path]` | Run evaluation suites (smoke/compliance) |
+| `skillpack discover [path]` | Discover skills in directory |
+| `skillpack lock [path]` | Generate skill.lock with integrity hashes |
+| `skillpack migrate [path]` | Migrate manifest to latest schema version |
+| `skillpack store sync` | Sync agent directories with canonical store |
+| `skillpack store migrate` | Migrate physical skills to canonical store |
+| `skillpack store status` | Show canonical store health & agent status |
+| `skillpack store check-boundary <path>` | Check IP boundary violations |
+
+</details>
+
+## Registry and dashboard
+
+The registry browser gives a catalog over published skills with grades surfaced at a glance:
+
+![Registry catalog view](docs/assets/screenshots/registry-live-top.png)
+
+![Fleet view](docs/assets/screenshots/fleet-view.png)
+
+## Trust and supply chain
+
+SkillPack is built for the audience it grades: security-conscious skill authors and fleet operators.
+
+- **Evidence-bearing grading.** Every assessment can be exported as a signed evidence envelope (keyless cosign); the Dagger pipeline performs real `cosign sign-blob`, CycloneDX SBOM generation, and SLSA provenance.
+- **Governed codebase.** Hard limits enforced by the `xtask` CI gate: 500 LOC per file, zero clippy warnings (`-D warnings`), full test suite on every change, and skill paths validated against traversal at every entry point (gRPC, HTTP, MCP, canonical joins).
+- **Honest about gaps.** Current limitations — including stub checkers, test-coverage gaps, and auth posture — are tracked openly in [KNOWN-ISSUES.md](KNOWN-ISSUES.md), and readiness evidence lives in [evidence/ALPHA-READINESS.md](evidence/ALPHA-READINESS.md) and [BETA-READINESS notes](docs/assessment-calibration-notes.md).
+
+This is a **private beta**: suitable for trusted local/private evaluation today, with the above gaps documented rather than hidden.
+
+## Documentation
+
+- [Authoring guide](docs/authoring-guide.md) — how to write a skill that grades well
+- [Assessment dimensions](docs/dimensions/) — the rubric in depth
+- [OCI distribution](docs/oci-distribution.md) — publishing and installing via registries
+- [Registry onboarding](docs/registry-onboarding.md) — joining the catalog
+- [Agentic authoring patterns](docs/agentic-authoring-patterns.md) — for agent-assisted skill development
+
+## Demo
+
+![15-second terminal demo: init, grade, badge emission](docs/assets/demo.gif)
+
+The 15-second terminal demo is generated from a script with [vhs](https://github.com/charmbracelet/vhs) — demo-as-code, re-runnable in CI:
+
+```bash
+vhs docs/assets/demo.tape   # renders docs/assets/demo.gif
+```
 
 ## Development
 
@@ -99,16 +130,15 @@ Install from `vscode-extension/` for:
 # Build all crates
 cargo build
 
-# Run tests
-cargo test
+# Full CI-parity gate (fmt, clippy -D warnings, tests, smoke) — what release-tag runs
+cargo run -p xtask -- ci
 
-# Start gRPC server
+# Start the gRPC + HTTP servers
 cargo run --bin skillpack-server
-
-# Compile VS Code extension
-cd vscode-extension && npm run compile
 ```
+
+The workspace uses `~/.cache/cargo-target` as a shared `CARGO_TARGET_DIR` (see `.cargo/config.toml`) — build artifacts do not land in `./target`.
 
 ## License
 
-Apache-2.0
+Apache-2.0 — see [LICENSE](LICENSE).

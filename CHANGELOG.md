@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+- Shared skill-path guard (`skillpack_application::skill_path_guard`) applied at
+  gRPC (`server.rs` incl. previously unsanitized `report`, `assess_stream`,
+  `assess_batch_stream`), HTTP (`http_server.rs`), MCP (`mcp.rs`), and canonical
+  joins (`canonical_service.rs`: package/import/promote). Rejects `..`, `..\\`,
+  absolute escapes, symlink escapes, NUL, and separator-carrying components;
+  13 unit tests.
+
+### Added
+- Automated release-tag workflow `.github/workflows/release-tag.yml`: runs the
+  `xtask` stamp (version-triple) check and the full CI-parity gate, then creates
+  annotated tag `v<version>` on main pushes when the tag is new.
+- SVG grade badge output: `skillpack report --format badge` (and MCP
+  `generate_report` format `"badge"`) renders a shields.io-style flat grade
+  badge for README embedding — deterministic bytes, XML-escaped skill names,
+  0–150 scale, 4 unit tests.
+
 ## [1.0.0-beta.2] - 2026-09-08
 
 ### Fixed

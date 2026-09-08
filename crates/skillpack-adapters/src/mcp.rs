@@ -2,12 +2,12 @@
 //!
 //! Model Context Protocol server for AI agent integration.
 
-use anyhow::Result;
-use serde::{Deserialize, Serialize};
-use skillpack_application::{AssessSkillRequest, AssessSkillUseCase};
-
 use crate::checkers::all_checkers;
 use crate::filesystem::FilesystemReader;
+use anyhow::Result;
+use serde::{Deserialize, Serialize};
+use skillpack_application::{AssessSkillRequest, AssessSkillUseCase, validate_skill_path_cwd};
+use skillpack_domain::ReportGenerator;
 
 /// MCP Server configuration
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -87,7 +87,7 @@ pub fn tools() -> Vec<McpTool> {
                     },
                     "format": {
                         "type": "string",
-                        "enum": ["json", "sarif", "markdown"],
+                        "enum": ["json", "sarif", "markdown", "badge"],
                         "description": "Report output format"
                     }
                 },
@@ -132,44 +132,6 @@ pub fn resources() -> Vec<McpResource> {
     ]
 }
 
-/// Sanitize and canonicalize a user-provided path to prevent path traversal attacks.
-/// Returns an error if the path attempts to escape the current working directory.
-fn sanitize_path(path: &str) -> Result<String> {
-    use std::path::{Path, PathBuf};
-
-    // Convert to absolute path
-    let absolute = if Path::new(path).is_absolute() {
-        PathBuf::from(path)
-    } else {
-        std::env::current_dir()
-            .map_err(|e| anyhow::anyhow!("Failed to get current directory: {}", e))?
-            .join(path)
-    };
-
-    // Canonicalize to resolve any .. or . components
-    let canonical = absolute
-        .canonicalize()
-        .map_err(|e| anyhow::anyhow!("Failed to canonicalize path '{}': {}", path, e))?;
-
-    // Ensure the canonical path doesn't escape the current working directory
-    let current_dir = std::env::current_dir()
-        .map_err(|e| anyhow::anyhow!("Failed to get current directory: {}", e))?
-        .canonicalize()
-        .map_err(|e| anyhow::anyhow!("Failed to canonicalize current directory: {}", e))?;
-
-    if !canonical.starts_with(&current_dir) {
-        return Err(anyhow::anyhow!(
-            "Path '{}' attempts to escape the current working directory",
-            path
-        ));
-    }
-
-    canonical
-        .to_str()
-        .map(|s| s.to_string())
-        .ok_or_else(|| anyhow::anyhow!("Path contains invalid UTF-8"))
-}
-
 /// Handle MCP tool call
 pub async fn handle_tool_call(
     name: &str,
@@ -178,7 +140,7 @@ pub async fn handle_tool_call(
     match name {
         "assess_skill" => {
             let raw_path = arguments["path"].as_str().unwrap_or(".");
-            let path = sanitize_path(raw_path)?;
+            let path = validate_skill_path_cwd(raw_path)?.display().to_string();
             let reader = FilesystemReader::new();
             let use_case = AssessSkillUseCase::new(reader, all_checkers());
             let response = use_case.execute(AssessSkillRequest {
@@ -202,7 +164,7 @@ pub async fn handle_tool_call(
         }
         "grade_skill" => {
             let raw_path = arguments["path"].as_str().unwrap_or(".");
-            let path = sanitize_path(raw_path)?;
+            let path = validate_skill_path_cwd(raw_path)?.display().to_string();
             let minimum = arguments["minimum_grade"].as_str().unwrap_or("C");
             let reader = FilesystemReader::new();
             let use_case = AssessSkillUseCase::new(reader, all_checkers());
@@ -231,7 +193,7 @@ pub async fn handle_tool_call(
         }
         "generate_report" => {
             let raw_path = arguments["path"].as_str().unwrap_or(".");
-            let path = sanitize_path(raw_path)?;
+            let path = validate_skill_path_cwd(raw_path)?.display().to_string();
             let format = arguments["format"].as_str().unwrap_or("json");
 
             let reader = FilesystemReader::new();
@@ -245,6 +207,7 @@ pub async fn handle_tool_call(
             let report = match format {
                 "sarif" => generate_sarif(&assessment, raw_path)?,
                 "markdown" | "md" => generate_markdown(&assessment)?,
+                "badge" => crate::reporters::BadgeReporter.generate(&assessment)?,
                 _ => serde_json::to_string_pretty(&assessment).map_err(|e| anyhow::anyhow!(e))?,
             };
 

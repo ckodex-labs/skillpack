@@ -17,7 +17,7 @@ use clap::{Parser, Subcommand, ValueEnum};
 use colored::*;
 use serde_json::json;
 use skillpack_application::{AssessSkillRequest, AssessSkillUseCase};
-use skillpack_domain::Grade;
+use skillpack_domain::{Grade, ReportGenerator};
 use std::sync::atomic::{AtomicBool, Ordering};
 
 /// CLIENT-SPEC.md §8: global quiet flag suppresses non-error stdout.
@@ -733,6 +733,7 @@ pub enum ReportOutputFormat {
     Json,
     Sarif,
     Markdown,
+    Badge,
 }
 
 #[derive(Clone, ValueEnum)]
@@ -1116,6 +1117,9 @@ fn run_report(path: &str, format: ReportOutputFormat, output: Option<&str>) -> R
         ReportOutputFormat::Json => serde_json::to_string_pretty(&response.assessment)?,
         ReportOutputFormat::Sarif => generate_sarif(&response.assessment, path)?,
         ReportOutputFormat::Markdown => generate_markdown(&response.assessment)?,
+        ReportOutputFormat::Badge => {
+            crate::reporters::BadgeReporter.generate(&response.assessment)?
+        }
     };
 
     match output {

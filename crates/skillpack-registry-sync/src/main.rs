@@ -5,7 +5,7 @@
 use anyhow::Result;
 use clap::{Parser, Subcommand};
 use colored::Colorize;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use tracing_subscriber::EnvFilter;
 
 use skillpack_registry_sync::{
@@ -121,7 +121,7 @@ fn resolve_root(arg: Option<PathBuf>) -> PathBuf {
 
 fn cmd_discover(root: &PathBuf) -> Result<()> {
     let mut skills = discover_all();
-    skills.extend(discover_shared(&[root.clone()]));
+    skills.extend(discover_shared(std::slice::from_ref(root)));
 
     println!(
         "{}",
@@ -140,13 +140,13 @@ fn cmd_discover(root: &PathBuf) -> Result<()> {
 
 fn cmd_dedup(root: &PathBuf) -> Result<()> {
     let mut raw = discover_all();
-    raw.extend(discover_shared(&[root.clone()]));
+    raw.extend(discover_shared(std::slice::from_ref(root)));
     raw.sort_by(|a, b| a.name.cmp(&b.name));
 
     let pairs: Vec<_> = raw.into_iter().map(|s| (s.name, s.path)).collect();
     let report = dedup(pairs);
 
-    println!("{}", format!("Deduplication report:").bold());
+    println!("{}", "Deduplication report:".to_string().bold());
     println!("  Total scanned:      {}", report.total_scanned);
     println!("  Unique (canonical): {}", report.unique.len());
     println!(
@@ -170,7 +170,7 @@ fn cmd_dedup(root: &PathBuf) -> Result<()> {
     Ok(())
 }
 
-async fn cmd_push(root: &PathBuf, registry_arg: Option<&str>) -> Result<()> {
+async fn cmd_push(root: &Path, registry_arg: Option<&str>) -> Result<()> {
     let oci = registry_arg
         .map(|r| RegistryConfig {
             endpoint: r.to_string(),
@@ -179,7 +179,7 @@ async fn cmd_push(root: &PathBuf, registry_arg: Option<&str>) -> Result<()> {
         .unwrap_or_else(RegistryConfig::local_zot);
 
     let opts = SyncOptions {
-        canonical_root: root.clone(),
+        canonical_root: root.to_path_buf(),
         extra_roots: vec![],
         oci: Some(oci),
         only_agent: None,
@@ -194,7 +194,7 @@ async fn cmd_push(root: &PathBuf, registry_arg: Option<&str>) -> Result<()> {
     Ok(())
 }
 
-async fn cmd_pull(_skill: Option<&str>, root: &PathBuf, _registry: Option<&str>) -> Result<()> {
+async fn cmd_pull(_skill: Option<&str>, root: &Path, _registry: Option<&str>) -> Result<()> {
     println!(
         "Pull: OCI pull into {} not yet wired (add --registry and skill tag map)",
         root.display()
@@ -203,7 +203,7 @@ async fn cmd_pull(_skill: Option<&str>, root: &PathBuf, _registry: Option<&str>)
 }
 
 async fn cmd_sync(
-    root: &PathBuf,
+    root: &Path,
     only_agent: Option<&str>,
     registry_arg: Option<&str>,
     dry_run: bool,
@@ -215,7 +215,7 @@ async fn cmd_sync(
     });
 
     let opts = SyncOptions {
-        canonical_root: root.clone(),
+        canonical_root: root.to_path_buf(),
         extra_roots: vec![home.join(".agents").join("skills")],
         oci,
         only_agent: only_agent.map(str::to_string),
@@ -252,7 +252,7 @@ async fn cmd_sync(
     Ok(())
 }
 
-fn cmd_migrate(root: &PathBuf, rename_dirs: bool, dry_run: bool) -> Result<()> {
+fn cmd_migrate(root: &Path, rename_dirs: bool, dry_run: bool) -> Result<()> {
     let label = if dry_run { "[dry-run] " } else { "" };
     println!(
         "{}{}",
@@ -265,7 +265,7 @@ fn cmd_migrate(root: &PathBuf, rename_dirs: bool, dry_run: bool) -> Result<()> {
     );
 
     let opts = MigrateOptions {
-        root: root.clone(),
+        root: root.to_path_buf(),
         dry_run,
         rename_invalid_dirs: rename_dirs,
     };
@@ -311,10 +311,10 @@ fn cmd_migrate(root: &PathBuf, rename_dirs: bool, dry_run: bool) -> Result<()> {
     Ok(())
 }
 
-fn cmd_audit(root: &PathBuf) -> Result<()> {
+fn cmd_audit(root: &Path) -> Result<()> {
     use skillpack_registry_sync::migrate::{MigrateOptions, run_migrate};
     let opts = MigrateOptions {
-        root: root.clone(),
+        root: root.to_path_buf(),
         dry_run: true,
         rename_invalid_dirs: false,
     };

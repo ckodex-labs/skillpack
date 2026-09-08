@@ -291,8 +291,7 @@ mod tests {
                 (
                     "security/SECURITY.md".into(),
                     "# Security\nContact: security@example.com\nDisclosure: responsible\n"
-                        .repeat(5)
-                        .into(),
+                        .repeat(5),
                 ),
                 (
                     "security/GOVERNANCE.md".into(),
@@ -302,12 +301,11 @@ mod tests {
                 (
                     "CODE_OF_CONDUCT.md".into(),
                     "# Code of Conduct\nBe excellent to each other.\n"
-                        .repeat(10)
-                        .into(),
+                        .repeat(10),
                 ),
                 (
                     "LICENSE".into(),
-                    "MIT License\nCopyright (c) 2024\n".repeat(5).into(),
+                    "MIT License\nCopyright (c) 2024\n".repeat(5),
                 ),
             ]
             .into(),

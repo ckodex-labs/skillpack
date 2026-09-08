@@ -548,25 +548,36 @@ impl IndexRepository for DuckDbRepository {
     }
 }
 
+/// Parameter bundle for `upsert_canonical_skill` (keeps the public arg count at 1).
+pub struct CanonicalSkillUpsert {
+    pub skill_ref: String,
+    pub tenant_id: String,
+    pub name: String,
+    pub path: String,
+    pub has_skill_md: bool,
+    pub content_hash: Option<String>,
+    pub manifest_json: Option<String>,
+}
+
 // ========================================
 // Canonical Store Persistence
 // ========================================
 
 impl DuckDbRepository {
     /// Upsert a canonical skill record
-    pub fn upsert_canonical_skill(
-        &self,
-        skill_ref: &str,
-        tenant_id: &str,
-        name: &str,
-        path: &str,
-        has_skill_md: bool,
-        content_hash: Option<&str>,
-        manifest_json: Option<&str>,
-    ) -> Result<()> {
+    pub fn upsert_canonical_skill(&self, upsert: CanonicalSkillUpsert) -> Result<()> {
         let conn = self
             .conn()
             .map_err(|e| IndexRepositoryError::StorageError(e.to_string()))?;
+        let CanonicalSkillUpsert {
+            skill_ref,
+            tenant_id,
+            name,
+            path,
+            has_skill_md,
+            content_hash,
+            manifest_json,
+        } = upsert;
         conn.execute(
             "INSERT OR REPLACE INTO canonical_skills 
              (skill_ref, tenant_id, name, path, has_skill_md, content_hash, manifest_json, updated_at)
@@ -577,8 +588,8 @@ impl DuckDbRepository {
                 name,
                 path,
                 has_skill_md,
-                content_hash.unwrap_or(""),
-                manifest_json.unwrap_or(""),
+                content_hash.as_deref().unwrap_or(""),
+                manifest_json.as_deref().unwrap_or(""),
             ],
         )?;
         Ok(())
@@ -787,7 +798,7 @@ pub struct AgentSyncState {
 
 #[cfg(test)]
 mod tests {
-    use super::DuckDbRepository;
+    use super::{CanonicalSkillUpsert, DuckDbRepository};
 
     #[test]
     fn tenant_isolation_filters_by_tenant_id() {
@@ -796,25 +807,25 @@ mod tests {
         // the cwd, so parallel test runs race on DuckDB's file lock.
         let repo = DuckDbRepository::in_memory().unwrap();
 
-        repo.upsert_canonical_skill(
-            "skill-a",
-            "tenant-a",
-            "Skill A",
-            "/a",
-            true,
-            Some("hash-a"),
-            Some("{}"),
-        )
+        repo.upsert_canonical_skill(CanonicalSkillUpsert {
+            skill_ref: "skill-a".to_string(),
+            tenant_id: "tenant-a".to_string(),
+            name: "Skill A".to_string(),
+            path: "/a".to_string(),
+            has_skill_md: true,
+            content_hash: Some("hash-a".to_string()),
+            manifest_json: Some("{}".to_string()),
+        })
         .unwrap();
-        repo.upsert_canonical_skill(
-            "skill-b",
-            "tenant-b",
-            "Skill B",
-            "/b",
-            true,
-            Some("hash-b"),
-            Some("{}"),
-        )
+        repo.upsert_canonical_skill(CanonicalSkillUpsert {
+            skill_ref: "skill-b".to_string(),
+            tenant_id: "tenant-b".to_string(),
+            name: "Skill B".to_string(),
+            path: "/b".to_string(),
+            has_skill_md: true,
+            content_hash: Some("hash-b".to_string()),
+            manifest_json: Some("{}".to_string()),
+        })
         .unwrap();
 
         let a_skills = repo.list_canonical_skills("tenant-a").unwrap();

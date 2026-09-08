@@ -132,13 +132,14 @@ pub async fn pull_skill(
 }
 
 fn build_client_config(insecure: bool) -> ClientConfig {
-    let mut cfg = ClientConfig::default();
-    cfg.protocol = if insecure {
-        oci_client::client::ClientProtocol::Http
-    } else {
-        oci_client::client::ClientProtocol::Https
-    };
-    cfg
+    ClientConfig {
+        protocol: if insecure {
+            oci_client::client::ClientProtocol::Http
+        } else {
+            oci_client::client::ClientProtocol::Https
+        },
+        ..ClientConfig::default()
+    }
 }
 
 #[cfg(test)]

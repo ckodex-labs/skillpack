@@ -135,73 +135,70 @@ impl DimensionChecker for LifecycleChecker {
         } else {
             // Parse CNSB bundle for lifecycle section with body validation
             for bundle in &bundles {
-                if let Ok(content) = reader.read_file(path, bundle) {
-                    if let Ok(json) = serde_json::from_str::<serde_json::Value>(&content) {
-                        let lifecycle = json.get("lifecycle").or_else(|| {
-                            // Fallback: check spec.skills[0].lifecycle (legacy nested schema)
-                            json.get("spec")
-                                .and_then(|s| s.get("skills"))
-                                .and_then(|s| s.as_array())
-                                .and_then(|arr| arr.first())
-                                .and_then(|skill| skill.get("lifecycle"))
-                        });
-                        if let Some(lifecycle) = lifecycle {
-                            // Required hooks (20 points each)
-                            if hook_has_body(lifecycle, "install") {
-                                score += 20;
-                            } else if lifecycle.get("install").is_some() {
-                                issues.push(empty_hook_issue(bundle, "install"));
-                            }
-                            if hook_has_body(lifecycle, "uninstall") {
-                                score += 20;
-                            } else if lifecycle.get("uninstall").is_some() {
-                                issues.push(empty_hook_issue(bundle, "uninstall"));
-                            }
-                            // Recommended hooks (15 points each)
-                            if hook_has_body(lifecycle, "upgrade") {
-                                score += 15;
-                            } else if lifecycle.get("upgrade").is_some() {
-                                issues.push(empty_hook_issue(bundle, "upgrade"));
-                            }
-                            if hook_has_body(lifecycle, "verify") {
-                                score += 15;
-                            } else if lifecycle.get("verify").is_some() {
-                                issues.push(empty_hook_issue(bundle, "verify"));
-                            }
-                            // Nice-to-have hooks (10 points each)
-                            if hook_has_body(lifecycle, "pack") {
-                                score += 10;
-                            } else if lifecycle.get("pack").is_some() {
-                                issues.push(empty_hook_issue(bundle, "pack"));
-                            }
-                            if hook_has_body(lifecycle, "unpack") {
-                                score += 10;
-                            } else if lifecycle.get("unpack").is_some() {
-                                issues.push(empty_hook_issue(bundle, "unpack"));
-                            }
-                            if hook_has_body(lifecycle, "preInstall") {
-                                score += 5;
-                            } else if lifecycle.get("preInstall").is_some() {
-                                issues.push(empty_hook_issue(bundle, "preInstall"));
-                            }
-                            if hook_has_body(lifecycle, "postInstall") {
-                                score += 5;
-                            } else if lifecycle.get("postInstall").is_some() {
-                                issues.push(empty_hook_issue(bundle, "postInstall"));
-                            }
-                        } else {
-                            issues.push(Issue {
-                                dimension: DimensionId::Lifecycle,
-                                severity: Severity::Warning,
-                                message: format!(
-                                    "CNSB bundle {} missing lifecycle section",
-                                    bundle
-                                ),
-                                file: Some(bundle.clone()),
-                                line: None,
-                            });
-                            score += 20; // Base score for having CNSB at all
+                if let Ok(content) = reader.read_file(path, bundle)
+                    && let Ok(json) = serde_json::from_str::<serde_json::Value>(&content)
+                {
+                    let lifecycle = json.get("lifecycle").or_else(|| {
+                        // Fallback: check spec.skills[0].lifecycle (legacy nested schema)
+                        json.get("spec")
+                            .and_then(|s| s.get("skills"))
+                            .and_then(|s| s.as_array())
+                            .and_then(|arr| arr.first())
+                            .and_then(|skill| skill.get("lifecycle"))
+                    });
+                    if let Some(lifecycle) = lifecycle {
+                        // Required hooks (20 points each)
+                        if hook_has_body(lifecycle, "install") {
+                            score += 20;
+                        } else if lifecycle.get("install").is_some() {
+                            issues.push(empty_hook_issue(bundle, "install"));
                         }
+                        if hook_has_body(lifecycle, "uninstall") {
+                            score += 20;
+                        } else if lifecycle.get("uninstall").is_some() {
+                            issues.push(empty_hook_issue(bundle, "uninstall"));
+                        }
+                        // Recommended hooks (15 points each)
+                        if hook_has_body(lifecycle, "upgrade") {
+                            score += 15;
+                        } else if lifecycle.get("upgrade").is_some() {
+                            issues.push(empty_hook_issue(bundle, "upgrade"));
+                        }
+                        if hook_has_body(lifecycle, "verify") {
+                            score += 15;
+                        } else if lifecycle.get("verify").is_some() {
+                            issues.push(empty_hook_issue(bundle, "verify"));
+                        }
+                        // Nice-to-have hooks (10 points each)
+                        if hook_has_body(lifecycle, "pack") {
+                            score += 10;
+                        } else if lifecycle.get("pack").is_some() {
+                            issues.push(empty_hook_issue(bundle, "pack"));
+                        }
+                        if hook_has_body(lifecycle, "unpack") {
+                            score += 10;
+                        } else if lifecycle.get("unpack").is_some() {
+                            issues.push(empty_hook_issue(bundle, "unpack"));
+                        }
+                        if hook_has_body(lifecycle, "preInstall") {
+                            score += 5;
+                        } else if lifecycle.get("preInstall").is_some() {
+                            issues.push(empty_hook_issue(bundle, "preInstall"));
+                        }
+                        if hook_has_body(lifecycle, "postInstall") {
+                            score += 5;
+                        } else if lifecycle.get("postInstall").is_some() {
+                            issues.push(empty_hook_issue(bundle, "postInstall"));
+                        }
+                    } else {
+                        issues.push(Issue {
+                            dimension: DimensionId::Lifecycle,
+                            severity: Severity::Warning,
+                            message: format!("CNSB bundle {} missing lifecycle section", bundle),
+                            file: Some(bundle.clone()),
+                            line: None,
+                        });
+                        score += 20; // Base score for having CNSB at all
                     }
                 }
             }

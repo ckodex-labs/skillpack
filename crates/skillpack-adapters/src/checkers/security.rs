@@ -37,65 +37,64 @@ impl DimensionChecker for SecurityChecker {
         let cnsb_files = reader.list_files(path, r"\.cnsb\.json$");
         let mut asc_ok = false;
         for f in &cnsb_files {
-            if let Ok(content) = reader.read_file(path, f) {
-                if let Ok(json) = serde_json::from_str::<serde_json::Value>(&content) {
-                    // Check legacy metadata.annotations.asc string
-                    if let Some(asc) = json
-                        .pointer("/metadata/annotations/asc")
-                        .and_then(serde_json::Value::as_str)
-                    {
-                        if AscPattern::is_valid(asc) {
-                            asc_ok = true;
-                        } else {
-                            issues.push(Issue {
-                                dimension: DimensionId::Security,
-                                severity: Severity::Error,
-                                message: format!("Invalid ASC pattern: {}", asc),
-                                file: Some(f.into()),
-                                line: None,
-                            });
-                        }
+            if let Ok(content) = reader.read_file(path, f)
+                && let Ok(json) = serde_json::from_str::<serde_json::Value>(&content)
+            {
+                // Check legacy metadata.annotations.asc string
+                if let Some(asc) = json
+                    .pointer("/metadata/annotations/asc")
+                    .and_then(serde_json::Value::as_str)
+                {
+                    if AscPattern::is_valid(asc) {
+                        asc_ok = true;
+                    } else {
+                        issues.push(Issue {
+                            dimension: DimensionId::Security,
+                            severity: Severity::Error,
+                            message: format!("Invalid ASC pattern: {}", asc),
+                            file: Some(f.into()),
+                            line: None,
+                        });
                     }
-                    // Check skills[].asc array (canonical CNSB v1/v2 schema)
-                    if let Some(skills) = json.pointer("/skills").and_then(|v| v.as_array()) {
-                        for skill in skills {
-                            if let Some(asc_array) = skill.get("asc").and_then(|v| v.as_array()) {
-                                for asc in asc_array {
-                                    if let Some(asc_str) = asc.as_str() {
-                                        if AscPattern::is_valid(asc_str) {
-                                            asc_ok = true;
-                                        }
-                                    }
-                                }
-                            }
-                            if let Some(asc) = skill.get("asc").and_then(|v| v.as_str()) {
-                                if AscPattern::is_valid(asc) {
-                                    asc_ok = true;
-                                } else {
-                                    issues.push(Issue {
-                                        dimension: DimensionId::Security,
-                                        severity: Severity::Error,
-                                        message: format!("Invalid ASC pattern: {}", asc),
-                                        file: Some(f.into()),
-                                        line: None,
-                                    });
-                                }
-                            }
-                        }
-                    }
-                    // Check spec.skills[].asc (legacy nested schema)
-                    if let Some(spec) = json.get("spec") {
-                        if let Some(skills) = spec.get("skills").and_then(|v| v.as_array()) {
-                            for skill in skills {
-                                if let Some(asc_array) = skill.get("asc").and_then(|v| v.as_array())
+                }
+                // Check skills[].asc array (canonical CNSB v1/v2 schema)
+                if let Some(skills) = json.pointer("/skills").and_then(|v| v.as_array()) {
+                    for skill in skills {
+                        if let Some(asc_array) = skill.get("asc").and_then(|v| v.as_array()) {
+                            for asc in asc_array {
+                                if let Some(asc_str) = asc.as_str()
+                                    && AscPattern::is_valid(asc_str)
                                 {
-                                    for asc in asc_array {
-                                        if let Some(asc_str) = asc.as_str() {
-                                            if AscPattern::is_valid(asc_str) {
-                                                asc_ok = true;
-                                            }
-                                        }
-                                    }
+                                    asc_ok = true;
+                                }
+                            }
+                        }
+                        if let Some(asc) = skill.get("asc").and_then(|v| v.as_str()) {
+                            if AscPattern::is_valid(asc) {
+                                asc_ok = true;
+                            } else {
+                                issues.push(Issue {
+                                    dimension: DimensionId::Security,
+                                    severity: Severity::Error,
+                                    message: format!("Invalid ASC pattern: {}", asc),
+                                    file: Some(f.into()),
+                                    line: None,
+                                });
+                            }
+                        }
+                    }
+                }
+                // Check spec.skills[].asc (legacy nested schema)
+                if let Some(spec) = json.get("spec")
+                    && let Some(skills) = spec.get("skills").and_then(|v| v.as_array())
+                {
+                    for skill in skills {
+                        if let Some(asc_array) = skill.get("asc").and_then(|v| v.as_array()) {
+                            for asc in asc_array {
+                                if let Some(asc_str) = asc.as_str()
+                                    && AscPattern::is_valid(asc_str)
+                                {
+                                    asc_ok = true;
                                 }
                             }
                         }
@@ -131,20 +130,19 @@ impl DimensionChecker for SecurityChecker {
             let script_files = reader.list_files(path, r"scripts/.+");
             let mut scripts_dirty = false;
             for f in &script_files {
-                if let Ok(content) = reader.read_file(path, f) {
-                    if (content.contains("curl") && content.contains("| sh"))
+                if let Ok(content) = reader.read_file(path, f)
+                    && ((content.contains("curl") && content.contains("| sh"))
                         || (content.contains("curl") && content.contains("| bash"))
-                        || content.contains("rm -rf /")
-                    {
-                        scripts_dirty = true;
-                        issues.push(Issue {
-                            dimension: DimensionId::Security,
-                            severity: Severity::Error,
-                            message: format!("dangerous pattern in {}", f),
-                            file: Some(f.clone()),
-                            line: None,
-                        });
-                    }
+                        || content.contains("rm -rf /"))
+                {
+                    scripts_dirty = true;
+                    issues.push(Issue {
+                        dimension: DimensionId::Security,
+                        severity: Severity::Error,
+                        message: format!("dangerous pattern in {}", f),
+                        file: Some(f.clone()),
+                        line: None,
+                    });
                 }
             }
             if !scripts_dirty {

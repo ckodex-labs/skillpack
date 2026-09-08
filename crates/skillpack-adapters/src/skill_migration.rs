@@ -11,13 +11,14 @@ use anyhow::Result;
 pub fn read_skill_md(path: &std::path::Path) -> Result<(Option<serde_yaml::Mapping>, String)> {
     let content = std::fs::read_to_string(path)?;
     let lines: Vec<&str> = content.split('\n').collect();
-    if lines.len() >= 2 && lines[0].trim() == "---" {
-        if let Some(end_idx) = lines.iter().skip(1).position(|l| l.trim() == "---") {
-            let fm_text = lines[1..=end_idx].join("\n");
-            let body = lines[end_idx + 2..].join("\n");
-            let fm: serde_yaml::Value = serde_yaml::from_str(&fm_text)?;
-            return Ok((fm.as_mapping().cloned(), body));
-        }
+    if lines.len() >= 2
+        && lines[0].trim() == "---"
+        && let Some(end_idx) = lines.iter().skip(1).position(|l| l.trim() == "---")
+    {
+        let fm_text = lines[1..=end_idx].join("\n");
+        let body = lines[end_idx + 2..].join("\n");
+        let fm: serde_yaml::Value = serde_yaml::from_str(&fm_text)?;
+        return Ok((fm.as_mapping().cloned(), body));
     }
     Ok((None, content))
 }
@@ -192,14 +193,14 @@ pub fn migrate_skill_file(
         changes.push("added metadata.status".to_string());
     }
 
-    if let Some(author) = default_author {
-        if ensure_metadata_field(
+    if let Some(author) = default_author
+        && ensure_metadata_field(
             &mut fm,
             "author",
             serde_yaml::Value::String(author.to_string()),
-        ) {
-            changes.push("added metadata.author".to_string());
-        }
+        )
+    {
+        changes.push("added metadata.author".to_string());
     }
 
     if ensure_field(

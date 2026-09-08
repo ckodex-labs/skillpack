@@ -174,6 +174,7 @@ fn smoke() -> (bool, Vec<String>) {
         );
     }
     let mut cmd = Command::new(&binary);
-    cmd.current_dir("examples/skill.txt").arg("check");
+    cmd.current_dir("examples/agentic-skill-template/skills/agentic-skill-template")
+        .arg("check");
     exec(cmd)
 }

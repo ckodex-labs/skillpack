@@ -112,10 +112,10 @@ pub fn collect_skill_paths(
 
     // Always include configured agent paths
     for (tool, dir) in &cfg.agent_paths {
-        if let Some(filter) = tool_filter {
-            if tool != filter {
-                continue;
-            }
+        if let Some(filter) = tool_filter
+            && tool != filter
+        {
+            continue;
         }
         let p = PathBuf::from(dir);
         if p.exists() {

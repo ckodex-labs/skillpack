@@ -79,10 +79,10 @@ impl SyncCanonicalStoreUseCase {
         let mut agent_results = Vec::new();
 
         for agent in registry.agents() {
-            if let Some(only) = &store.only_agent {
-                if agent.name.to_lowercase() != only.to_lowercase() {
-                    continue;
-                }
+            if let Some(only) = &store.only_agent
+                && agent.name.to_lowercase() != only.to_lowercase()
+            {
+                continue;
             }
 
             let result = self.sync_agent(agent, &skills, store)?;
@@ -281,12 +281,12 @@ impl SyncCanonicalStoreUseCase {
         // Clean stale .mdc files (keep up to 50 non-skill ones)
         for entry in fs::read_dir(&rules_dir)?.flatten() {
             let path = entry.path();
-            if let Some(ext) = path.extension() {
-                if ext == "mdc" {
-                    let stem = path.file_stem().unwrap_or_default().to_string_lossy();
-                    if !skills.iter().any(|s| s.name == stem.as_ref()) {
-                        let _ = fs::remove_file(&path);
-                    }
+            if let Some(ext) = path.extension()
+                && ext == "mdc"
+            {
+                let stem = path.file_stem().unwrap_or_default().to_string_lossy();
+                if !skills.iter().any(|s| s.name == stem.as_ref()) {
+                    let _ = fs::remove_file(&path);
                 }
             }
         }

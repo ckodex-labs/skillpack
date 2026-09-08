@@ -3228,12 +3228,11 @@ fn resolve_skill_name(skill_root: &std::path::Path) -> String {
     if let Ok((name, _)) = agentskill_identity(&skill_root.join("SKILL.md")) {
         return name;
     }
-    if let Ok(c) = std::fs::read_to_string(skill_root.join("skill.cnsb.json")) {
-        if let Ok(j) = serde_json::from_str::<serde_json::Value>(&c) {
-            if let Some(n) = j["metadata"]["name"].as_str() {
-                return n.to_string();
-            }
-        }
+    if let Ok(c) = std::fs::read_to_string(skill_root.join("skill.cnsb.json"))
+        && let Ok(j) = serde_json::from_str::<serde_json::Value>(&c)
+        && let Some(n) = j["metadata"]["name"].as_str()
+    {
+        return n.to_string();
     }
     skill_root
         .file_name()
@@ -4856,11 +4855,11 @@ fn run_skill(command: SkillCommands) -> Result<()> {
             if let Some(ref s) = schema {
                 if let Some(required) = s.get("required").and_then(|r| r.as_array()) {
                     for req in required {
-                        if let Some(field) = req.as_str() {
-                            if fm.get(field).is_none() {
-                                eprintln!("{} Missing required field: {}", "✗".red(), field);
-                                issues += 1;
-                            }
+                        if let Some(field) = req.as_str()
+                            && fm.get(field).is_none()
+                        {
+                            eprintln!("{} Missing required field: {}", "✗".red(), field);
+                            issues += 1;
                         }
                     }
                 }
@@ -4916,20 +4915,16 @@ fn run_skill(command: SkillCommands) -> Result<()> {
             // Check referenced files exist
             if let Some(body) = parts.get(2) {
                 for line in body.lines() {
-                    if line.starts_with("| `") && line.contains("scripts/") {
-                        if let Some(start) = line.find("scripts/") {
-                            if let Some(end) = line[start..].find('`') {
-                                let script_ref = &line[start..start + end];
-                                let expected = skill_path.join(script_ref);
-                                if !expected.exists() {
-                                    eprintln!(
-                                        "{} Referenced file missing: {}",
-                                        "✗".red(),
-                                        script_ref
-                                    );
-                                    issues += 1;
-                                }
-                            }
+                    if line.starts_with("| `")
+                        && line.contains("scripts/")
+                        && let Some(start) = line.find("scripts/")
+                        && let Some(end) = line[start..].find('`')
+                    {
+                        let script_ref = &line[start..start + end];
+                        let expected = skill_path.join(script_ref);
+                        if !expected.exists() {
+                            eprintln!("{} Referenced file missing: {}", "✗".red(), script_ref);
+                            issues += 1;
                         }
                     }
                 }
@@ -5171,49 +5166,47 @@ fn run_skill(command: SkillCommands) -> Result<()> {
                     "name": name,
                 });
                 let skill_md = skill_path.join("SKILL.md");
-                if skill_md.exists() {
-                    if let Ok(content) = std::fs::read_to_string(&skill_md) {
-                        let parts: Vec<&str> = content.splitn(3, "---").collect();
-                        if parts.len() >= 3 {
-                            if let Ok(fm) =
-                                serde_yaml::from_str::<serde_yaml::Value>(parts[1].trim())
-                            {
-                                if let Some(desc) = fm.get("description").and_then(|v| v.as_str()) {
-                                    skill_info["description"] = desc.into();
-                                }
-                                if let Some(license) = fm.get("license").and_then(|v| v.as_str()) {
-                                    skill_info["license"] = license.into();
-                                }
-                                if let Some(ns_fm) = fm.get("namespace").and_then(|v| v.as_str()) {
-                                    skill_info["namespace"] = ns_fm.into();
-                                } else if let Some(ns_meta) = fm
-                                    .get("metadata")
-                                    .and_then(|m| m.get("namespace"))
-                                    .and_then(|v| v.as_str())
-                                {
-                                    skill_info["namespace"] = ns_meta.into();
-                                } else {
-                                    skill_info["namespace"] = if dir_ns.is_empty() {
-                                        "default".into()
-                                    } else {
-                                        dir_ns.into()
-                                    };
-                                }
-                                if let Some(version) = fm
-                                    .get("metadata")
-                                    .and_then(|m| m.get("version"))
-                                    .and_then(|v| v.as_str())
-                                {
-                                    skill_info["version"] = version.into();
-                                }
-                                if let Some(status) = fm
-                                    .get("metadata")
-                                    .and_then(|m| m.get("status"))
-                                    .and_then(|v| v.as_str())
-                                {
-                                    skill_info["status"] = status.into();
-                                }
-                            }
+                if skill_md.exists()
+                    && let Ok(content) = std::fs::read_to_string(&skill_md)
+                {
+                    let parts: Vec<&str> = content.splitn(3, "---").collect();
+                    if parts.len() >= 3
+                        && let Ok(fm) = serde_yaml::from_str::<serde_yaml::Value>(parts[1].trim())
+                    {
+                        if let Some(desc) = fm.get("description").and_then(|v| v.as_str()) {
+                            skill_info["description"] = desc.into();
+                        }
+                        if let Some(license) = fm.get("license").and_then(|v| v.as_str()) {
+                            skill_info["license"] = license.into();
+                        }
+                        if let Some(ns_fm) = fm.get("namespace").and_then(|v| v.as_str()) {
+                            skill_info["namespace"] = ns_fm.into();
+                        } else if let Some(ns_meta) = fm
+                            .get("metadata")
+                            .and_then(|m| m.get("namespace"))
+                            .and_then(|v| v.as_str())
+                        {
+                            skill_info["namespace"] = ns_meta.into();
+                        } else {
+                            skill_info["namespace"] = if dir_ns.is_empty() {
+                                "default".into()
+                            } else {
+                                dir_ns.into()
+                            };
+                        }
+                        if let Some(version) = fm
+                            .get("metadata")
+                            .and_then(|m| m.get("version"))
+                            .and_then(|v| v.as_str())
+                        {
+                            skill_info["version"] = version.into();
+                        }
+                        if let Some(status) = fm
+                            .get("metadata")
+                            .and_then(|m| m.get("status"))
+                            .and_then(|v| v.as_str())
+                        {
+                            skill_info["status"] = status.into();
                         }
                     }
                 }
@@ -5335,39 +5328,39 @@ fn run_skill(command: SkillCommands) -> Result<()> {
             if skill_md.exists() {
                 let content = std::fs::read_to_string(&skill_md)?;
                 let parts: Vec<&str> = content.splitn(3, "---").collect();
-                if parts.len() >= 3 {
-                    if let Ok(fm) = serde_yaml::from_str::<serde_yaml::Value>(parts[1].trim()) {
-                        if let Some(desc) = fm.get("description").and_then(|v| v.as_str()) {
-                            info["description"] = desc.into();
-                        }
-                        if let Some(license) = fm.get("license").and_then(|v| v.as_str()) {
-                            info["license"] = license.into();
-                        }
-                        if let Some(ns_from_fm) = fm.get("namespace").and_then(|v| v.as_str()) {
-                            info["namespace"] = ns_from_fm.into();
-                        } else if let Some(ns_from_meta) = fm
-                            .get("metadata")
-                            .and_then(|m| m.get("namespace"))
-                            .and_then(|v| v.as_str())
-                        {
-                            info["namespace"] = ns_from_meta.into();
-                        } else {
-                            info["namespace"] = "default".into();
-                        }
-                        if let Some(version) = fm
-                            .get("metadata")
-                            .and_then(|m| m.get("version"))
-                            .and_then(|v| v.as_str())
-                        {
-                            info["version"] = version.into();
-                        }
-                        if let Some(status) = fm
-                            .get("metadata")
-                            .and_then(|m| m.get("status"))
-                            .and_then(|v| v.as_str())
-                        {
-                            info["status"] = status.into();
-                        }
+                if parts.len() >= 3
+                    && let Ok(fm) = serde_yaml::from_str::<serde_yaml::Value>(parts[1].trim())
+                {
+                    if let Some(desc) = fm.get("description").and_then(|v| v.as_str()) {
+                        info["description"] = desc.into();
+                    }
+                    if let Some(license) = fm.get("license").and_then(|v| v.as_str()) {
+                        info["license"] = license.into();
+                    }
+                    if let Some(ns_from_fm) = fm.get("namespace").and_then(|v| v.as_str()) {
+                        info["namespace"] = ns_from_fm.into();
+                    } else if let Some(ns_from_meta) = fm
+                        .get("metadata")
+                        .and_then(|m| m.get("namespace"))
+                        .and_then(|v| v.as_str())
+                    {
+                        info["namespace"] = ns_from_meta.into();
+                    } else {
+                        info["namespace"] = "default".into();
+                    }
+                    if let Some(version) = fm
+                        .get("metadata")
+                        .and_then(|m| m.get("version"))
+                        .and_then(|v| v.as_str())
+                    {
+                        info["version"] = version.into();
+                    }
+                    if let Some(status) = fm
+                        .get("metadata")
+                        .and_then(|m| m.get("status"))
+                        .and_then(|v| v.as_str())
+                    {
+                        info["status"] = status.into();
                     }
                 }
             }
@@ -5763,20 +5756,20 @@ fn collect_entries_from_dir(tool: &str, dir: &std::path::Path) -> Vec<SkillEntry
 
         if let Ok(content) = std::fs::read_to_string(p.join("SKILL.md")) {
             let parts: Vec<&str> = content.splitn(3, "---").collect();
-            if parts.len() >= 3 {
-                if let Ok(fm) = serde_yaml::from_str::<serde_yaml::Value>(parts[1].trim()) {
-                    if let Some(v) = fm.get("version").and_then(|v| v.as_str()) {
-                        version = v.to_string();
-                    } else if let Some(v) = fm
-                        .get("metadata")
-                        .and_then(|m| m.get("version"))
-                        .and_then(|v| v.as_str())
-                    {
-                        version = v.to_string();
-                    }
-                    if let Some(d) = fm.get("description").and_then(|v| v.as_str()) {
-                        description = Some(d.to_string());
-                    }
+            if parts.len() >= 3
+                && let Ok(fm) = serde_yaml::from_str::<serde_yaml::Value>(parts[1].trim())
+            {
+                if let Some(v) = fm.get("version").and_then(|v| v.as_str()) {
+                    version = v.to_string();
+                } else if let Some(v) = fm
+                    .get("metadata")
+                    .and_then(|m| m.get("version"))
+                    .and_then(|v| v.as_str())
+                {
+                    version = v.to_string();
+                }
+                if let Some(d) = fm.get("description").and_then(|v| v.as_str()) {
+                    description = Some(d.to_string());
                 }
             }
         }
@@ -5813,12 +5806,10 @@ fn all_skill_entries(tool_filter: Option<&str>, scope: &str) -> Vec<SkillEntry> 
 }
 
 /// Emit output respecting json/machine flags.
-fn emit_output(data: &serde_json::Value, json_output: bool, machine_output: bool) {
+fn emit_output(data: &serde_json::Value, machine_output: bool) {
     if machine_output {
         let env = json!({ "v": 1, "ok": true, "data": data });
         println!("{}", serde_json::to_string_pretty(&env).unwrap_or_default());
-    } else if json_output {
-        println!("{}", serde_json::to_string_pretty(data).unwrap_or_default());
     } else {
         println!("{}", serde_json::to_string_pretty(data).unwrap_or_default());
     }
@@ -5846,7 +5837,10 @@ fn run_asm_list(
 
     if json_output || machine_output {
         let data = serde_json::to_value(&entries)?;
-        return Ok(emit_output(&data, json_output, machine_output));
+        return {
+            emit_output(&data, machine_output);
+            Ok(())
+        };
     }
 
     if entries.is_empty() {
@@ -5929,7 +5923,10 @@ fn run_asm_search(
 
     if json_output || machine_output {
         let data = serde_json::to_value(&matches)?;
-        return Ok(emit_output(&data, json_output, machine_output));
+        return {
+            emit_output(&data, machine_output);
+            Ok(())
+        };
     }
 
     if matches.is_empty() {
@@ -5982,14 +5979,14 @@ fn run_asm_inspect(
 
     // Enrich with full SKILL.md frontmatter
     let skill_md = skill_path.join("SKILL.md");
-    if skill_md.exists() {
-        if let Ok(content) = std::fs::read_to_string(&skill_md) {
-            let parts: Vec<&str> = content.splitn(3, "---").collect();
-            if parts.len() >= 3 {
-                if let Ok(fm) = serde_yaml::from_str::<serde_json::Value>(parts[1].trim()) {
-                    detail["frontmatter"] = fm;
-                }
-            }
+    if skill_md.exists()
+        && let Ok(content) = std::fs::read_to_string(&skill_md)
+    {
+        let parts: Vec<&str> = content.splitn(3, "---").collect();
+        if parts.len() >= 3
+            && let Ok(fm) = serde_yaml::from_str::<serde_json::Value>(parts[1].trim())
+        {
+            detail["frontmatter"] = fm;
         }
     }
 
@@ -6011,7 +6008,10 @@ fn run_asm_inspect(
     detail["file_count"] = serde_json::Value::Number(files.len().into());
 
     if json_output || machine_output {
-        return Ok(emit_output(&detail, json_output, machine_output));
+        return {
+            emit_output(&detail, machine_output);
+            Ok(())
+        };
     }
 
     cli_println!(
@@ -6374,7 +6374,7 @@ fn run_asm_export(output: Option<&str>, _json_output: bool, machine_output: bool
         }
         // A manifest dumped to stdout is always structured JSON; there is no
         // human/table rendering for it (see emit_output). Force JSON here.
-        None => emit_output(&data, true, machine_output),
+        None => emit_output(&data, machine_output),
     }
     Ok(())
 }
@@ -6481,7 +6481,10 @@ fn run_asm_stats(json_output: bool, machine_output: bool) -> Result<()> {
     });
 
     if json_output || machine_output {
-        return Ok(emit_output(&stats, json_output, machine_output));
+        return {
+            emit_output(&stats, machine_output);
+            Ok(())
+        };
     }
 
     cli_println!(
@@ -6652,18 +6655,18 @@ fn run_asm_outdated(json_output: bool, machine_output: bool) -> Result<()> {
 
     if json_output || machine_output {
         let data = serde_json::to_value(&outdated)?;
-        emit_output(&data, json_output, machine_output);
+        emit_output(&data, machine_output);
     }
     Ok(())
 }
 
 /// Best-effort remote version check: reads source ref if available, otherwise returns None.
 fn check_remote_version(entry: &SkillEntry) -> Option<String> {
-    if let Some(src) = &entry.source {
-        if src.starts_with("ghcr.io") || src.contains('/') {
-            // Could make OCI HEAD request — for now return None
-            return None;
-        }
+    if let Some(src) = &entry.source
+        && (src.starts_with("ghcr.io") || src.contains('/'))
+    {
+        // Could make OCI HEAD request — for now return None
+        return None;
     }
     None
 }
@@ -6810,31 +6813,31 @@ fn run_asm_bundle(command: BundleCommands, dry_run: bool) -> Result<()> {
                 .filter_map(|e| e.ok())
                 .filter(|e| e.file_name() == "skill.cnsb.json")
             {
-                if let Ok(content) = std::fs::read_to_string(entry.path()) {
-                    if let Ok(manifest) = serde_json::from_str::<serde_json::Value>(&content) {
-                        let sname = manifest["metadata"]["name"]
+                if let Ok(content) = std::fs::read_to_string(entry.path())
+                    && let Ok(manifest) = serde_json::from_str::<serde_json::Value>(&content)
+                {
+                    let sname = manifest["metadata"]["name"]
+                        .as_str()
+                        .unwrap_or("unknown")
+                        .to_string();
+                    let sver = manifest["metadata"]["version"]
+                        .as_str()
+                        .unwrap_or("0.0.0")
+                        .to_string();
+                    skill_defs.push(skillpack_domain::SkillDefinition {
+                        name: sname,
+                        version: Some(sver),
+                        description: manifest["metadata"]["description"]
                             .as_str()
-                            .unwrap_or("unknown")
-                            .to_string();
-                        let sver = manifest["metadata"]["version"]
-                            .as_str()
-                            .unwrap_or("0.0.0")
-                            .to_string();
-                        skill_defs.push(skillpack_domain::SkillDefinition {
-                            name: sname,
-                            version: Some(sver),
-                            description: manifest["metadata"]["description"]
-                                .as_str()
-                                .map(|s| s.to_string()),
-                            entry_point: None,
-                            extensions: vec![],
-                            dependencies: vec![],
-                            asc: vec![],
-                            examples: vec![],
-                            gal_min: None,
-                            gal_max: None,
-                        });
-                    }
+                            .map(|s| s.to_string()),
+                        entry_point: None,
+                        extensions: vec![],
+                        dependencies: vec![],
+                        asc: vec![],
+                        examples: vec![],
+                        gal_min: None,
+                        gal_max: None,
+                    });
                 }
             }
 
@@ -8722,7 +8725,7 @@ mod tests {
         let bundle: serde_json::Value = serde_json::from_str(&content).unwrap();
         assert_eq!(bundle["metadata"]["name"], "my-bundle");
         assert_eq!(bundle["metadata"]["version"], "0.1.0");
-        assert!(bundle["skills"].as_array().unwrap().len() >= 1);
+        assert!(!bundle["skills"].as_array().unwrap().is_empty());
     }
 
     #[test]
@@ -8781,8 +8784,8 @@ mod tests {
         // We test the structure logic by calling the function directly.
         // Since emit_output writes to stdout we just verify it doesn't panic.
         let data = json!({"key": "value"});
-        emit_output(&data, false, true);
-        emit_output(&data, true, false);
-        emit_output(&data, false, false);
+        emit_output(&data, true);
+        emit_output(&data, false);
+        emit_output(&data, false);
     }
 }

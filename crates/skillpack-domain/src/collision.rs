@@ -193,22 +193,22 @@ fn tokenize(text: &str) -> Vec<String> {
 fn stem(token: &str) -> String {
     let mut t = token.to_string();
     for suffix in ["ally", "ing", "ed", "es", "al"] {
-        if t.len() > suffix.len() + 2 {
-            if let Some(stripped) = t.strip_suffix(suffix) {
-                t = stripped.to_string();
-                break;
-            }
+        if t.len() > suffix.len() + 2
+            && let Some(stripped) = t.strip_suffix(suffix)
+        {
+            t = stripped.to_string();
+            break;
         }
     }
-    if t.len() > 3 {
-        if let Some(stripped) = t.strip_suffix('s') {
-            t = stripped.to_string();
-        }
+    if t.len() > 3
+        && let Some(stripped) = t.strip_suffix('s')
+    {
+        t = stripped.to_string();
     }
-    if t.len() > 3 {
-        if let Some(stripped) = t.strip_suffix('e') {
-            t = stripped.to_string();
-        }
+    if t.len() > 3
+        && let Some(stripped) = t.strip_suffix('e')
+    {
+        t = stripped.to_string();
     }
     let bytes = t.as_bytes();
     if bytes.len() > 3 && bytes[bytes.len() - 1] == bytes[bytes.len() - 2] {

@@ -100,16 +100,14 @@ impl DimensionChecker for ProvenanceChecker {
         }
 
         // 2. SLSA provenance present (25 pts)
-        if let Ok(content) = reader.read_file(path, "evidence/provenance.json") {
-            if let Ok(j) = serde_json::from_str::<serde_json::Value>(&content) {
-                if j.get("predicateType")
-                    .and_then(serde_json::Value::as_str)
-                    .map(|s| s.contains("slsa.dev/provenance"))
-                    .unwrap_or(false)
-                {
-                    score += 25.0;
-                }
-            }
+        if let Ok(content) = reader.read_file(path, "evidence/provenance.json")
+            && let Ok(j) = serde_json::from_str::<serde_json::Value>(&content)
+            && j.get("predicateType")
+                .and_then(serde_json::Value::as_str)
+                .map(|s| s.contains("slsa.dev/provenance"))
+                .unwrap_or(false)
+        {
+            score += 25.0;
         }
 
         // 3. Sigstore signature present (20 pts) AND signed flag (not "unsigned: true" marker)

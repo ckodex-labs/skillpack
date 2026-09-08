@@ -32,7 +32,7 @@ fn assess_fixture(name: &str) -> anyhow::Result<skillpack_domain::EvidenceEnvelo
         min_score: None,
     })?;
 
-    let envelope = EnvelopeBuilder::new(&format!("urn:ckodex:skill:test:{name}"))
+    let envelope = EnvelopeBuilder::new(format!("urn:ckodex:skill:test:{name}"))
         .with_assessment(serde_json::json!({
             "overall": response.assessment.total_score().value(),
             "grade": response.assessment.grade().as_str(),

@@ -62,7 +62,7 @@ pub async fn run_sync(opts: &SyncOptions) -> Result<SyncSummary> {
     // 1. Discover
     let mut raw: Vec<DiscoveredSkill> = discover_all();
     raw.extend(discover_shared(&opts.extra_roots));
-    raw.extend(discover_shared(&[opts.canonical_root.clone()]));
+    raw.extend(discover_shared(std::slice::from_ref(&opts.canonical_root)));
     summary.skills_discovered = raw.len();
     info!(total = raw.len(), "discovered skills from all agent paths");
 
@@ -99,13 +99,13 @@ pub async fn run_sync(opts: &SyncOptions) -> Result<SyncSummary> {
         .collect();
 
     // 3. OCI push (optional)
-    if let Some(ref oci) = opts.oci {
-        if !opts.dry_run {
-            for ds in &report.unique {
-                match push_skill(ds, oci).await {
-                    Ok(_) => summary.oci_pushed += 1,
-                    Err(e) => warn!(skill = %ds.canonical_name, error = %e, "OCI push failed"),
-                }
+    if let Some(ref oci) = opts.oci
+        && !opts.dry_run
+    {
+        for ds in &report.unique {
+            match push_skill(ds, oci).await {
+                Ok(_) => summary.oci_pushed += 1,
+                Err(e) => warn!(skill = %ds.canonical_name, error = %e, "OCI push failed"),
             }
         }
     }
@@ -118,10 +118,10 @@ pub async fn run_sync(opts: &SyncOptions) -> Result<SyncSummary> {
 
     let registry = AgentRegistry::default_registry();
     for agent in registry.agents() {
-        if let Some(ref only) = opts.only_agent {
-            if agent.name.to_lowercase() != only.to_lowercase() {
-                continue;
-            }
+        if let Some(ref only) = opts.only_agent
+            && agent.name.to_lowercase() != only.to_lowercase()
+        {
+            continue;
         }
 
         match render_for_agent(agent, &canonical, &opts.canonical_root) {

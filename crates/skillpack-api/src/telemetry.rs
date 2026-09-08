@@ -44,10 +44,10 @@ impl<'a> GrpcMetadataCarrier<'a> {
 
 impl<'a> Injector for GrpcMetadataCarrier<'a> {
     fn set(&mut self, key: &str, value: String) {
-        if let Ok(k) = tonic::metadata::MetadataKey::from_bytes(key.as_bytes()) {
-            if let Ok(v) = tonic::metadata::MetadataValue::try_from(&value) {
-                self.metadata.insert(k, v);
-            }
+        if let Ok(k) = tonic::metadata::MetadataKey::from_bytes(key.as_bytes())
+            && let Ok(v) = tonic::metadata::MetadataValue::try_from(&value)
+        {
+            self.metadata.insert(k, v);
         }
     }
 }

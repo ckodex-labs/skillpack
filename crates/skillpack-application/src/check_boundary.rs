@@ -46,11 +46,11 @@ impl CheckBoundaryUseCase {
             is_safe = false;
         }
 
-        if let Some(name) = request.skill_name {
-            if let Err(IPGuardError::BoundaryViolation(msg)) = self.guard.guard_skill_name(&name) {
-                violations.push(msg);
-                is_safe = false;
-            }
+        if let Some(name) = request.skill_name
+            && let Err(IPGuardError::BoundaryViolation(msg)) = self.guard.guard_skill_name(&name)
+        {
+            violations.push(msg);
+            is_safe = false;
         }
 
         let message = if is_safe {

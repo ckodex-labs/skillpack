@@ -45,14 +45,14 @@ impl SkillReader for FilesystemReader {
     fn read_identity(&self, path: &Path) -> Result<SkillIdentity, SkillReaderError> {
         // First try CNSB bundle
         let cnsb_files = self.list_bundles(path);
-        if !cnsb_files.is_empty() {
-            if let Ok(bundle) = self.read_bundle(&path.join(&cnsb_files[0])) {
-                return Ok(SkillIdentity {
-                    name: bundle.metadata.name,
-                    version: bundle.metadata.version,
-                    path: path.to_string_lossy().to_string(),
-                });
-            }
+        if !cnsb_files.is_empty()
+            && let Ok(bundle) = self.read_bundle(&path.join(&cnsb_files[0]))
+        {
+            return Ok(SkillIdentity {
+                name: bundle.metadata.name,
+                version: bundle.metadata.version,
+                path: path.to_string_lossy().to_string(),
+            });
         }
 
         // Fallback to SKILL.md
@@ -77,10 +77,10 @@ impl SkillReader for FilesystemReader {
 
     fn file_exists(&self, path: &Path, relative: &str) -> bool {
         let key = format!("{}|{}", path.display(), relative);
-        if let Ok(cache) = self.exists_cache.lock() {
-            if let Some(&result) = cache.get(&key) {
-                return result;
-            }
+        if let Ok(cache) = self.exists_cache.lock()
+            && let Some(&result) = cache.get(&key)
+        {
+            return result;
         }
         let result = path.join(relative).exists();
         if let Ok(mut cache) = self.exists_cache.lock() {
@@ -127,10 +127,10 @@ impl BundleReader for FilesystemReader {
 
     fn list_bundles(&self, path: &Path) -> Vec<String> {
         let key = path.display().to_string();
-        if let Ok(cache) = self.bundles_cache.lock() {
-            if let Some(result) = cache.get(&key) {
-                return result.clone();
-            }
+        if let Ok(cache) = self.bundles_cache.lock()
+            && let Some(result) = cache.get(&key)
+        {
+            return result.clone();
         }
         let result: Vec<String> = WalkDir::new(path)
             .max_depth(2)

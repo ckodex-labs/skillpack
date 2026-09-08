@@ -171,11 +171,9 @@ fn migrate_skill_md(
 
     if !skill_md.exists() {
         // Create a minimal compliant SKILL.md stub
+        let description = format!("{} skill", skill_name.replace('-', " "));
         let stub = format!(
-            "---\nname: {}\ndescription: \"{}\"\n---\n\n# {}\n\n<!-- TODO(ckodex): add skill description -->\n",
-            skill_name,
-            format!("{} skill", skill_name.replace('-', " ")),
-            skill_name
+            "---\nname: {skill_name}\ndescription: \"{description}\"\n---\n\n# {skill_name}\n\n<!-- TODO(ckodex): add skill description -->\n",
         );
         if opts.dry_run {
             println!("  [dry-run] CREATE {}/SKILL.md", skill_name);
@@ -258,14 +256,15 @@ fn fix_frontmatter_name(content: &str, expected_name: &str) -> (String, bool) {
             continue;
         }
 
-        if in_frontmatter && !frontmatter_closed {
-            if let Some(rest) = line.strip_prefix("name:") {
-                let current_value = rest.trim();
-                if current_value != expected_name {
-                    result.push(format!("name: {}", expected_name));
-                    changed = true;
-                    continue;
-                }
+        if in_frontmatter
+            && !frontmatter_closed
+            && let Some(rest) = line.strip_prefix("name:")
+        {
+            let current_value = rest.trim();
+            if current_value != expected_name {
+                result.push(format!("name: {}", expected_name));
+                changed = true;
+                continue;
             }
         }
 
@@ -293,10 +292,8 @@ fn extract_name(content: &str) -> Option<String> {
         if fence_count >= 2 {
             break;
         }
-        if in_fm {
-            if let Some(rest) = line.strip_prefix("name:") {
-                return Some(rest.trim().to_string());
-            }
+        if in_fm && let Some(rest) = line.strip_prefix("name:") {
+            return Some(rest.trim().to_string());
         }
     }
     None

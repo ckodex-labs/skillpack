@@ -54,7 +54,9 @@ pub use git::GitReader;
 pub use index_repository::JsonIndexRepository;
 pub use mcp::{McpResource, McpServerConfig, McpTool};
 pub use oci::OciReader;
-pub use persistence::{AgentSyncState, CanonicalSkillRecord, DuckDbRepository, IndexStats};
+pub use persistence::{
+    AgentSyncState, CanonicalSkillRecord, CanonicalSkillUpsert, DuckDbRepository, IndexStats,
+};
 pub use registry_client::{FederationCoordinator, RegistryClient, RemoteRegistry, TrustLevel};
 pub use s3::S3Reader;
 pub use sftp::SftpReader;

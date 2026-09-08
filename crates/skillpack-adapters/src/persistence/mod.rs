@@ -4,4 +4,6 @@
 
 pub mod duckdb;
 
-pub use self::duckdb::{AgentSyncState, CanonicalSkillRecord, DuckDbRepository, IndexStats};
+pub use self::duckdb::{
+    AgentSyncState, CanonicalSkillRecord, CanonicalSkillUpsert, DuckDbRepository, IndexStats,
+};

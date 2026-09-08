@@ -57,10 +57,10 @@ impl IndexRepository for JsonIndexRepository {
 
     fn get(&self, id: &IndexId) -> Result<SkillsIndex, IndexRepositoryError> {
         // Check cache first
-        if let Ok(cache) = self.cache.read() {
-            if let Some(index) = cache.get(id.as_str()) {
-                return Ok(index.clone());
-            }
+        if let Ok(cache) = self.cache.read()
+            && let Some(index) = cache.get(id.as_str())
+        {
+            return Ok(index.clone());
         }
 
         let path = self.index_path(id);
@@ -91,12 +91,10 @@ impl IndexRepository for JsonIndexRepository {
             let path = entry.path();
             if path.extension().is_some_and(|e| e == "json")
                 && !path.to_string_lossy().contains("_history")
+                && let Ok(content) = fs::read_to_string(&path)
+                && let Ok(index) = serde_json::from_str::<SkillsIndex>(&content)
             {
-                if let Ok(content) = fs::read_to_string(&path) {
-                    if let Ok(index) = serde_json::from_str::<SkillsIndex>(&content) {
-                        indices.push(index);
-                    }
-                }
+                indices.push(index);
             }
         }
 

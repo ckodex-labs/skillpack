@@ -73,10 +73,10 @@ impl CanonicalStoreClient {
 
     fn add_auth<T>(&self, req: Request<T>) -> Request<T> {
         let mut req = req;
-        if let Some(token) = &self.token {
-            if let Ok(val) = MetadataValue::try_from(format!("Bearer {}", token)) {
-                req.metadata_mut().insert("authorization", val);
-            }
+        if let Some(token) = &self.token
+            && let Ok(val) = MetadataValue::try_from(format!("Bearer {}", token))
+        {
+            req.metadata_mut().insert("authorization", val);
         }
         req
     }

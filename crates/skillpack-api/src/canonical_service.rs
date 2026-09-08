@@ -16,7 +16,7 @@ use crate::proto::{
     canonical_store_service_server::{CanonicalStoreService, CanonicalStoreServiceServer},
 };
 use skillpack_adapters::oci::OciReader;
-use skillpack_adapters::persistence::DuckDbRepository;
+use skillpack_adapters::persistence::{CanonicalSkillUpsert, DuckDbRepository};
 use skillpack_application::{
     CheckBoundaryRequest as DomainCheckBoundaryRequest, CheckBoundaryUseCase, MigrateSkillsUseCase,
     SyncCanonicalStoreUseCase,
@@ -160,15 +160,15 @@ impl CanonicalStoreService for CanonicalStoreServiceImpl {
                             .collect::<String>();
                         format!("sha256:{}", hex)
                     });
-                let _ = repo.upsert_canonical_skill(
-                    &skill.name,
-                    "default",
-                    &skill.name,
-                    &skill.path.to_string_lossy(),
-                    skill.has_skill_md,
-                    content_hash.as_deref(),
-                    None,
-                );
+                let _ = repo.upsert_canonical_skill(CanonicalSkillUpsert {
+                    skill_ref: skill.name.clone(),
+                    tenant_id: "default".to_string(),
+                    name: skill.name.clone(),
+                    path: skill.path.to_string_lossy().into_owned(),
+                    has_skill_md: skill.has_skill_md,
+                    content_hash,
+                    manifest_json: None,
+                });
             }
             for agent_result in &result.agent_results {
                 let _ = repo.upsert_sync_state(
@@ -530,10 +530,10 @@ impl CanonicalStoreService for CanonicalStoreServiceImpl {
         let mut removed_skills = 0;
 
         for agent in registry.agents() {
-            if let Some(ref only) = req.agent_name {
-                if agent.name.to_lowercase() != only.to_lowercase() {
-                    continue;
-                }
+            if let Some(ref only) = req.agent_name
+                && agent.name.to_lowercase() != only.to_lowercase()
+            {
+                continue;
             }
 
             let agent_dir = match agent.resolved_dir() {
@@ -577,11 +577,11 @@ impl CanonicalStoreService for CanonicalStoreServiceImpl {
                             };
                             for entry in entries {
                                 let path = entry.path();
-                                if let Some(ext) = path.extension() {
-                                    if ext == "mdc" {
-                                        let _ = std::fs::remove_file(&path);
-                                        removed_skills += 1;
-                                    }
+                                if let Some(ext) = path.extension()
+                                    && ext == "mdc"
+                                {
+                                    let _ = std::fs::remove_file(&path);
+                                    removed_skills += 1;
                                 }
                             }
                         }

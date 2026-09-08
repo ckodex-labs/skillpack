@@ -147,10 +147,10 @@ impl<R: SkillReader> AssessSkillUseCase<R> {
         match raw {
             Some(serde_yaml::Value::Sequence(seq)) => {
                 for v in seq {
-                    if let Some(s) = v.as_str() {
-                        if let Some(d) = parse_exempt_dimension(s) {
-                            dims.push(d);
-                        }
+                    if let Some(s) = v.as_str()
+                        && let Some(d) = parse_exempt_dimension(s)
+                    {
+                        dims.push(d);
                     }
                 }
             }

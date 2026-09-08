@@ -578,6 +578,6 @@ A test skill for MCP assessment.
         .await;
         assert!(result.is_ok(), "assess_skill failed: {:?}", result.err());
         let assessment = result.unwrap();
-        assert!(assessment["dimensions"].as_object().unwrap().len() > 0);
+        assert!(!assessment["dimensions"].as_object().unwrap().is_empty());
     }
 }

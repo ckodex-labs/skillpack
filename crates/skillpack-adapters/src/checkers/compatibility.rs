@@ -92,10 +92,10 @@ impl DimensionChecker for CompatibilityChecker {
             }
         } else if let Ok(content) = reader.read_file(path, "package.json") {
             deps_found = true;
-            if let Ok(json) = serde_json::from_str::<serde_json::Value>(&content) {
-                if json.get("dependencies").is_some() || json.get("devDependencies").is_some() {
-                    deps_pinned = true;
-                }
+            if let Ok(json) = serde_json::from_str::<serde_json::Value>(&content)
+                && (json.get("dependencies").is_some() || json.get("devDependencies").is_some())
+            {
+                deps_pinned = true;
             }
         } else if let Ok(content) = reader.read_file(path, "Cargo.toml") {
             deps_found = true;

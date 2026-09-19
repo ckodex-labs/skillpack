@@ -211,6 +211,13 @@ fn smoke() -> (bool, Vec<String>) {
             )],
         );
     }
+    // Resolve to an absolute path before setting current_dir: on Unix the
+    // program path is interpreted relative to the child's cwd, so a relative
+    // `target/debug/skillpack` would be looked up inside the example dir.
+    let binary = match binary.canonicalize() {
+        Ok(abs) => abs,
+        Err(_) => binary,
+    };
     let mut cmd = Command::new(&binary);
     cmd.current_dir("examples/agentic-skill-template/skills/agentic-skill-template")
         .arg("check");

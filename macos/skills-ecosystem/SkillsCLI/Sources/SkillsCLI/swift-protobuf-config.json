@@ -1,0 +1,12 @@
+{
+  "protocPath": "/opt/homebrew/bin/protoc",
+  "invocations": [
+    {
+      "protoPath": "../../../../../proto/macos/v1",
+      "protoFiles": [
+        "skills.proto"
+      ],
+      "visibility": "public"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+.build/
+build/
+SkillsEcosystem.xcodeproj/
+.swiftpm/
+demo-sandbox/
+*.log
+.DS_Store
+xcuserdata/
+DerivedData/
+.codegraph/codegraph.db

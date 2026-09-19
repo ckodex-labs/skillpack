@@ -1,0 +1,33 @@
+name: SkillsEcosystem
+options:
+  bundleIdPrefix: com.ckodex
+  deploymentTarget:
+    macOS: "13.0"
+targets:
+  SkillsUI:
+    type: application
+    platform: macOS
+    sources:
+      - path: SkillsUI/Sources/SkillsUI
+    dependencies:
+      - package: SkillsCore
+        product: SkillsCore
+    settings:
+      INFOPLIST_FILE: SkillsUI/Sources/SkillsUI/Info.plist
+      PRODUCT_BUNDLE_IDENTIFIER: com.ckodex.SkillsUI
+
+  SkillsFinderSync:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: SkillsFinder
+    dependencies:
+      - package: SkillsCore
+        product: SkillsCore
+    settings:
+      INFOPLIST_FILE: SkillsFinder/Info.plist
+      PRODUCT_BUNDLE_IDENTIFIER: com.ckodex.SkillsUI.SkillsFinderSync
+
+packages:
+  SkillsCore:
+    path: SkillsCore

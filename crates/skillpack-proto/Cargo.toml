@@ -18,3 +18,4 @@ serde_json.workspace = true
 [build-dependencies]
 tonic-build.workspace = true
 tonic-prost-build.workspace = true
+protoc-bin-vendored = "3"

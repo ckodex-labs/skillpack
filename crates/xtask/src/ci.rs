@@ -150,10 +150,37 @@ fn exec(mut cmd: Command) -> (bool, Vec<String>) {
                 String::from_utf8_lossy(&out.stdout),
                 String::from_utf8_lossy(&out.stderr)
             );
-            (out.status.success(), tail_lines(&text, OUTPUT_TAIL_LIMIT))
+            let tail = if out.status.success() {
+                tail_lines(&text, OUTPUT_TAIL_LIMIT)
+            } else {
+                diagnostic_tail(&text)
+            };
+            (out.status.success(), tail)
         }
         Err(err) => (false, vec![format!("spawn failed: {err}")]),
     }
+}
+
+/// On failure, prefer compiler diagnostics over build-progress noise: a cold
+/// build fills the tail with `Compiling`/`Checking` lines and the actual
+/// `error:`/`warning:` block is lost. Keep lines carrying diagnostics, capped,
+/// with the raw tail appended for exit context.
+fn diagnostic_tail(text: &str) -> Vec<String> {
+    const DIAGNOSTIC_LIMIT: usize = 120;
+    let mut lines: Vec<String> = text
+        .lines()
+        .filter(|l| {
+            l.contains("error")
+                || l.contains("warning")
+                || l.contains(" --> ")
+                || l.contains("help:")
+                || l.contains("note:")
+        })
+        .map(|l| l.to_string())
+        .collect();
+    lines.truncate(DIAGNOSTIC_LIMIT);
+    lines.extend(tail_lines(text, 10));
+    lines
 }
 
 fn smoke() -> (bool, Vec<String>) {

@@ -30,37 +30,37 @@ impl SkillPackPipeline {
     /// Run full pipeline
     pub async fn run(&self) -> anyhow::Result<PipelineResult> {
         let mut result = PipelineResult::default();
-        
+
         // Stage 1: Lint
         result.lint = self.lint().await?;
         if !result.lint.passed {
             return Ok(result);
         }
-        
+
         // Stage 2: Test
         result.test = self.test().await?;
         if !result.test.passed {
             return Ok(result);
         }
-        
+
         // Stage 3: Audit
         result.audit = self.audit().await?;
         if !result.audit.passed {
             return Ok(result);
         }
-        
+
         // Stage 4: Build
         result.build = self.build().await?;
         if !result.build.passed {
             return Ok(result);
         }
-        
+
         // Stage 5: Sign
         result.sign = self.sign().await?;
-        
+
         // Stage 6: Attest
         result.attest = self.attest().await?;
-        
+
         result.overall_passed = true;
         Ok(result)
     }
@@ -79,7 +79,10 @@ impl SkillPackPipeline {
 
         let passed = fmt.status.success() && clippy.status.success();
         if !passed {
+            // cargo fmt --check prints the diff on stdout, not stderr.
+            eprintln!("{}", String::from_utf8_lossy(&fmt.stdout));
             eprintln!("{}", String::from_utf8_lossy(&fmt.stderr));
+            eprintln!("{}", String::from_utf8_lossy(&clippy.stdout));
             eprintln!("{}", String::from_utf8_lossy(&clippy.stderr));
         }
 
@@ -198,7 +201,13 @@ impl SkillPackPipeline {
         }
 
         let out = tokio::process::Command::new("cosign")
-            .args(["sign-blob", "--yes", "--output-signature", "target/release/skillpack-server.sig", binary])
+            .args([
+                "sign-blob",
+                "--yes",
+                "--output-signature",
+                "target/release/skillpack-server.sig",
+                binary,
+            ])
             .output()
             .await?;
 
@@ -241,7 +250,10 @@ impl SkillPackPipeline {
             if out.status.success() {
                 artifacts.push(sbom_path.to_string());
             } else {
-                eprintln!("SBOM generation failed: {}", String::from_utf8_lossy(&out.stderr));
+                eprintln!(
+                    "SBOM generation failed: {}",
+                    String::from_utf8_lossy(&out.stderr)
+                );
                 passed = false;
             }
         } else {
@@ -331,7 +343,10 @@ async fn main() -> anyhow::Result<()> {
     tracing_subscriber::fmt::init();
     let pipeline = SkillPackPipeline::new(env!("CARGO_PKG_VERSION"));
     let result = pipeline.run().await?;
-    tracing::info!("Pipeline completed: overall_passed={}", result.overall_passed);
+    tracing::info!(
+        "Pipeline completed: overall_passed={}",
+        result.overall_passed
+    );
     if !result.overall_passed {
         std::process::exit(1);
     }

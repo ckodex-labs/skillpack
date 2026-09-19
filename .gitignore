@@ -28,6 +28,11 @@ dist/
 /*.png
 /*.gif
 
+# The user-level gitignore also carries a global `.dagger/` rule (engine
+# caches). Here `.dagger/` holds the Rust pipeline source that the CI
+# `artifacts` job runs — it must be tracked.
+!.dagger/
+
 # Git: the user-level gitignore carries a global `bin/` rule intended for
 # binary artifact directories. It shadows Rust source bins. Re-include the
 # exact source-bin paths so CLI/server binaries stay under version control.

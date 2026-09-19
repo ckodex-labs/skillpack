@@ -5071,7 +5071,7 @@ checksum = "0c6f73aeb92d671e0cc4dca167e59b2deb6387c375391bc99ee743f326994a2b"
 
 [[package]]
 name = "skillpack-adapters"
-version = "1.0.0-beta.2"
+version = "1.0.0-beta.3"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -5114,7 +5114,7 @@ dependencies = [
 
 [[package]]
 name = "skillpack-api"
-version = "1.0.0-beta.2"
+version = "1.0.0-beta.3"
 dependencies = [
  "anyhow",
  "axum",
@@ -5151,7 +5151,7 @@ dependencies = [
 
 [[package]]
 name = "skillpack-application"
-version = "1.0.0-beta.2"
+version = "1.0.0-beta.3"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -5169,7 +5169,7 @@ dependencies = [
 
 [[package]]
 name = "skillpack-cni"
-version = "1.0.0-beta.2"
+version = "1.0.0-beta.3"
 dependencies = [
  "anyhow",
  "clap",
@@ -5184,7 +5184,7 @@ dependencies = [
 
 [[package]]
 name = "skillpack-domain"
-version = "1.0.0-beta.2"
+version = "1.0.0-beta.3"
 dependencies = [
  "anyhow",
  "chrono",
@@ -5202,7 +5202,7 @@ dependencies = [
 
 [[package]]
 name = "skillpack-fabricator"
-version = "1.0.0-beta.2"
+version = "1.0.0-beta.3"
 dependencies = [
  "serde",
  "serde_json",
@@ -5212,7 +5212,7 @@ dependencies = [
 
 [[package]]
 name = "skillpack-proto"
-version = "1.0.0-beta.2"
+version = "1.0.0-beta.3"
 dependencies = [
  "prost",
  "serde",
@@ -5225,7 +5225,7 @@ dependencies = [
 
 [[package]]
 name = "skillpack-registry-sync"
-version = "1.0.0-beta.2"
+version = "1.0.0-beta.3"
 dependencies = [
  "anyhow",
  "chrono",
@@ -5248,7 +5248,7 @@ dependencies = [
 
 [[package]]
 name = "skillpack-tests"
-version = "1.0.0-beta.2"
+version = "1.0.0-beta.3"
 dependencies = [
  "anyhow",
  "clap",

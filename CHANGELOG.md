@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-beta.3] - 2026-09-19
+
 ### Security
 - Shared skill-path guard (`skillpack_application::skill_path_guard`) applied at
   gRPC (`server.rs` incl. previously unsanitized `report`, `assess_stream`,
@@ -14,6 +16,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   joins (`canonical_service.rs`: package/import/promote). Rejects `..`, `..\\`,
   absolute escapes, symlink escapes, NUL, and separator-carrying components;
   13 unit tests.
+- Fail-closed auth: the server now refuses to start when `SKILLPACK_BIND_ALL=1`
+  is set without `SKILLPACK_API_TOKEN` (previously logged CRITICAL and started
+  unauthenticated anyway).
+- `cargo audit` cleared: h2 (RUSTSEC-2026-0258), quinn-proto
+  (RUSTSEC-2026-0185), rustls (RUSTSEC-2026-0285), rkyv (RUSTSEC-2026-0235),
+  webbrowser (RUSTSEC-2026-0257), crossbeam-epoch (RUSTSEC-2026-0204), anyhow
+  (RUSTSEC-2026-0190) via dependency refresh. `rsa` RUSTSEC-2023-0071
+  (Marvin, via sigstore→openidconnect) has no upstream fix; documented
+  acceptance in `.cargo/audit.toml` — usage is signature verification, not
+  the vulnerable decryption path.
 
 ### Added
 - Automated release-tag workflow `.github/workflows/release-tag.yml`: runs the
@@ -23,6 +35,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `generate_report` format `"badge"`) renders a shields.io-style flat grade
   badge for README embedding — deterministic bytes, XML-escaped skill names,
   0–150 scale, 4 unit tests.
+- `SHIP-PLAN.md`: audit-driven upgrade-and-ship plan with evidence labels.
+
+### Changed
+- Toolchain 1.95.0 → 1.98.1; MSRV `rust-version` 1.95 → 1.98. CI and
+  release-tag workflows pinned to `dtolnay/rust-toolchain@1.98.1`.
+- Dependency refresh: ~236 semver-compatible bumps plus majors —
+  `jsonschema` 0.46 → 0.56 (`validator_for` constructor), `brotli` 8 → 9,
+  `serial_test` 3 → 4.
+- Dockerfile builder `rust:1.85-bookworm` → `rust:1.98-bookworm` (was below
+  MSRV; container build would have failed).
+- Pinned floating inputs: `zot` image `:latest` → `v2.1.21`,
+  docs-site `rspress` `latest` → `^1.47.1`, CI `json-schema-to-typescript`
+  → `@15`.
+
+### Fixed
+- Repository hygiene: ~2,528 build/tool artifacts untracked and purged from
+  history (`dashboard/.next`, `.next-stale-bak`, `.playwright-mcp` logs, 39
+  stray root screenshots); real `.gitignore` written. Tracked file count
+  3,194 → 728.
+- `macos/skills-ecosystem` embedded repo (unregistered gitlink, broken for
+  clones) absorbed into the parent tree.
+- `.dagger` crate version re-synced to the workspace line.
+- New clippy `question_mark` finding on 1.98.1 resolved in
+  `cli/improve.rs`.
 
 ## [1.0.0-beta.2] - 2026-09-08
 
@@ -82,6 +118,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Known Limitations
 - See `KNOWN-ISSUES.md` for the full list of alpha limitations.
 
+[1.0.0-beta.3]: https://github.com/ckodex/skillpack/releases/tag/v1.0.0-beta.3
 [1.0.0-beta.2]: https://github.com/ckodex/skillpack/releases/tag/v1.0.0-beta.2
 [1.0.0-beta.1]: https://github.com/ckodex/skillpack/releases/tag/v1.0.0-beta.1
 [1.0.0-alpha.1]: https://github.com/ckodex/skillpack/releases/tag/v1.0.0-alpha.1

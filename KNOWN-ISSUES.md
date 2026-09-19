@@ -7,8 +7,8 @@
 ## 1. Security
 
 - **Default-open auth:** The HTTP/gRPC server disables bearer-token authentication when `SKILLPACK_API_TOKEN` is unset. This is convenient for local development but means mutation/migration endpoints are unprotected if the server is exposed to a network.
-  - **Mitigation:** Always set `SKILLPACK_API_TOKEN` before exposing the server. The server now defaults to binding on `127.0.0.1` only.
-  - **Status:** Partially mitigated; requires user vigilance.
+  - **Mitigation:** Fail-closed in 1.0.0-beta.3 — the server refuses to start when `SKILLPACK_BIND_ALL=1` is set without `SKILLPACK_API_TOKEN`. Loopback binding without a token still warns but starts (dev convenience).
+  - **Status:** Resolved in 1.0.0-beta.3.
 
 - **Path-traversal hardening:** Enforced at every entry point (gRPC, HTTP, MCP, canonical joins).
   - **Evidence:** Shared `skill_path_guard` in `skillpack-application` (`validate_skill_path`, `validate_skill_path_cwd`, `validate_skill_component`); wired at `server.rs` (assess/grade/report/assess_stream/assess_batch_stream), `http_server.rs` (`assess_handler`), `mcp.rs` (3 tool call-sites), and `canonical_service.rs` (package_skill ns+skill_ref, import_skill target_name, promote_skill candidate_name). Rejects `..`, `..\\`, absolute escapes, symlink escapes (resolution-before-containment), NUL, and empty or separator-carrying components. 13 unit tests green plus workspace gate green.

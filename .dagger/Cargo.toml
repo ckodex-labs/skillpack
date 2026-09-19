@@ -1,0 +1,18 @@
+[package]
+name = "skillpack-dagger"
+version = "1.0.0-beta.3"
+edition = "2024"
+
+[[bin]]
+name = "pipeline"
+path = "pipeline.rs"
+
+[dependencies]
+anyhow = "1.0"
+tokio = { version = "1.49", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = "0.3"
+dagger-sdk = "0.19"
+serde_json = "1.0"
+chrono = "0.4"
+uuid = { version = "1.0", features = ["v4"] }

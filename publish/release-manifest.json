@@ -1,7 +1,7 @@
 {
   "name": "ckodex-skill-pack",
-  "version": "1.0.0-beta.2",
-  "generated_at": "2026-06-06T20:48:00Z",
+  "version": "1.0.0-beta.3",
+  "generated_at": "2026-09-19T00:00:00Z",
   "assets": [
     {
       "path": "docs/doc_build/404.html",

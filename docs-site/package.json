@@ -9,5 +9,8 @@
   },
   "devDependencies": {
     "rspress": "^1.47.1"
+  },
+  "overrides": {
+    "prismjs": "^1.30.0"
   }
 }

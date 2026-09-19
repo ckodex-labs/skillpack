@@ -10,6 +10,10 @@
   - **Mitigation:** Fail-closed in 1.0.0-beta.3 — the server refuses to start when `SKILLPACK_BIND_ALL=1` is set without `SKILLPACK_API_TOKEN`. Loopback binding without a token still warns but starts (dev convenience).
   - **Status:** Resolved in 1.0.0-beta.3.
 
+- **docs-site transitive advisories:** `rspress@1.47.2` (latest stable) pins `react-router-dom@6.30.6`, inside the `react-router 6.0.0–7.17.0` advisory range (GHSA-wrjc-x8rr-h8h6, GHSA-337j-9hxr-rhxg — open redirect, SSR hydration constructor injection). No fixed 6.x exists; rspress 2.x is beta-only. `prismjs` was cleared via an npm `overrides` pin to `^1.30.0`.
+  - **Mitigation:** The docs site is statically generated at build time; these are build-chain/library advisories, not reachable runtime attack surface in the emitted HTML. Revisit when rspress 2.x ships stable.
+  - **Status:** Accepted in 1.0.0-beta.3; tracked for post-beta.
+
 - **Path-traversal hardening:** Enforced at every entry point (gRPC, HTTP, MCP, canonical joins).
   - **Evidence:** Shared `skill_path_guard` in `skillpack-application` (`validate_skill_path`, `validate_skill_path_cwd`, `validate_skill_component`); wired at `server.rs` (assess/grade/report/assess_stream/assess_batch_stream), `http_server.rs` (`assess_handler`), `mcp.rs` (3 tool call-sites), and `canonical_service.rs` (package_skill ns+skill_ref, import_skill target_name, promote_skill candidate_name). Rejects `..`, `..\\`, absolute escapes, symlink escapes (resolution-before-containment), NUL, and empty or separator-carrying components. 13 unit tests green plus workspace gate green.
   - **Status:** Resolved in 1.0.0-beta.2+

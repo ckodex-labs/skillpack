@@ -3,7 +3,7 @@ version: "3.8"
 services:
   # OCI 1.2 registry for skill artifacts — push/pull via `sctl push/pull`
   zot-registry:
-    image: ghcr.io/project-zot/zot-linux-amd64:latest
+    image: ghcr.io/project-zot/zot-linux-amd64:v2.1.21
     container_name: zot-registry
     ports:
       - "5000:5000"

@@ -46,10 +46,8 @@ pub fn ensure_version(skill_dir: &Path, dry_run: bool) -> Option<Fix> {
         let val = serde_yaml::Value::String("0.1.0".into());
         if let Some(meta) = fm.get_mut("metadata").and_then(|m| m.as_mapping_mut()) {
             meta.insert(key, val);
-        } else if let Some(root) = fm.as_mapping_mut() {
-            root.insert(key, val);
         } else {
-            return None;
+            fm.as_mapping_mut()?.insert(key, val);
         }
         let new_fm = serde_yaml::to_string(&fm).ok()?;
         std::fs::write(&skill_md, format!("---\n{}---\n{}", new_fm, parts[2])).ok()?;

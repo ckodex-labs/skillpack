@@ -5,7 +5,7 @@
 [![Status: Private Beta](https://img.shields.io/badge/status-private_beta-orange)](KNOWN-ISSUES.md)
 [![Version](https://img.shields.io/badge/version-1.0.0--beta.2-blue)](CHANGELOG.md)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
-[![MSRV](https://img.shields.io/badge/MSRV-1.95-purple)](rust-toolchain.toml)
+[![MSRV](https://img.shields.io/badge/MSRV-1.98-purple)](rust-toolchain.toml)
 
 **Quality grading for AI agent skills — the SonarQube of the skills ecosystem.**
 

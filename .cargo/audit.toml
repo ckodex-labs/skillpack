@@ -1,0 +1,7 @@
+[advisories]
+# RUSTSEC-2023-0071 (rsa Marvin Attack): no fixed upstream release. Reached via
+# sigstore -> openidconnect -> rsa. Marvin targets RSA PKCS#1 v1.5 *decryption*
+# oracles; our usage is RSA signature *verification* of OIDC tokens inside
+# sigstore's keyless flow, which is not the vulnerable operation. Revisit on
+# every sigstore bump.
+ignore = ["RUSTSEC-2023-0071"]

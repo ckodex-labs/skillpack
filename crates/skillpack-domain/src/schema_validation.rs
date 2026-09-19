@@ -83,10 +83,10 @@ impl SchemaValidator {
         let policy_schema: Value = serde_json::from_str(embedded::POLICY_V1)?;
 
         Ok(Self {
-            cnsb_validator: Validator::new(&cnsb_schema)?,
-            cnaab_validator: Validator::new(&cnaab_schema)?,
-            evidence_validator: Validator::new(&evidence_schema)?,
-            policy_validator: Validator::new(&policy_schema)?,
+            cnsb_validator: jsonschema::validator_for(&cnsb_schema)?,
+            cnaab_validator: jsonschema::validator_for(&cnaab_schema)?,
+            evidence_validator: jsonschema::validator_for(&evidence_schema)?,
+            policy_validator: jsonschema::validator_for(&policy_schema)?,
         })
     }
 

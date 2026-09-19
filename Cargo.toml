@@ -57,7 +57,7 @@ notify = "7.0"
 tar = "0.4.46"
 flate2 = "1.1.9"
 bzip2 = "0.6.1"
-brotli = "8.0.2"
+brotli = "9.0"
 zstd = "0.13.3"
 zip = "8.6.0"
 
@@ -137,7 +137,7 @@ futures = "0.3.32"
 # ========================================
 
 # JSON Schema validation
-jsonschema = "0.46.5"
+jsonschema = "0.56"
 
 # ========================================
 # Observability (OpenTelemetry + Prometheus)

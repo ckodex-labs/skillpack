@@ -122,6 +122,7 @@ impl SkillPackPipeline {
             .output()
             .await?;
         if !check.status.success() {
+            eprintln!("audit stage failed: cargo-audit not installed");
             return Ok(StageResult {
                 name: "audit".to_string(),
                 passed: false,

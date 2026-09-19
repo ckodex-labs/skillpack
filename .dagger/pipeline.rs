@@ -7,12 +7,12 @@
 //! locally with the same failure semantics.
 //!
 //! Stages:
-/// 1. Lint - cargo clippy, cargo fmt
-/// 2. Test - cargo test with coverage
-/// 3. Build - release binary + distroless image
-/// 4. Sign - Sigstore keyless signing (cosign sign-blob)
-/// 5. Attest - SLSA provenance + SBOM (CycloneDX)
-/// 6. Publish - OCI registry push
+//! 1. Lint - cargo clippy, cargo fmt
+//! 2. Test - cargo test with coverage
+//! 3. Build - release binary + distroless image
+//! 4. Sign - Sigstore keyless signing (cosign sign-blob)
+//! 5. Attest - SLSA provenance + SBOM (CycloneDX)
+//! 6. Publish - OCI registry push
 
 pub struct SkillPackPipeline {
     pub name: String,

@@ -11,20 +11,20 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@connectrpc/connect": "^2.1.1",
+    "@connectrpc/connect-web": "^2.1.1",
     "next": "^16.2.6",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
-    "@connectrpc/connect": "^2.1.1",
-    "@connectrpc/connect-web": "^2.1.1",
     "recharts": "^3.8.1"
   },
   "devDependencies": {
     "@types/node": "^25.9.1",
     "@types/react": "^19.2.15",
-    "typescript": "^6.0.3",
     "eslint": "^10.4.0",
     "eslint-config-next": "^16.2.6",
     "json-schema-to-typescript": "^15.0.4",
-    "vitest": "^3.0.0"
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.1"
   }
 }

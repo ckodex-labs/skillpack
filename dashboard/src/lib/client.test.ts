@@ -82,15 +82,17 @@ describe("skillpackClient transport", () => {
         ok: true,
         json: () =>
           Promise.resolve({
-            id: "test-001",
-            skillId: "test-skill",
-            skillPath: "/test",
-            grade: "A",
-            totalScore: 85,
-            dimensions: [],
-            issues: [],
-            assessedAt: new Date().toISOString(),
-          } as AssessmentResult),
+            assessment: {
+              id: "test-001",
+              skillId: "test-skill",
+              skillPath: "/test",
+              grade: "A",
+              totalScore: 85,
+              dimensions: [],
+              issues: [],
+              assessedAt: new Date().toISOString(),
+            } as AssessmentResult,
+          }),
       });
     });
     globalThis.fetch = mockFetch;
@@ -132,15 +134,17 @@ describe("skillpackClient transport", () => {
         ok: true,
         json: () =>
           Promise.resolve({
-            id: "test-002",
-            skillId: "test-skill",
-            skillPath: "/test",
-            grade: "B",
-            totalScore: 70,
-            dimensions: [],
-            issues: [],
-            assessedAt: new Date().toISOString(),
-          } as AssessmentResult),
+            assessment: {
+              id: "test-002",
+              skillId: "test-skill",
+              skillPath: "/test",
+              grade: "B",
+              totalScore: 70,
+              dimensions: [],
+              issues: [],
+              assessedAt: new Date().toISOString(),
+            } as AssessmentResult,
+          }),
       });
     });
     globalThis.fetch = mockFetch;

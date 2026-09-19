@@ -184,6 +184,17 @@ fn diagnostic_tail(text: &str) -> Vec<String> {
 }
 
 fn smoke() -> (bool, Vec<String>) {
+    // The gate must build the binary it smokes — `cargo test` does not emit
+    // target/debug/skillpack, so a fresh runner (or clean target dir) has
+    // nothing to spawn. Build first, then run.
+    let (built, mut tail) = exec(command("cargo", &["build", "--bin", "skillpack"]));
+    if !built {
+        tail.insert(
+            0,
+            "smoke prerequisite: cargo build --bin skillpack failed".into(),
+        );
+        return (false, tail);
+    }
     // Honor CARGO_TARGET_DIR exactly as cargo resolves artifacts; fall back
     // to the in-tree target directory when the variable is unset.
     let target_dir = match std::env::var("CARGO_TARGET_DIR") {
@@ -195,7 +206,7 @@ fn smoke() -> (bool, Vec<String>) {
         return (
             false,
             vec![format!(
-                "smoke binary missing at {}: run cargo build first",
+                "smoke binary missing at {} after successful build",
                 binary.display()
             )],
         );

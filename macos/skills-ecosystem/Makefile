@@ -92,6 +92,18 @@ generate-types:
 	@echo "Quicktype JSON Schema support is limited; manual maintenance is preferred for correctness."
 	@echo "Remember to update the header timestamp to: $(GEN_TIMESTAMP)"
 
+check-schema-sync: check-proto-sync
+	@echo "Checking Swift type coverage against client-model schema..."
+	@python3 -c "\
+import json, re, sys; \
+schema = json.load(open('$(SKILLPACK_ROOT)/schemas/skills-specs-next/client-model.schema.json')); \
+defs = set(schema.get('definitions', schema.get('\$$defs', {})).keys()); \
+src = open('SkillsCore/Sources/SkillsCore/Generated/ClientModel.swift').read(); \
+decls = set(re.findall(r'public (?:struct|enum|typealias|final class) (\w+)', src)); \
+missing = sorted(defs - decls); \
+sys.exit('ERROR: Swift ClientModel.swift missing schema types: ' + ', '.join(missing) if missing else 0)"
+	@echo "Swift generated types cover all schema definitions."
+
 clean:
 	@echo "Cleaning build artifacts..."
 	rm -rf SkillsCore/.build SkillsCLI/.build SkillsDaemon/.build

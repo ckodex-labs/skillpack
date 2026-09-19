@@ -1,3 +1,33 @@
+# Build artifacts
+target/
+**/target/
+# Tracked test fixtures that intentionally live under a target/ path
+!crates/skillpack-adapters/target/
+
+# Node / JS
+node_modules/
+.next/
+.next-stale-bak/
+out/
+dist/
+
+# OS noise
+.DS_Store
+
+# Agent / tool session state
+.playwright-mcp/
+.pi/
+.antigravitycli/
+
+# Logs & env
+*.log
+.env
+.env.*
+
+# Local screenshots / outtakes (curated set lives in docs/assets/)
+/*.png
+/*.gif
+
 # Git: the user-level gitignore carries a global `bin/` rule intended for
 # binary artifact directories. It shadows Rust source bins. Re-include the
 # exact source-bin paths so CLI/server binaries stay under version control.

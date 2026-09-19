@@ -5,7 +5,7 @@
 ### From Source
 
 ```bash
-git clone https://github.com/ckodex/skillpack.git
+git clone https://github.com/ckodex-labs/skillpack.git
 cd skillpack
 cargo build --release
 ```

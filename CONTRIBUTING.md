@@ -40,7 +40,7 @@ This project adheres to a Code of Conduct. By participating, you are expected to
 
 ```bash
 # Clone
-git clone https://github.com/ckodex/skillpack.git
+git clone https://github.com/ckodex-labs/skillpack.git
 cd skillpack
 
 # Build
@@ -129,6 +129,6 @@ By contributing, you agree that your contributions will be licensed under the Ap
 
 ## Questions?
 
-- Open a [Discussion](https://github.com/ckodex/skillpack/discussions)
+- Open a [Discussion](https://github.com/ckodex-labs/skillpack/discussions)
 - Check [Documentation](./docs/)
 - Review [Authoring Guide](./docs/authoring-guide.md)

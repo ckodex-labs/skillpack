@@ -118,7 +118,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Known Limitations
 - See `KNOWN-ISSUES.md` for the full list of alpha limitations.
 
-[1.0.0-beta.3]: https://github.com/ckodex/skillpack/releases/tag/v1.0.0-beta.3
-[1.0.0-beta.2]: https://github.com/ckodex/skillpack/releases/tag/v1.0.0-beta.2
-[1.0.0-beta.1]: https://github.com/ckodex/skillpack/releases/tag/v1.0.0-beta.1
-[1.0.0-alpha.1]: https://github.com/ckodex/skillpack/releases/tag/v1.0.0-alpha.1
+[1.0.0-beta.3]: https://github.com/ckodex-labs/skillpack/releases/tag/v1.0.0-beta.3
+[1.0.0-beta.2]: https://github.com/ckodex-labs/skillpack/releases/tag/v1.0.0-beta.2
+[1.0.0-beta.1]: https://github.com/ckodex-labs/skillpack/releases/tag/v1.0.0-beta.1
+[1.0.0-alpha.1]: https://github.com/ckodex-labs/skillpack/releases/tag/v1.0.0-alpha.1

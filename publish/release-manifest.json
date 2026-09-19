@@ -34,7 +34,7 @@
     {
       "path": "docs/doc_build/guide/getting-started.html",
       "category": "docs",
-      "sha256": "d73601753702d759a15f5e7c62a03423bc2b1fa566b216b7cc8e6727a11223bc",
+      "sha256": "0c9f196b99886fe8910584f5abace5ed499ed5641f2a501958ae63a39068d6a7",
       "size_bytes": 27158,
       "media_type": "text/html"
     },
@@ -55,14 +55,14 @@
     {
       "path": "docs/doc_build/guide/security.html",
       "category": "docs",
-      "sha256": "9ac90df11366d8c8e76007b4abead994b38e28fb0f6d048c2e228fd85ca4ff9a",
+      "sha256": "d8ee28d3b422783dc734f1003ec62490b3b3e25c43091594122a7d1921cb03d6",
       "size_bytes": 31362,
       "media_type": "text/html"
     },
     {
       "path": "docs/doc_build/index.html",
       "category": "docs",
-      "sha256": "dbc067a0eefb7a1d2f572e4fd68589a9c9249a191b9ef0e2884bc603e46dd58b",
+      "sha256": "0fef134aa2a68885b3d4e6398226195962d3b203641fa7481c257c0d4a0dcc43",
       "size_bytes": 11430,
       "media_type": "text/html"
     },
@@ -125,7 +125,7 @@
     {
       "path": "docs/doc_build/static/js/134.7e81ffb2.js",
       "category": "docs",
-      "sha256": "d81dac96b1d91214fa07fc245a8c4bd590a851534d94be05eab2bb71e49a2716",
+      "sha256": "bb1a3d659e4f440aca6a8ad54defcd230480d2cf8cda2f717bbc3cde4e0db169",
       "size_bytes": 262815,
       "media_type": "application/javascript"
     },
@@ -153,7 +153,7 @@
     {
       "path": "docs/doc_build/static/js/async/324.f2f79aa9.js",
       "category": "docs",
-      "sha256": "da3288636fc70bbc9d8a5163048c0a6814196600f36af3b57a5ec970ea180d1d",
+      "sha256": "e64e46db400edce076156818bbdd3e16f5b96d2df00d5b6f21e5c130779371cd",
       "size_bytes": 1358,
       "media_type": "application/javascript"
     },
@@ -174,7 +174,7 @@
     {
       "path": "docs/doc_build/static/js/async/470.e15002d8.js",
       "category": "docs",
-      "sha256": "af73927037efd0b6fd6a8387cf16fb665fc6405f1c575428d2c2fc1cc14a3d0d",
+      "sha256": "bde8bb0264294bfabba3d0c8301f85419d5225e003ecd85d4215464c2f95fa18",
       "size_bytes": 4750,
       "media_type": "application/javascript"
     },
@@ -209,7 +209,7 @@
     {
       "path": "docs/doc_build/static/js/async/676.c8adcb1c.js",
       "category": "docs",
-      "sha256": "9646f60331bc63925ffbd2386b41be66e66ad4e67a77a2bed72eceef359eba3c",
+      "sha256": "b38c7192bbdca91343e8e216ff3be660b86397fedd852c39c804c9d13fe70d2c",
       "size_bytes": 7512,
       "media_type": "application/javascript"
     },
@@ -433,14 +433,14 @@
     {
       "path": "specs/protos/skillpack/v1/canonical.proto",
       "category": "proto",
-      "sha256": "b2fb6671e5c0a46efbd73a3872bc56cb5d14cc7af6e54ebbbedb8a26918d5c57",
+      "sha256": "462f74f66f4be9cf02953408fba8c96e271b6c3eb133f76a93093b03d9ae3686",
       "size_bytes": 7615,
       "media_type": "text/x-protobuf"
     },
     {
       "path": "specs/protos/skillpack/v1/skillpack.proto",
       "category": "proto",
-      "sha256": "c8411f34117a4e0da6e133d2c0eb4767abf9171b6049d9dcadd205a578e13218",
+      "sha256": "f652eaf60c5c37412bfba5bac95c3fb2a2ebd8a7289f2318932affd774853982",
       "size_bytes": 11995,
       "media_type": "text/x-protobuf"
     },

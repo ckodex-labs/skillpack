@@ -15,7 +15,7 @@ impl ReportGenerator for SarifReporter {
                     "driver": {
                         "name": "SkillPack",
                         "version": "1.0.0",
-                        "informationUri": "https://github.com/ckodex/skillpack"
+                        "informationUri": "https://github.com/ckodex-labs/skillpack"
                     }
                 },
                 "results": assessment.issues.iter().map(|issue| {

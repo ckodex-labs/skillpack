@@ -10,7 +10,7 @@ hero:
       link: /guide/getting-started
     - theme: alt
       text: GitHub
-      link: https://github.com/ckodex/skillpack
+      link: https://github.com/ckodex-labs/skillpack
 features:
   - title: 8 Quality Dimensions
     details: Structure, Security, Provenance, Governance, Templates, MCP, Documentation, Accessibility

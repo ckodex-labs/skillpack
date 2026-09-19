@@ -275,11 +275,11 @@ impl SkillPackPipeline {
                 "digest": { "sha256": "pending" }
             }],
             "predicate": {
-                "builder": { "id": "https://github.com/ckodex/skillpack/.github/workflows/skillpack-ci.yml" },
-                "buildType": "https://github.com/ckodex/skillpack/dagger/v1",
+                "builder": { "id": "https://github.com/ckodex-labs/skillpack/.github/workflows/skillpack-ci.yml" },
+                "buildType": "https://github.com/ckodex-labs/skillpack/dagger/v1",
                 "invocation": {
                     "configSource": {
-                        "uri": "https://github.com/ckodex/skillpack",
+                        "uri": "https://github.com/ckodex-labs/skillpack",
                         "digest": { "sha1": "HEAD" }
                     },
                     "parameters": { "version": &self.version }

@@ -45,7 +45,7 @@ runs:
     - name: Install SkillPack
       shell: bash
       run: |
-        curl -sSL https://github.com/ckodex/skillpack/releases/latest/download/skillpack-$(uname -m)-linux.tar.gz | tar xzf -
+        curl -sSL https://github.com/ckodex-labs/skillpack/releases/latest/download/skillpack-$(uname -m)-linux.tar.gz | tar xzf -
         chmod +x skillpack
         sudo mv skillpack /usr/local/bin/
 

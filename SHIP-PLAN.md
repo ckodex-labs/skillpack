@@ -50,7 +50,7 @@
      all SHAs. Safe precisely because nothing is published yet.
    Recommendation: (b) — this is the only moment history rewrite is free.
 4. DECISION — remote destination. `Cargo.toml` and CHANGELOG links already
-   claim `github.com/ckodex/skillpack` (repo does not resolve today — create
+   claim `github.com/ckodex-labs/skillpack` (repo does not resolve today — create
    the org repo or pick a different canonical URL and update both files).
 5. DECISION — version line. Recommend cutting `1.0.0-beta.3` after this round
    rather than re-stamping beta.2 — the vuln fixes and hygiene changes are

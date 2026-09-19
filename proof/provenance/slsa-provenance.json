@@ -3,7 +3,7 @@
   "buildDefinition": {
     "buildType": "https://ckodex.dev/skillpack/build-type/v1",
     "externalParameters": {
-      "repository": "https://github.com/ckodex/skillpack",
+      "repository": "https://github.com/ckodex-labs/skillpack",
       "ref": "refs/tags/v1.0.0-beta.2"
     },
     "internalParameters": {
@@ -13,7 +13,7 @@
   },
   "runDetails": {
     "builder": {
-      "id": "https://github.com/ckodex/skillpack/.dagger/pipeline.rs"
+      "id": "https://github.com/ckodex-labs/skillpack/.dagger/pipeline.rs"
     },
     "metadata": {
       "invocationId": "f0c840da-fa01-49ad-a5f5-8d6d080f474f",

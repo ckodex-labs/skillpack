@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package skillpack.v1;
 
-option go_package = "github.com/ckodex/skillpack/gen/go/skillpack/v1";
+option go_package = "github.com/ckodex-labs/skillpack/gen/go/skillpack/v1";
 
 // ========================================
 // SkillPack Assessment Service - Kernel Space

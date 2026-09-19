@@ -28,7 +28,7 @@
       "externalReferences": [
         {
           "type": "vcs",
-          "url": "https://github.com/ckodex/skillpack"
+          "url": "https://github.com/ckodex-labs/skillpack"
         }
       ],
       "components": [

@@ -7,7 +7,7 @@ export default defineConfig({
   logo: "/logo.svg",
   themeConfig: {
     socialLinks: [
-      { icon: "github", link: "https://github.com/ckodex/skillpack" },
+      { icon: "github", link: "https://github.com/ckodex-labs/skillpack" },
     ],
     sidebar: {
       "/guide/": [

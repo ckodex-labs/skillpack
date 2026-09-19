@@ -2373,7 +2373,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install SkillPack
-        run: cargo install --git https://github.com/ckodex/skillpack
+        run: cargo install --git https://github.com/ckodex-labs/skillpack
       - name: Run tests
         run: make test
       - name: Assess skill quality
@@ -2384,7 +2384,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install SkillPack
-        run: cargo install --git https://github.com/ckodex/skillpack
+        run: cargo install --git https://github.com/ckodex-labs/skillpack
       - name: Run evals
         run: skillpack eval {}
 
@@ -2395,7 +2395,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install SkillPack
-        run: cargo install --git https://github.com/ckodex/skillpack
+        run: cargo install --git https://github.com/ckodex-labs/skillpack
       - name: Package skill
         run: skillpack package --no-check
       - name: Upload artifact
@@ -2411,7 +2411,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install SkillPack
-        run: cargo install --git https://github.com/ckodex/skillpack
+        run: cargo install --git https://github.com/ckodex-labs/skillpack
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
@@ -2528,12 +2528,12 @@ fn generate_wizard_provenance(name: &str) -> String {
         }],
         "predicate": {
             "buildDefinition": {
-                "buildType": "https://github.com/ckodex/skillpack/buildtypes/skill@v1",
+                "buildType": "https://github.com/ckodex-labs/skillpack/buildtypes/skill@v1",
                 "externalParameters": {},
                 "resolvedDependencies": []
             },
             "runDetails": {
-                "builder": { "id": "https://github.com/ckodex/skillpack/.github/workflows/ci.yml" },
+                "builder": { "id": "https://github.com/ckodex-labs/skillpack/.github/workflows/ci.yml" },
                 "metadata": { "invocationId": "placeholder" }
             }
         }

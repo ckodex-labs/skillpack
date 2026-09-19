@@ -12,7 +12,7 @@ All releases include cryptographic provenance:
 # Verify provenance
 slsa-verifier verify-artifact \
   --provenance-path provenance.json \
-  --source-uri github.com/ckodex/skillpack \
+  --source-uri github.com/ckodex-labs/skillpack \
   skillpack-linux-amd64
 ```
 
@@ -23,7 +23,7 @@ Artifacts are signed keyless via Sigstore:
 ```bash
 # Verify signature
 cosign verify \
-  --certificate-identity-regexp=".*github.com/ckodex/skillpack.*" \
+  --certificate-identity-regexp=".*github.com/ckodex-labs/skillpack.*" \
   --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
   ghcr.io/ckodex/skillpack:1.0.0
 ```

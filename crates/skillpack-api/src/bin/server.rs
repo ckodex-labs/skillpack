@@ -68,24 +68,23 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let validator = Arc::new(TokenValidator::from_env());
     if validator.is_enabled() {
         info!("Bearer token auth enabled");
+    } else if bind_all {
+        eprintln!("\n┌──────────────────────────────────────────────────────────────────────┐");
+        eprintln!("│  FATAL: SKILLPACK_BIND_ALL=1 but SKILLPACK_API_TOKEN is unset.       │");
+        eprintln!("│  Refusing to bind 0.0.0.0 without bearer-token auth.               │");
+        eprintln!("└──────────────────────────────────────────────────────────────────────┘\n");
+        tracing::error!("refusing to start: SKILLPACK_BIND_ALL=1 requires SKILLPACK_API_TOKEN");
+        return Err("SKILLPACK_BIND_ALL=1 requires SKILLPACK_API_TOKEN".into());
     } else {
         eprintln!("\n┌──────────────────────────────────────────────────────────────────────┐");
         eprintln!("│  WARNING: Bearer token auth is DISABLED                              │");
         eprintln!("│  Mutation/migration endpoints are unprotected.                     │");
         eprintln!("│  Set SKILLPACK_API_TOKEN before exposing this server to any network. │");
-        if bind_all {
-            eprintln!("│  CRITICAL: SKILLPACK_BIND_ALL=1 but no token configured.           │");
-        }
         eprintln!("└──────────────────────────────────────────────────────────────────────┘\n");
         tracing::warn!(
             "Bearer token auth is DISABLED. Mutation/migration endpoints are unprotected."
         );
         tracing::warn!("Set SKILLPACK_API_TOKEN before exposing this server to any network.");
-        if bind_all {
-            tracing::error!(
-                "CRITICAL: SKILLPACK_BIND_ALL=1 is set but SKILLPACK_API_TOKEN is unset."
-            );
-        }
     }
 
     // Create services
